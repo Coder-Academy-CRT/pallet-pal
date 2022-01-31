@@ -6,7 +6,7 @@ import "./style.scss"
 export default function App() {
     return (
         <>
-            <Warehouse rows='10' columns='10'></Warehouse>
+            <Warehouse rows='4' columns='4'></Warehouse>
             <Sidebar></Sidebar>
         </>
     )
