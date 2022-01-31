@@ -3,7 +3,7 @@ import React from 'react';
 export default function App() {
   return (
     <div>
-      <h1>Hello team!!</h1>
+      <h1>UNDER CONSTRUCTION</h1>
     </div>
   );
 }
