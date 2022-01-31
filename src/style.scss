@@ -1,0 +1,108 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    color: black;
+}
+
+#root {
+    display: grid;
+    height: 100vh;
+}
+
+#warehouse {
+    display: grid;
+    grid-row: 1 / 1;
+    background-color: orange;
+
+    > .location {
+        display: flex;
+        flex-direction: column-reverse;
+        border: 1px solid white;
+        padding: 5%;
+
+        &:hover {
+            background-color: green;
+        }
+
+        > .palletBox {
+            background-color: hotpink;
+            border: 1px solid indigo;
+            padding: 2px;
+            height: 25%;
+        }
+    }
+}
+
+#sidebar {
+    display: flex;
+    grid-area: "nav" "components";
+    overflow-y: auto;
+    flex-direction: column;
+}
+
+#sidebarNav {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    grid-area: "nav";
+    display: flex;
+    flex-direction: row;
+    background-color: slategray;
+    > a {
+        flex: 1;
+        border: 1px solid white;
+        text-align: center;
+        align-items: center;
+    }
+}
+
+#lotManager {
+    grid-area: "components";
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    background-color: steelblue;
+    border: 1px solid white;
+}
+
+#searchWindow {
+    grid-area: "components";
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    background-color: gold;
+}
+
+#locationDetails {
+    grid-area: "components";
+    background-color: green;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.palletCard {
+    margin: 2px 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    background-color: grey;
+}
+
+.productCard {
+    margin: 2px;
+    background-color: white;
+}
+@media (orientation: landscape) {
+    #root {
+        grid-template-columns: 70% 30%;
+        grid-template-rows: 100%;
+    }
+}
+
+@media (orientation: portrait) {
+    #root {
+        grid-template-columns: 100%;
+        grid-template-rows: 50% 50%;
+    }
+}
