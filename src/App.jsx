@@ -1,9 +1,13 @@
-import React from 'react';
+import React from "react"
+import Warehouse from "./components/Warehouse"
+import Sidebar from "./components/Sidebar"
+import "./style.scss"
 
 export default function App() {
-  return (
-    <div>
-      <h1>UNDER CONSTRUCTION</h1>
-    </div>
-  );
+    return (
+        <>
+            <Warehouse rows='10' columns='10'></Warehouse>
+            <Sidebar></Sidebar>
+        </>
+    )
 }
