@@ -1,11 +1,17 @@
 import PalletCard from "./PalletCard"
 
-function LocationDetails({ numberOfPallets }) {
+function LocationDetails({ locationsInfo, clickedLocation }) {
     const palletCards = []
-    for (let i = 0; i < numberOfPallets; i++) {
-        palletCards.push(<PalletCard />)
+
+    if (clickedLocation) {
+        if (locationsInfo[clickedLocation].pallets_on_location[0] !== null) {
+            const numberOfPallets = locationsInfo[clickedLocation].pallets_on_location.length
+            for (let i = 0; i < numberOfPallets; i++) {
+                palletCards.push(<PalletCard />)
+            }
+        }
     }
-    return <div id='locationDetails'>{palletCards}</div>
+    return clickedLocation ? <div id='locationDetails'>{palletCards}</div> : null
 }
 
 export default LocationDetails

@@ -1,6 +1,6 @@
 import Location from "./Location"
 
-function Warehouse({ rows, columns }) {
+function Warehouse({ rows, columns, locationsInfo, setClickedLocation }) {
     const locations = []
     const locationCount = rows * columns
 
@@ -9,13 +9,11 @@ function Warehouse({ rows, columns }) {
         gridTemplateColumns: `repeat(${columns}, calc(100% / ${columns}))`
     }
 
-    for (let i = 0; i < locationCount; i++) {
-        locations.push(<Location />)
-    }
-
     return (
         <div id='warehouse' style={dynamicStyling}>
-            {locations}
+            {locationsInfo.map((location, index) => (
+                <Location info={location.pallets_on_location} key={index} id={index} setClickedLocation={setClickedLocation}/>
+            ))}
         </div>
     )
 }
