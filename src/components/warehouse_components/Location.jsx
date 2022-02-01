@@ -1,10 +1,9 @@
-function Location({ info }) {
-    
+function Location({ info, id, setClickedLocation }) {
     const style = {
         color: "white",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
     }
 
     const boxes = []
@@ -14,7 +13,14 @@ function Location({ info }) {
             boxes.push(<div className='palletBox' key={i} style={style}># {info[i]}</div>)
         }
     } 
-    return <div className='location'>{boxes}</div>
+
+    const handleClick = (e) => {
+        setClickedLocation(e.target.id)
+    }
+
+    return <div className='location' onClick={handleClick} id={id}>{boxes}</div>
 }
 
 export default Location
+
+

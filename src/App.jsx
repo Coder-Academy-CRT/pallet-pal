@@ -5,6 +5,7 @@ import "./style.scss"
 
 export default function App() {
     const [locationsInfo, setLocationsInfo] = useState([])
+    const [clickedLocation, setClickedLocation] = useState("")
 
     useEffect(async () => {
         const res = await fetch('https://glacial-bayou-38289.herokuapp.com/warehouse/1/location_info')
@@ -14,8 +15,8 @@ export default function App() {
 
     return (
         <>
-            <Warehouse rows='4' columns='4' locationsInfo={locationsInfo}></Warehouse>
-            <Sidebar></Sidebar>
+            <Warehouse rows='4' columns='4' locationsInfo={locationsInfo} setClickedLocation={setClickedLocation}></Warehouse>
+            <Sidebar locationsInfo={locationsInfo} clickedLocation={clickedLocation}></Sidebar>
         </>
     )
 }

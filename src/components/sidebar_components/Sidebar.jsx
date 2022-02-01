@@ -3,13 +3,13 @@ import LocationDetails from "./location_details/LocationDetails"
 import SearchWindow from "./search_window/SearchWindow"
 import LotManager from "./lot_manager/LotManager"
 
-function Sidebar() {
+function Sidebar({ locationsInfo, clickedLocation }) {
     return (
         <div id='sidebar'>
             <SidebarNav />
             <LotManager />
             <SearchWindow />
-            <LocationDetails numberOfPallets={3} />
+            <LocationDetails locationsInfo={locationsInfo} clickedLocation={clickedLocation}/>
         </div>
     )
 }
