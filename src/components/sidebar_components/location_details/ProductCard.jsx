@@ -1,7 +1,9 @@
-function ProductCard() {
+function ProductCard({ seedType, bagSize, numOfBags, lotCode}) {
     return (
         <div className='productCard'>
-            <p>product card</p>
+            <p>Seed type: {seedType}</p>
+            <p>Lot_code: {lotCode}</p>
+            <p>Total: {numOfBags * bagSize}kg</p>
         </div>
     )
 }
