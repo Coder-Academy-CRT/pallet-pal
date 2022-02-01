@@ -1,7 +1,22 @@
+// Font variables
+// roboto
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
+$text: "Roboto", sans-serif;
+
+// Colour Variables
+// No other colours should exist on the page (except white and black).
+$dark-accent: chocolate;
+$bright-accent: orange;
+$light: lightgray;
+$mid: gray;
+$dark: lightslategray;
+$darkest: darkslategray;
+$highlight: turquoise;
+
 * {
+    font-family: $text;
     padding: 0px;
     margin: 0px;
-    color: black;
 }
 
 #root {
@@ -12,7 +27,7 @@
 #warehouse {
     display: grid;
     grid-row: 1 / 1;
-    background-color: orange;
+    background-color: $dark-accent;
 
     > .location {
         display: flex;
@@ -21,12 +36,12 @@
         padding: 5%;
 
         &:hover {
-            background-color: green;
+            background-color: $bright-accent;
         }
 
         > .palletBox {
-            background-color: hotpink;
-            border: 1px solid indigo;
+            background-color: $darkest;
+            border: 1px solid white;
             padding: 2px;
             height: 25%;
         }
@@ -35,64 +50,73 @@
 
 #sidebar {
     display: flex;
-    grid-area: "nav" "components";
     overflow-y: auto;
     flex-direction: column;
+    background-color: $dark;
 }
 
 #sidebarNav {
     position: sticky;
     top: 0;
     width: 100%;
-    grid-area: "nav";
     display: flex;
     flex-direction: row;
-    background-color: slategray;
+    background-color: $mid;
     > a {
         flex: 1;
-        border: 1px solid white;
+        border: 1px solid $bright-accent;
         text-align: center;
         align-items: center;
     }
 }
 
 #lotManager {
-    grid-area: "components";
-    height: 100px;
     display: flex;
     flex-direction: column;
-    background-color: steelblue;
-    border: 1px solid white;
+    background-color: white;
+}
+
+#lotList {
+    background-color: $darkest;
+    padding: 5px;
+}
+
+.lotCard {
+    display: flex;
+    justify-content: space-between;
+    padding: 1px;
+    margin-top: 1px;
+    background-color: white;
 }
 
 #searchWindow {
-    grid-area: "components";
-    height: 100px;
     display: flex;
     flex-direction: column;
-    background-color: gold;
+    background-color: $highlight;
 }
 
 #locationDetails {
-    grid-area: "components";
-    background-color: green;
+    background-color: $bright-accent;
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    padding: 5px;
 }
 
 .palletCard {
-    margin: 2px 5px;
     padding: 5px;
+    margin-top: 5px;
     display: flex;
     flex-direction: column;
-    background-color: grey;
+    background-color: $darkest;
 }
 
 .productCard {
-    margin: 2px;
+    flex: 1;
+    margin-top: 1px;
     background-color: white;
 }
+
 @media (orientation: landscape) {
     #root {
         grid-template-columns: 70% 30%;
