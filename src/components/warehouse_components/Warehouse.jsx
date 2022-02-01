@@ -1,4 +1,3 @@
-import { useState, useLayoutEffect, useRef } from "react"
 import Location from "./Location"
 
 function Warehouse({ rows, columns }) {

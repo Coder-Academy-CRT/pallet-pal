@@ -17,13 +17,18 @@ function SearchWindow() {
     if (active) {
         return (
             <div id='searchWindow'>
-                <button onClick={setOff}>close search</button>
+                <button onClick={setOff}>close Search</button>
                 SEARCH
             </div>
         )
     } else {
         // have put a button here as a placeholder to test opening and closing.
-        return <button onClick={setOn}>open search</button>
+
+        return (
+            <div id='searchWindow'>
+                <button onClick={setOn}>open Search</button>
+            </div>
+        )
     }
 }
 

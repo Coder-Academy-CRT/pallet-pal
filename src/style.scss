@@ -50,7 +50,6 @@ $highlight: turquoise;
 
 #sidebar {
     display: flex;
-    grid-area: "nav" "components";
     overflow-y: auto;
     flex-direction: column;
     background-color: $dark;
@@ -60,7 +59,6 @@ $highlight: turquoise;
     position: sticky;
     top: 0;
     width: 100%;
-    grid-area: "nav";
     display: flex;
     flex-direction: row;
     background-color: $mid;
@@ -73,42 +71,52 @@ $highlight: turquoise;
 }
 
 #lotManager {
-    grid-area: "components";
-    height: 100px;
     display: flex;
     flex-direction: column;
     background-color: white;
-    border: 1px solid $darkest;
+}
+
+#lotList {
+    background-color: $darkest;
+    padding: 5px;
+}
+
+.lotCard {
+    display: flex;
+    justify-content: space-between;
+    padding: 1px;
+    margin-top: 1px;
+    background-color: white;
 }
 
 #searchWindow {
-    grid-area: "components";
-    height: 100px;
     display: flex;
     flex-direction: column;
     background-color: $highlight;
 }
 
 #locationDetails {
-    grid-area: "components";
     background-color: $bright-accent;
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    padding: 5px;
 }
 
 .palletCard {
-    margin: 2px 5px;
     padding: 5px;
+    margin-top: 5px;
     display: flex;
     flex-direction: column;
     background-color: $darkest;
 }
 
 .productCard {
-    margin: 2px;
+    flex: 1;
+    margin-top: 1px;
     background-color: white;
 }
+
 @media (orientation: landscape) {
     #root {
         grid-template-columns: 70% 30%;
