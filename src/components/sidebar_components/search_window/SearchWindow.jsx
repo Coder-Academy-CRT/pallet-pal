@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react"
-import Select from "react-select"
+import CustomSelect from "./CustomSelect"
+import Summary from "./Summary"
 
 function SearchWindow() {
     const [active, setActive] = useState(true)
-    const [searchValue, setSearchValue] = useState(null)
+    const [searchMode, setSearchMode] = useState(null)
     const [seeds, setSeeds] = useState([])
     const [lots, setLots] = useState([])
     const [options, setOptions] = useState(null)
+    const [products, setProducts] = useState([])
+    const [summary, setSummary] = useState(null)
+    const [searchValue, setSearchValue] = useState(null)
+    const [foundPallets, setFoundPallets] = useState([])
 
     useEffect(async () => {
         // query products api
@@ -14,6 +19,8 @@ function SearchWindow() {
             "https://glacial-bayou-38289.herokuapp.com/warehouse/1/populate"
         )
         const data = await res.json()
+        // set product list
+        setProducts(data)
 
         // declare temp lists for working
         let seedList = []
@@ -55,8 +62,54 @@ function SearchWindow() {
     }
 
     function setDropDown(event) {
-        console.log(event)
-        setOptions(event.value)
+        // console.log(event)
+        switch (event.target.value) {
+            case "lots":
+                setOptions(lots)
+                console.log("set to lots")
+                break
+            case "seeds":
+                setOptions(seeds)
+                console.log("set to seeds")
+                break
+            default:
+                break
+        }
+    }
+
+    function search() {
+        setFoundPallets([])
+        let bags = 0
+        let totalWeight = 0
+        let matchingProducts = []
+        switch (searchMode) {
+            // if searching by LOT_CODE
+            case "lots":
+                // get all product objects with lot code
+                matchingProducts = products.filter(
+                    (product) => product.lot_code == searchValue
+                )
+                break
+            // if searching by SEED_TYPE + VARITEY
+            case "seeds":
+                matchingProducts = products.filter(
+                    (product) =>
+                        `${product.seed_type} - ${product.seed_variety}` ==
+                        searchValue
+                )
+                break
+            default:
+                break
+        }
+        matchingProducts.forEach((product) => {
+            bags += product.number_of_bags
+            totalWeight += product.number_of_bags * product.bag_size
+        })
+        setSummary({
+            kind: searchValue,
+            bags: bags,
+            totalWeight: totalWeight
+        })
     }
 
     // only render while active
@@ -64,29 +117,33 @@ function SearchWindow() {
         return (
             <div id='searchWindow'>
                 <button onClick={setOff}>close Search</button>
-                SEARCH
-                <Select
-                    id='searchByDropdown'
-                    name='searchBy'
-                    defaultValue={null}
-                    placeholder='Search by?'
-                    options={[
-                        { value: lots, label: "lot" },
-                        { value: seeds, label: "seed type" }
-                    ]}
-                    onChange={setDropDown}
-                />
-                <Select
-                    className='thing'
-                    id='searchDropdown'
-                    name='searchDropdown'
-                    defaultValue={null}
+                <h3>Search</h3>
+                <section id='searchModes'>
+                    <button
+                        className='searchOption'
+                        onClick={() => {
+                            setOptions(lots)
+                            setSearchMode("lots")
+                        }}>
+                        LOTS
+                    </button>
+                    <button
+                        className='searchOption'
+                        onClick={() => {
+                            setOptions(seeds)
+                            setSearchMode("seeds")
+                        }}>
+                        SEEDS
+                    </button>
+                </section>
+                <CustomSelect
                     options={options}
-                    onChange={(e) => {
-                        setSearchValue(e.value)
-                    }}
+                    name='searchDropdown'
+                    watching={options}
+                    change={(e) => setSearchValue(e.target.value)}
                 />
-                <p>searching for {searchValue}</p>
+                <button onClick={(e) => search(e)}>search</button>
+                <Summary summary={summary} watching={searchValue} />
             </div>
         )
     } else {
