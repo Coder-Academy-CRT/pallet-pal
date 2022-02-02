@@ -1,28 +1,10 @@
 import React, { useEffect, useState, useReducer } from "react"
 import Warehouse from "./components/warehouse_components/Warehouse"
-// import Sidebar from "./components/sidebar_components/Sidebar"
+import Sidebar from "./components/sidebar_components/Sidebar"
 import "./style.scss"
 import palletpalContext from "./palletpalContext"
 import reducer from "./reducer"
 import api from "./api"
-
-// export default function App() {
-//     const [locationsInfo, setLocationsInfo] = useState([])
-//     const [clickedLocation, setClickedLocation] = useState("")
-
-//     useEffect(async () => {
-//         const res = await fetch('https://glacial-bayou-38289.herokuapp.com/warehouse/1/location_info')
-//         const data = await res.json()
-//         setLocationsInfo(data)
-//     }, [])
-
-//     return (
-//         <>
-//             <Warehouse rows='4' columns='4' locationsInfo={locationsInfo} setClickedLocation={setClickedLocation}></Warehouse>
-//             <Sidebar locationsInfo={locationsInfo} clickedLocation={clickedLocation}></Sidebar>
-//         </>
-//     )
-// }
 
 const initialState = { 
     warehouse : { id : 1, name: "warehouse_01", rows : 4, columns : 5}, 
@@ -36,11 +18,26 @@ const initialState = {
 
 export default function App() {
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+
+    //////////////////////// FOR THE SIDEBAR TO CONTINUE PARTIAL FUNCTION /////////////////////////////
 
     // still need to work on the Sidebar components to transition
     const [locationsInfo, setLocationsInfo] = useState([])
     const [clickedLocation, setClickedLocation] = useState("")
+
+    useEffect(async () => {
+                const res = await fetch('https://glacial-bayou-38289.herokuapp.com/warehouse/1/location_info')
+                const data = await res.json()
+                setLocationsInfo(data)
+            }, [])
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+
+    /////////////////////////////////// REFACTORED CODE USING REDUCER AND CONTEXT //////////////////////////
+
+    
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(async () => {
 
@@ -87,7 +84,7 @@ export default function App() {
        
             <palletpalContext.Provider value = { {state, dispatch} }>
                 <Warehouse />
-                {/* <Sidebar locationsInfo={locationsInfo} clickedLocation={clickedLocation}></Sidebar> */}
+                <Sidebar locationsInfo={locationsInfo} clickedLocation={clickedLocation}></Sidebar>
             </palletpalContext.Provider>
         
     ) : (<h1 style={{padding:"100px", color:"green", fontSize: "3em"}} >palletPAL is loading....</h1>)
