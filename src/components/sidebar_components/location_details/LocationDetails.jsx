@@ -3,6 +3,7 @@ import PalletCard from "./PalletCard"
 function LocationDetails({ locationsInfo, clickedLocation }) {
     const palletCards = []
 
+
     if (clickedLocation) {
         const palletInfo = locationsInfo[clickedLocation].pallets_on_location
         if (palletInfo[0] !== null) {
