@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useReducer } from "react"
 import Warehouse from "./components/warehouse_components/Warehouse"
-import Sidebar from "./components/sidebar_components/Sidebar"
+// import Sidebar from "./components/sidebar_components/Sidebar"
 import "./style.scss"
 import palletpalContext from "./palletpalContext"
 import reducer from "./reducer"
@@ -34,12 +34,11 @@ const initialState = {
     selectedMoveLocation : "" // these two values can be utilised to show where moved from and where moved to
 }
 
-// const initialState = { nam : "jane"}
-
 export default function App() {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
+    // still need to work on the Sidebar components to transition
     const [locationsInfo, setLocationsInfo] = useState([])
     const [clickedLocation, setClickedLocation] = useState("")
 
@@ -48,7 +47,6 @@ export default function App() {
         // location information into state
 
         const res_locations = await api.get("warehouse/1/locations")
-        // console.log(res_locations.data)
         dispatch({
             type: 'setLocationData',
             data: res_locations.data
@@ -57,7 +55,6 @@ export default function App() {
         //  product information into state
 
          const res_products = await api.get("warehouse/1/products")
-         console.log(res_products.data)
          dispatch({
              type: 'setProductData',
              data: res_products.data
@@ -66,13 +63,12 @@ export default function App() {
          //  product information into state
 
          const res_seeds = await api.get("seeds")
-         console.log(res_seeds.data)
          dispatch({
              type: 'setSeeds',
              data: res_seeds.data
          })
 
-         //  product information into state
+         //  lot information into state // REQUIRE A SEPARATE API REQUEST FOR ALL LOTS RECORDED
 
         //  const res_lots = await api.get("warehouse/1/lots")
         //  console.log(res_lots.data)
@@ -84,15 +80,16 @@ export default function App() {
 
     }, [])
 
+   
 
-    return (
-        <>
-            
-            <palletpalContext.Provider value = { {state, dispatch}}>
-                <Warehouse rows='4' columns='4' locationsInfo={locationsInfo} setClickedLocation={setClickedLocation}></Warehouse>
-                <Sidebar locationsInfo={locationsInfo} clickedLocation={clickedLocation}></Sidebar>
+    // should think of another option but this will suffice for now to allow content to load
+    return state.seeds.length == 22 ? (
+       
+            <palletpalContext.Provider value = { {state, dispatch} }>
+                <Warehouse />
+                {/* <Sidebar locationsInfo={locationsInfo} clickedLocation={clickedLocation}></Sidebar> */}
             </palletpalContext.Provider>
-        </>
-    )
+        
+    ) : (<h1 style={{padding:"100px", color:"green", fontSize: "3em"}} >palletPAL is loading....</h1>)
 }
 
