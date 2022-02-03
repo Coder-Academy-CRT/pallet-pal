@@ -5,7 +5,7 @@ function ProductCard({ seedType, bagSize, numOfBags, lotCode}) {
             <p>Lot_code: {lotCode}</p>
             <p>Total: {numOfBags * bagSize}kg</p>
         </div>
-    )
+    ) 
 }
 
 export default ProductCard

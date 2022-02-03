@@ -1,40 +1,56 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import Button from './Button'
 import ProductCard from "./ProductCard"
+import palletpalContext from '../../../palletpalContext'
 
-function PalletCard({ palletId }) {
-    const [palletInfo, setPalletInfo] = useState([])
+function PalletCard({ palletId, palletExist }) {
 
-    useEffect(async () => {
-        const res = await fetch('https://glacial-bayou-38289.herokuapp.com/warehouse/1/populate')
-        const data = await res.json()
-        setPalletInfo(data)
-    }, [])
+    const { state: { products }, dispatch } = useContext(palletpalContext)
 
+    const [palletCardClicked, setPalletCardClicked] = useState(false)
 
-    const foundProducts = palletInfo.filter(pallet => pallet.pallet_id == palletId)
-    // console.log(palletInfo)
-    // console.log(sorted[0].number_of_bags) // Array [{seed_type, bag_size * number of bags}, {}, {}]
+    const foundProducts = products.filter(product => product.pallet_id == palletId)
 
     const productCards = []
-    // for (let i = 0; i < foundProducts.length; i++) {
-    //     productCards.push(<ProductCard />)
-    // }
 
-    if (palletId) {
+    if (foundProducts) {
         foundProducts.map(
-            product => productCards.push(
-                <ProductCard seedType={product.seed_type} 
+            (product, index) => productCards.push(
+                <ProductCard 
+                    seedType={product.seed_type} 
                     bagSize={product.bag_size} 
                     numOfBags={product.number_of_bags}
-                    lotCode={product.lot_code} />
+                    lotCode={product.lot_code}
+                    key={index} />
         ))
+    } 
+
+    const handleClick = () => {
+        setPalletCardClicked(!palletCardClicked)
+        dispatch({
+            type: 'setSelectedPallet',
+            data: palletId
+        })
     }
 
-    
-    return (
-        <div className='palletCard' 
-            palletid={palletId}><span style={{color: "white", fontWeight: "bold"}}>Pallet #{palletId}</span>
-            {productCards}
+    return palletExist ? (
+        <>
+            <div className='palletCard' 
+                palletid={palletId} 
+                onClick={handleClick}>
+                    <span style={{color: "white", fontWeight: "bold"}}>Pallet #{palletId}</span>
+                {productCards}
+            </div>
+            {palletCardClicked ? 
+                <div className="buttons">
+                    <Button text="Edit" />
+                    <Button text="Move" />
+                    <Button text="Dispatch" />
+                </div> : null}
+        </>
+    ) : (
+        <div className='palletCard'>
+            <p style={{ color: "white" }}>No pallets in this location.</p>
         </div>
     )
 
