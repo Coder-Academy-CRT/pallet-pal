@@ -1,30 +1,48 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
 function CustomSelect({ options, name, watching, change }) {
     const optionElements = []
+    const [selectedValue, setSelectedValue] = useState("")
+
+    function handleChange(event) {
+        change(event)
+        setSelectedValue(event.target.value)
+    }
 
     useEffect(() => {
         console.log({ options })
+        setSelectedValue("")
     }, [watching])
 
-    if (options) {
-        options.forEach((element, index) => {
-            optionElements.push(
-                <option value={element.value} key={index}>
-                    {element.label}
-                </option>
-            )
-        })
-    }
+    // if (options) {
+    //     options.forEach((element, index) => {
+    //         optionElements.push(
+    //             <option value={element.value} key={index}>
+    //                 {element.label}
+    //             </option>
+    //         )
+    //     })
+    // }
 
     return (
         <select
             name={name}
             id={name}
             className='searchDropdown'
-            onChange={change}
-            placeholder='select'>
-            {optionElements ? optionElements : "no options"}
+            onChange={handleChange}
+            value={selectedValue}>
+            {options ? (
+                <>
+                    <option value='' disabled selected>
+                        please select
+                    </option>
+                    {options.map((element, index) => (
+                        <option value={element.value} key={index}>
+                            {element.label}
+                        </option>
+                    ))}
+                </>
+            ) : null}
         </select>
     )
 }

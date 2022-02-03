@@ -1,44 +1,34 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
+import palletpalContext from "../../../palletpalContext"
 import CustomSelect from "./CustomSelect"
 import Summary from "./Summary"
 
 function SearchWindow() {
     const [active, setActive] = useState(true)
-    const [searchMode, setSearchMode] = useState(null)
     const [seeds, setSeeds] = useState([])
     const [lots, setLots] = useState([])
     const [options, setOptions] = useState(null)
-    const [products, setProducts] = useState([])
     const [summary, setSummary] = useState(null)
-    const [searchValue, setSearchValue] = useState(null)
     const [foundPallets, setFoundPallets] = useState([])
+    const {
+        dispatch,
+        state: { products }
+    } = useContext(palletpalContext)
 
-    useEffect(async () => {
-        // query products api
-        const res = await fetch(
-            "https://glacial-bayou-38289.herokuapp.com/warehouse/1/populate"
-        )
-        const data = await res.json()
-        // set product list
-        setProducts(data)
-
+    useEffect(() => {
         // declare temp lists for working
-        let seedList = []
+        let seedList = new Set([])
         let seedOptions = []
-        let lotList = []
+        let lotList = new Set([])
         let lotOptions = []
 
         // get every current lot and seed (including duplicates) and push to temp lists
-        data.forEach((element) => {
-            seedList.push(
+        products.forEach((element) => {
+            seedList.add(
                 `${element.seed_type} - ${element.seed_variety}`.toLowerCase()
             )
-            lotList.push(`${element.lot_code}`)
+            lotList.add(`${element.lot_code}`)
         })
-
-        // remove duplicates and sort
-        seedList = new Set(seedList.sort())
-        lotList = new Set(lotList.sort())
 
         // build options lists
         seedList.forEach((seed) => {
@@ -61,49 +51,24 @@ function SearchWindow() {
         setActive(true)
     }
 
-    function setDropDown(event) {
-        // console.log(event)
-        switch (event.target.value) {
-            case "lots":
-                setOptions(lots)
-                console.log("set to lots")
-                break
-            case "seeds":
-                setOptions(seeds)
-                console.log("set to seeds")
-                break
-            default:
-                break
-        }
-    }
-
-    function search() {
+    function search(event) {
         setFoundPallets([])
+        const searchValue = event.target.value
         let bags = 0
         let totalWeight = 0
-        let matchingProducts = []
-        switch (searchMode) {
-            // if searching by LOT_CODE
-            case "lots":
-                // get all product objects with lot code
-                matchingProducts = products.filter(
-                    (product) => product.lot_code == searchValue
-                )
-                break
-            // if searching by SEED_TYPE + VARITEY
-            case "seeds":
-                matchingProducts = products.filter(
-                    (product) =>
-                        `${product.seed_type} - ${product.seed_variety}` ==
-                        searchValue
-                )
-                break
-            default:
-                break
-        }
+        console.log(products)
+        let matchingProducts = products.filter(
+            (product) =>
+                product.lot_code == searchValue ||
+                `${product.seed_type} - ${product.seed_variety}` == searchValue
+        )
+        console.log(matchingProducts)
+
         matchingProducts.forEach((product) => {
-            bags += product.number_of_bags
-            totalWeight += product.number_of_bags * product.bag_size
+            console.log()
+            bags += Number(product.number_of_bags)
+            totalWeight +=
+                Number(product.number_of_bags, 2) * Number(product.bag_size, 2)
         })
         setSummary({
             kind: searchValue,
@@ -123,7 +88,6 @@ function SearchWindow() {
                         className='searchOption'
                         onClick={() => {
                             setOptions(lots)
-                            setSearchMode("lots")
                         }}>
                         LOTS
                     </button>
@@ -131,7 +95,6 @@ function SearchWindow() {
                         className='searchOption'
                         onClick={() => {
                             setOptions(seeds)
-                            setSearchMode("seeds")
                         }}>
                         SEEDS
                     </button>
@@ -140,10 +103,9 @@ function SearchWindow() {
                     options={options}
                     name='searchDropdown'
                     watching={options}
-                    change={(e) => setSearchValue(e.target.value)}
+                    change={(e) => search(e)}
                 />
-                <button onClick={(e) => search(e)}>search</button>
-                <Summary summary={summary} watching={searchValue} />
+                <Summary summary={summary} />
             </div>
         )
     } else {
