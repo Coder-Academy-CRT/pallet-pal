@@ -20,7 +20,7 @@ function Warehouse() {
 
     return (
         <div id='warehouse' style={dynamicStyling}>
-             {locations.map((location, index) => (       
+             {locations.flat(1).map((location, index) => (       
                 <Location arrOfPallet={location.pallets_on_location} key={index} id={location.coordinates}/>
             ))}
         </div>
