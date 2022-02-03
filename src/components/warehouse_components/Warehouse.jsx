@@ -1,30 +1,32 @@
-import React, { useContext } from 'react'
-import palletpalContext from '../../palletpalContext'
+import React, { useContext } from "react"
+import palletpalContext from "../../palletpalContext"
 import Location from "./Location"
 
 function Warehouse() {
-
-    const { state: { warehouse, locations, palletOption } } = useContext(palletpalContext)
-
-    let rows = warehouse.rows
-    let columns = warehouse.columns
-
-    // const locations = []
-    const locationCount = rows * columns
-    // alt locations.length
+    const {
+        state: { warehouse, locations, metaMode, palletOption }
+    } = useContext(palletpalContext)
 
     const dynamicStyling = {
-        gridTemplateRows: `repeat(${rows}, calc(100% / ${rows}))`,
-        gridTemplateColumns: `repeat(${columns}, calc(100% / ${columns}))`
+        gridTemplateRows: `repeat(${warehouse.rows}, calc(100% / ${warehouse.rows}))`,
+        gridTemplateColumns: `repeat(${warehouse.columns}, calc(100% / ${warehouse.columns}))`
     }
 
-    return (
-        <div id='warehouse' style={dynamicStyling}>
-             {locations.map((location, index) => (       
-                <Location arrOfPallet={location.pallets_on_location} key={index} id={location.coordinates}/>
-            ))}
-        </div>
-    ) 
+    if (metaMode == "build") {
+        return <h1>BUILD WAREHOUSE SIDEBAR</h1>
+    } else {
+        return (
+            <div id='warehouse' style={dynamicStyling}>
+                {locations.map((location, index) => (
+                    <Location
+                        arrOfPallet={location.pallets_on_location}
+                        key={index}
+                        id={location.coordinates}
+                    />
+                ))}
+            </div>
+        )
+    }
 }
 
 export default Warehouse
