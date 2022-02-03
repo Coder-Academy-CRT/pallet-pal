@@ -97,34 +97,42 @@ export default function DispatchBox() {
   return (
       <div style={style}>
 			<div className='text-wrapper'>
-				<h1>Dispatch #{selectedPallet}</h1>
+				<h1 style={{ textAlign: "center"}}>Pallet #{selectedPallet}</h1>
+				{productList.length > 0 ? 
 				<form onSubmit={handleSubmit}>
-					{productList.map(product => (
-						<div id={product.product_id} key={product.id} style={styleWrapper} >
-							<div>
-								<p>{product.seed_type.toUpperCase()}</p>
-							</div>
-							<div>
-								<p>Bag Size: {parseInt(product.bag_size)}</p>
-							</div>
-							<div style={{ display: "flex"}}>
-								<input 
-									type="text"
-									size="5"
-									name={product.id}
-									placeholder={parseInt(product.number_of_bags)}
-									onBlur={handleChange}
-								/>
-								<p style={{marginLeft: "5px"}}>BAG</p>
-							</div>
-							<button style={{ padding: "0 3px"}} onClick={handleDelete}>X</button>
+				{productList.map(product => (
+					<div id={product.product_id} key={product.id} style={styleWrapper} >
+						<div>
+							<p>{product.seed_type.toUpperCase()}</p>
 						</div>
+						<div>
+							<p>Bag Size: {parseInt(product.bag_size)}</p>
+						</div>
+						<div style={{ display: "flex"}}>
+							<input 
+								type="text"
+								size="5"
+								name={product.id}
+								placeholder={parseInt(product.number_of_bags)}
+								onBlur={handleChange}
+							/>
+							<p style={{marginLeft: "5px"}}>BAG</p>
+						</div>
+						<button style={{ padding: "0 3px"}} onClick={handleDelete}>X</button>
+					</div>
 					))}
 					<div className='button-wrapper'>
 						<button style={styleButton} onClick={handleClose}>Cancel</button>
 						<button type="submit" style={styleButton} onClick={handleSubmit}>Dispatch</button>
 					</div>
 				</form>
+				: (
+					<div style={{ textAlign: "center"}}>
+						<h3>No product exist on this pallet, this pallet will be removed.</h3>
+						<button style={styleButton} onClick={handleClose}>Confirm</button>
+					</div>
+				)}
+				
 			</div>
 
       </div>
