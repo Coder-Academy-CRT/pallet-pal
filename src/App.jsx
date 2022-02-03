@@ -12,29 +12,13 @@ const initialState = {
     locations: [],
     seeds: [],
     lots: [],
-    clickedLocation: "",
-    selectedMoveLocation: "" // these two values can be utilised to show where moved from and where moved to
+    clickedLocation : "", // coordinates
+    selectedMoveLocation : "",// these two values can be utilised to show where moved from and where moved to
+    palletOption : "",
+    selectedPallet : "" // for edit, move, dispatch or we can replace it with logic if we don't want them to stay in store
 }
 
 export default function App() {
-    //////////////////////// FOR THE SIDEBAR TO CONTINUE PARTIAL FUNCTION /////////////////////////////
-
-    // still need to work on the Sidebar components to transition
-    const [locationsInfo, setLocationsInfo] = useState([])
-    const [clickedLocation, setClickedLocation] = useState("")
-
-    useEffect(async () => {
-        const res = await fetch(
-            "https://glacial-bayou-38289.herokuapp.com/warehouse/1/location_info"
-        )
-        const data = await res.json()
-        setLocationsInfo(data)
-    }, [])
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /////////////////////////////////// REFACTORED CODE USING REDUCER AND CONTEXT //////////////////////////
-
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(async () => {
@@ -73,16 +57,12 @@ export default function App() {
     }, [])
 
     // should think of another option but this will suffice for now to allow content to load
+    // Maybe check the status return from db? 304?
     return state.seeds.length == 22 ? (
-        <palletpalContext.Provider value={{ state, dispatch }}>
-            <Warehouse />
-            <Sidebar
-                locationsInfo={locationsInfo}
-                clickedLocation={clickedLocation}></Sidebar>
-        </palletpalContext.Provider>
-    ) : (
-        <h1 style={{ padding: "100px", color: "green", fontSize: "3em" }}>
-            palletPAL is loading....
-        </h1>
-    )
+            <palletpalContext.Provider value = { {state, dispatch} }>
+                <Warehouse />
+                <Sidebar ></Sidebar>
+            </palletpalContext.Provider>
+        
+    ) : (<h1 style={{padding:"100px", color:"green", fontSize: "3em"}} >palletPAL is loading....</h1>)
 }
