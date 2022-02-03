@@ -62,17 +62,19 @@ export default function reducer (state, action) {
                 metaMode : action.data
             }
 
-        // case 'addMicroMode' :
-        //     return {
-        //         ...state, 
-        //         microModes : action.data
-        //     }
+        case 'addMicroMode' :
+            return state.microModes.includes(action.data) ? 
+            state
+            : 
+            { ... state, microModes : [action.data, ...state.microModes] }
 
-        // case 'removeMicroMode' :
-        //     return {
-        //         ...state, 
-        //         metaMode : action.data
-        //     }
+            
+        case 'removeMicroMode' :
+            index = state.microModes.indexOf(action.data)
+            if (index > -1) {
+                state.microModes.splice(index, 1)
+            }
+            return state
 
 
         default:
