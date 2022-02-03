@@ -1,4 +1,9 @@
-function Location({ info, id, setClickedLocation }) {
+import React, { useContext } from 'react'
+import palletpalContext from '../../palletpalContext'
+function Location({ info, id }) {
+
+    const { state: { }, dispatch } = useContext(palletpalContext)
+
     const style = {
         color: "white",
         display: "flex",
@@ -8,7 +13,13 @@ function Location({ info, id, setClickedLocation }) {
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
-        setClickedLocation(e.target.parentNode.id)
+        // setClickedLocation(e.target.parentNode.id)
+        // REPLACED WITH
+        dispatch({
+            type: 'setClickedLocation',
+            data: e.target.parentNode.id
+        })
+        
     }
 
     const boxes = []
@@ -20,7 +31,12 @@ function Location({ info, id, setClickedLocation }) {
     } 
 
     const handleClick = (e) => {
-        setClickedLocation(e.target.id)
+        // setClickedLocation(e.target.id)
+        // REPLACED WITH
+        dispatch({
+            type: 'setClickedLocation',
+            data: e.target.id
+        })
     }
 
     return <div className='location' onClick={handleClick} id={id}>{boxes}</div>
