@@ -9,7 +9,7 @@ function LocationDetails() {
 
     // this function retrieves the location object directly from the array of arrays of location objects
     function getLocation(coordString) {
-        // split coordinate into x and y coords
+        // split coordinate into x and y coords, example ["01","02"]
         const coords = coordString.split("_")
         // convert to numbers
         let x = Number(coords[0])

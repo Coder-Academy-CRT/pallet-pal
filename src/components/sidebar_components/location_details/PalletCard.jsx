@@ -1,20 +1,21 @@
-import React, { useEffect, useState, useContext } from "react"
+import React, { useState, useContext } from "react"
 import Button from "./Button"
 import ProductCard from "./ProductCard"
 import palletpalContext from "../../../palletpalContext"
 
 function PalletCard({ palletId }) {
-    // removed pallet exists because pallet cards will not render unless it has products
     const {
         state: { products },
         dispatch
     } = useContext(palletpalContext)
+    // state to manage pallet card mode
     const [palletCardClicked, setPalletCardClicked] = useState(false)
-
+    // pallet products is an arry of product objects which are on this pallet
     const palletProducts = products.filter(
         (product) => product.pallet_id == palletId
     )
 
+    // prepare all the product card components to be rendered
     const productCards = palletProducts.map((product, index) => (
         <ProductCard
             seedType={product.seed_type}
@@ -25,6 +26,7 @@ function PalletCard({ palletId }) {
         />
     ))
 
+    // change mode on click faciliating option button display
     const handleClick = () => {
         setPalletCardClicked(!palletCardClicked)
         dispatch({
@@ -33,17 +35,14 @@ function PalletCard({ palletId }) {
         })
     }
 
-    return palletProducts ? (
-        <>
-            <div
-                className='palletCard'
-                palletid={palletId}
-                onClick={handleClick}>
-                <span style={{ color: "white", fontWeight: "bold" }}>
-                    Pallet #{palletId}
-                </span>
-                {productCards}
-            </div>
+    // no conditional required, simply render all product cards.
+    // ****NOTE**** removed the outer fragment and now conditionally rendering options WITHIN pallet card
+    return (
+        <div className='palletCard' palletid={palletId} onClick={handleClick}>
+            <span style={{ color: "white", fontWeight: "bold" }}>
+                Pallet #{palletId}
+            </span>
+            {productCards}
             {palletCardClicked ? (
                 <div className='buttons'>
                     <Button text='Edit' />
@@ -51,10 +50,6 @@ function PalletCard({ palletId }) {
                     <Button text='Dispatch' />
                 </div>
             ) : null}
-        </>
-    ) : (
-        <div className='palletCard'>
-            <p style={{ color: "white" }}>No pallets in this location.</p>
         </div>
     )
 }
