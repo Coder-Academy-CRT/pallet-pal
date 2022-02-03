@@ -56,6 +56,24 @@ export default function reducer (state, action) {
                 foundPallets : action.data
             }
 
+        case 'setMetaMode' :
+            return {
+                ...state, 
+                metaMode : action.data
+            }
+
+        // case 'addMicroMode' :
+        //     return {
+        //         ...state, 
+        //         microModes : action.data
+        //     }
+
+        // case 'removeMicroMode' :
+        //     return {
+        //         ...state, 
+        //         metaMode : action.data
+        //     }
+
 
         default:
         // return state // this is an optional default, however this alternative provides more feedback
