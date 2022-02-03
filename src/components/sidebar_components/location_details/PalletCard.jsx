@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Button from './Button'
 import ProductCard from "./ProductCard"
+import palletpalContext from '../../../palletpalContext'
 
 function PalletCard({ palletId, palletExist }) {
-    const [palletInfo, setPalletInfo] = useState([])
+
+    const { state: { products } } = useContext(palletpalContext)
+
     const [palletCardClicked, setPalletCardClicked] = useState(false)
     const [clickedButton, setClickedButton] = useState("")
 
-
-    useEffect(async () => {
-        const res = await fetch('https://glacial-bayou-38289.herokuapp.com/warehouse/1/populate')
-        const data = await res.json()
-        setPalletInfo(data)
-    }, [])
-
-    const foundProducts = palletInfo.filter(pallet => pallet.pallet_id == palletId)
+    const foundProducts = products.filter(product => product.pallet_id == palletId)
 
     const productCards = []
 
@@ -33,6 +29,7 @@ function PalletCard({ palletId, palletExist }) {
     const handleClick = () => {
         setPalletCardClicked(!palletCardClicked)
     }
+
     return palletExist ? (
         <>
             <div className='palletCard' 
@@ -53,7 +50,6 @@ function PalletCard({ palletId, palletExist }) {
             <p style={{ color: "white" }}>No pallets in this location.</p>
         </div>
     )
-    
 
 }
 

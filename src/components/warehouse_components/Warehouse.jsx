@@ -2,10 +2,9 @@ import React, { useContext } from 'react'
 import palletpalContext from '../../palletpalContext'
 import Location from "./Location"
 
-
 function Warehouse() {
 
-    const { state: { warehouse, locations }, } = useContext(palletpalContext)
+    const { state: { warehouse, locations } } = useContext(palletpalContext)
 
     let rows = warehouse.rows
     let columns = warehouse.columns
@@ -13,7 +12,6 @@ function Warehouse() {
     // const locations = []
     const locationCount = rows * columns
     // alt locations.length
-
 
     const dynamicStyling = {
         gridTemplateRows: `repeat(${rows}, calc(100% / ${rows}))`,
@@ -23,11 +21,10 @@ function Warehouse() {
     return (
         <div id='warehouse' style={dynamicStyling}>
              {locations.map((location, index) => (       
-                <Location info={location.pallets_on_location} key={index} id={index}/>
-                // NOTING THAT THE INDEX THAT IS REPRESENTED ON THE PALLETS IS NOT NECESSARILY THE PALLET ID
+                <Location palletNum={location.pallets_on_location} key={index} id={location.coordinates}/>
             ))}
         </div>
-    )
+    ) 
 }
 
 export default Warehouse
