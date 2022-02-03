@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import palletpalContext from '../../palletpalContext'
 
-function Location({ palletNum, id }) {
+function Location({ arrOfPallet, id }) {
 
     const { state: { }, dispatch } = useContext(palletpalContext)
 
@@ -22,9 +22,9 @@ function Location({ palletNum, id }) {
 
     const boxes = []
     // Only create box when palletNum[0] != null
-    if (palletNum[0]) {
-        for (let i = 0; i < palletNum.length; i++) {
-            boxes.push(<div className='palletBox' key={palletNum[i]} style={style} onClick={handleClickOnBox} ># {palletNum[i]}</div>)
+    if (arrOfPallet[0]) {
+        for (let i = 0; i < arrOfPallet.length; i++) {
+            boxes.push(<div className='palletBox' key={arrOfPallet[i]} style={style} onClick={handleClickOnBox} ># {arrOfPallet[i]}</div>)
         }
     } 
 
