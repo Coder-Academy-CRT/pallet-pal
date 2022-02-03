@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
+import palletpalContext from '../../../palletpalContext';
 
-export default function Button({ text, setClickedButton }) {
-	
+export default function Button({ text }) {
+  const { state: { }, dispatch } = useContext(palletpalContext)
 
   const handleClick = (e) => {
-		setClickedButton(e.target.innerText)
+    dispatch({
+      type: 'setPalletOption',
+      data: e.target.innerText.toLowerCase()
+    })
 	} 
 
-
   return (
-    <button onClick={handleClick}>{text}</button>
+    <>
+      <button onClick={handleClick}>{text}</button>
+    </>
   )
 }

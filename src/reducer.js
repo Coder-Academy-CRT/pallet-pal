@@ -37,6 +37,18 @@ export default function reducer (state, action) {
             ... state,
             selectedMoveLocation : action.data
             }
+            
+        case 'setPalletOption' :
+            return {
+                ...state, 
+                palletOption : action.data
+            }
+
+        case 'setSelectedPallet' :
+            return {
+                ...state, 
+                selectedPallet : action.data
+            }
 
 
         default:

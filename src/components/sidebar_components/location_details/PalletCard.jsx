@@ -5,10 +5,9 @@ import palletpalContext from '../../../palletpalContext'
 
 function PalletCard({ palletId, palletExist }) {
 
-    const { state: { products } } = useContext(palletpalContext)
+    const { state: { products }, dispatch } = useContext(palletpalContext)
 
     const [palletCardClicked, setPalletCardClicked] = useState(false)
-    const [clickedButton, setClickedButton] = useState("")
 
     const foundProducts = products.filter(product => product.pallet_id == palletId)
 
@@ -28,6 +27,10 @@ function PalletCard({ palletId, palletExist }) {
 
     const handleClick = () => {
         setPalletCardClicked(!palletCardClicked)
+        dispatch({
+            type: 'setSelectedPallet',
+            data: palletId
+        })
     }
 
     return palletExist ? (
@@ -40,9 +43,9 @@ function PalletCard({ palletId, palletExist }) {
             </div>
             {palletCardClicked ? 
                 <div className="buttons">
-                    <Button text="Edit" setClickedButton={setClickedButton}/>
-                    <Button text="Move" setClickedButton={setClickedButton} />
-                    <Button text="Dispatch" setClickedButton={setClickedButton} />
+                    <Button text="Edit" />
+                    <Button text="Move" />
+                    <Button text="Dispatch" />
                 </div> : null}
         </>
     ) : (

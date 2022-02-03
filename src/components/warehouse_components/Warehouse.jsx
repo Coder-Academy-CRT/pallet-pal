@@ -4,7 +4,7 @@ import Location from "./Location"
 
 function Warehouse() {
 
-    const { state: { warehouse, locations } } = useContext(palletpalContext)
+    const { state: { warehouse, locations, palletOption } } = useContext(palletpalContext)
 
     let rows = warehouse.rows
     let columns = warehouse.columns
