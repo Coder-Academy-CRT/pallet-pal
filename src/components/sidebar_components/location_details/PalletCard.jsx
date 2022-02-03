@@ -1,59 +1,62 @@
-import React, { useEffect, useState, useContext } from 'react'
-import Button from './Button'
+import React, { useEffect, useState, useContext } from "react"
+import Button from "./Button"
 import ProductCard from "./ProductCard"
-import palletpalContext from '../../../palletpalContext'
+import palletpalContext from "../../../palletpalContext"
 
-function PalletCard({ palletId, palletExist }) {
-
-    const { state: { products }, dispatch } = useContext(palletpalContext)
-
+function PalletCard({ palletId }) {
+    // removed pallet exists because pallet cards will not render unless it has products
+    const {
+        state: { products },
+        dispatch
+    } = useContext(palletpalContext)
     const [palletCardClicked, setPalletCardClicked] = useState(false)
 
-    const foundProducts = products.filter(product => product.pallet_id == palletId)
+    const palletProducts = products.filter(
+        (product) => product.pallet_id == palletId
+    )
 
-    const productCards = []
-
-    if (foundProducts) {
-        foundProducts.map(
-            (product, index) => productCards.push(
-                <ProductCard 
-                    seedType={product.seed_type} 
-                    bagSize={product.bag_size} 
-                    numOfBags={product.number_of_bags}
-                    lotCode={product.lot_code}
-                    key={index} />
-        ))
-    } 
+    const productCards = palletProducts.map((product, index) => (
+        <ProductCard
+            seedType={product.seed_type}
+            bagSize={product.bag_size}
+            numOfBags={product.number_of_bags}
+            lotCode={product.lot_code}
+            key={index}
+        />
+    ))
 
     const handleClick = () => {
         setPalletCardClicked(!palletCardClicked)
         dispatch({
-            type: 'setSelectedPallet',
+            type: "setSelectedPallet",
             data: palletId
         })
     }
 
-    return palletExist ? (
+    return palletProducts ? (
         <>
-            <div className='palletCard' 
-                palletid={palletId} 
+            <div
+                className='palletCard'
+                palletid={palletId}
                 onClick={handleClick}>
-                    <span style={{color: "white", fontWeight: "bold"}}>Pallet #{palletId}</span>
+                <span style={{ color: "white", fontWeight: "bold" }}>
+                    Pallet #{palletId}
+                </span>
                 {productCards}
             </div>
-            {palletCardClicked ? 
-                <div className="buttons">
-                    <Button text="Edit" />
-                    <Button text="Move" />
-                    <Button text="Dispatch" />
-                </div> : null}
+            {palletCardClicked ? (
+                <div className='buttons'>
+                    <Button text='Edit' />
+                    <Button text='Move' />
+                    <Button text='Dispatch' />
+                </div>
+            ) : null}
         </>
     ) : (
         <div className='palletCard'>
             <p style={{ color: "white" }}>No pallets in this location.</p>
         </div>
     )
-
 }
 
 export default PalletCard
