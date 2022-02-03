@@ -22,99 +22,99 @@ $highlight: turquoise;
 #root {
     display: grid;
     height: 100vh;
-}
 
-#warehouse {
-    display: grid;
-    grid-row: 1 / 1;
-    background-color: $dark-accent;
+    > #warehouse {
+        display: grid;
+        grid-row: 1 / 1;
+        background-color: $dark-accent;
 
-    > .location {
-        display: flex;
-        flex-direction: column-reverse;
-        border: 1px solid white;
-        padding: 5%;
-
-        &:hover {
-            background-color: $bright-accent;
-        }
-
-        > .palletBox {
-            background-color: $darkest;
+        > .location {
+            display: flex;
+            flex-direction: column-reverse;
             border: 1px solid white;
-            padding: 2px;
-            height: 25%;
+            padding: 5%;
+
+            &:hover {
+                background-color: $bright-accent;
+            }
+
+            > .palletBox {
+                background-color: $darkest;
+                border: 1px solid white;
+                padding: 2px;
+                height: 25%;
+            }
         }
     }
-}
 
-#sidebar {
-    display: flex;
-    overflow-y: auto;
-    flex-direction: column;
-    background-color: $dark;
-}
+    #sidebar {
+        display: flex;
+        overflow-y: auto;
+        flex-direction: column;
+        background-color: $dark;
 
-#sidebarNav {
-    position: sticky;
-    top: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    background-color: $mid;
-    > a {
-        flex: 1;
-        border: 1px solid $bright-accent;
-        text-align: center;
-        align-items: center;
+        #locationDetails {
+            background-color: $bright-accent;
+            display: flex;
+            flex-direction: column;
+            overflow-y: scroll;
+            padding: 5px;
+
+            > .palletCard {
+                padding: 5px;
+                margin-top: 5px;
+                display: flex;
+                flex-direction: column;
+                background-color: $darkest;
+
+                > .productCard {
+                    flex: 1;
+                    margin-top: 1px;
+                    background-color: white;
+                }
+            }
+        }
+
+        > #searchWindow {
+            display: flex;
+            flex-direction: column;
+            background-color: $highlight;
+        }
+
+        > #lotManager {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+
+            > #lotList {
+                background-color: $darkest;
+                padding: 5px;
+
+                > .lotCard {
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 1px;
+                    margin-top: 1px;
+                    background-color: white;
+                }
+            }
+        }
+
+        #sidebarNav {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            background-color: $mid;
+            > a {
+                flex: 1;
+                border: 1px solid $bright-accent;
+                text-align: center;
+                align-items: center;
+            }
+        }
     }
-}
-
-#lotManager {
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-}
-
-#lotList {
-    background-color: $darkest;
-    padding: 5px;
-}
-
-.lotCard {
-    display: flex;
-    justify-content: space-between;
-    padding: 1px;
-    margin-top: 1px;
-    background-color: white;
-}
-
-#searchWindow {
-    display: flex;
-    flex-direction: column;
-    background-color: $highlight;
-}
-
-#locationDetails {
-    background-color: $bright-accent;
-    display: flex;
-    flex-direction: column;
-    overflow-y: scroll;
-    padding: 5px;
-}
-
-.palletCard {
-    padding: 5px;
-    margin-top: 5px;
-    display: flex;
-    flex-direction: column;
-    background-color: $darkest;
-}
-
-.productCard {
-    flex: 1;
-    margin-top: 1px;
-    background-color: white;
 }
 
 .buttons {

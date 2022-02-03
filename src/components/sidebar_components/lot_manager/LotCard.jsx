@@ -14,7 +14,8 @@ function LotCard() {
     if (editMode) {
         return (
             <div className='lotCard'>
-                <p>this is a form</p>
+                <h3>insert lot</h3>
+                <h3>dropdown</h3>
                 <button onClick={setEditOff}>save</button>
             </div>
         )
