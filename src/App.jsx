@@ -17,9 +17,8 @@ const initialState = {
     palletOption : "",
     selectedPallet : "", // for edit, move, dispatch or we can replace it with logic if we don't want them to stay in store
     foundPallets: [],
-    metaMode : "main",
+    metaMode : "main",  // options include "landing" "build" "main" to cater for various levels
     microModes : []
-
 }
 
 export default function App() {
