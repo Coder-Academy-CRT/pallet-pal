@@ -87,10 +87,10 @@ export default function DispatchBox() {
 		// //
 		alert("Products have been dispatched")
 		// To close the dispatch box
-		dispatch({
-			type: 'setPalletOption',
-			data: ""
-		  })
+		// dispatch({
+		// 	type: 'setPalletOption',
+		// 	data: ""
+		//   })
 	}
 
 
