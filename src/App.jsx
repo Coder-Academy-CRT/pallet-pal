@@ -15,10 +15,15 @@ const initialState = {
     clickedLocation : "", // coordinates
     selectedMoveLocation : "",// these two values can be utilised to show where moved from and where moved to
     palletOption : "",
-    selectedPallet : "" // for edit, move, dispatch or we can replace it with logic if we don't want them to stay in store
+    selectedPallet : "", // for edit, move, dispatch or we can replace it with logic if we don't want them to stay in store
+    foundPallets: [],
+    metaMode : "main",
+    microModes : []
+
 }
 
 export default function App() {
+
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(async () => {
@@ -46,14 +51,15 @@ export default function App() {
             data: res_seeds.data
         })
 
-        //  lot information into state // REQUIRE A SEPARATE API REQUEST FOR ALL LOTS RECORDED
+        //  lot information into state
 
-        //  const res_lots = await api.get("warehouse/1/lots")
-        //  console.log(res_lots.data)
-        //  dispatch({
-        //      type: 'setLots',
-        //      data: res_lots.data
-        //  })
+         const res_lots = await api.get("warehouse/1/lots")
+         console.log(res_lots.data)
+         dispatch({
+             type: 'setLotsInWarehouse',
+             data: res_lots.data
+         })
+
     }, [])
 
     // should think of another option but this will suffice for now to allow content to load

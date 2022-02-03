@@ -50,6 +50,12 @@ export default function reducer (state, action) {
                 selectedPallet : action.data
             }
 
+        case 'setFoundPallets' :
+            return {
+                ...state, 
+                foundPallets : action.data
+            }
+
 
         default:
         // return state // this is an optional default, however this alternative provides more feedback
