@@ -11,6 +11,7 @@ function Warehouse() {
         gridTemplateColumns: `repeat(${warehouse.columns}, calc(100% / ${warehouse.columns}))`
     }
 
+
     if (metaMode == "build") {
         return(
             <h1>BUILD WAREHOUSE VIEW</h1>
@@ -18,7 +19,7 @@ function Warehouse() {
     } else {
         return (
             <div id='warehouse' style={dynamicStyling}>
-                {locations.map((location, index) => (       
+                {locations.flat(1).map((location, index) => (       
                     <Location arrOfPallet={location.pallets_on_location} key={index} id={location.coordinates}/>
                 ))}
             </div>

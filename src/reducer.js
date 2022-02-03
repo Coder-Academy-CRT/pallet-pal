@@ -3,9 +3,24 @@ export default function reducer (state, action) {
     switch (action.type) {
 
         case 'setLocationData':
+
+            let final_list = []
+            let index = 0
+
+            for (let y = 0; y < 4; y++) {
+                let current_list = []
+
+                for (let x = 0; x < 4; x++) {
+                    current_list.push(action.data[index])
+                    index++
+                }
+
+                final_list.push(current_list)      
+            }
+
             return { 
                 ...state,
-                locations : action.data
+                locations : final_list
             }
 
         case 'setLotsInWarehouse' :
@@ -62,17 +77,19 @@ export default function reducer (state, action) {
                 metaMode : action.data
             }
 
-        // case 'addMicroMode' :
-        //     return {
-        //         ...state, 
-        //         microModes : action.data
-        //     }
+        case 'addMicroMode' :
+            return state.microModes.includes(action.data) ? 
+            state
+            : 
+            { ... state, microModes : [action.data, ...state.microModes] }
 
-        // case 'removeMicroMode' :
-        //     return {
-        //         ...state, 
-        //         metaMode : action.data
-        //     }
+            
+        case 'removeMicroMode' :
+            index = state.microModes.indexOf(action.data)
+            if (index > -1) {
+                state.microModes.splice(index, 1)
+            }
+            return state
 
 
         default:
