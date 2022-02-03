@@ -20,14 +20,6 @@ function Location({ arrOfPallet, id }) {
         })
     }
 
-    const boxes = []
-    // Only create box when palletNum[0] != null
-    if (arrOfPallet[0]) {
-        for (let i = 0; i < arrOfPallet.length; i++) {
-            boxes.push(<div className='palletBox' key={arrOfPallet[i]} style={style} onClick={handleClickOnBox} ># {arrOfPallet[i]}</div>)
-        }
-    } 
-
     const handleClick = (e) => {
         dispatch({
             type: 'setClickedLocation',
@@ -35,7 +27,20 @@ function Location({ arrOfPallet, id }) {
         })
     }
 
-    return <div className='location' onClick={handleClick} id={id}>{boxes}</div>
+    const boxes = []
+
+    if (arrOfPallet[0]) {
+        arrOfPallet.forEach( (pallet) => { 
+            boxes.push(<div className='palletBox' key={pallet} style={style} onClick={handleClickOnBox}># {pallet}</div>) }
+    )}
+
+    return <div 
+        className='location' 
+        onClick={handleClick} 
+        id={id}>
+        {boxes}
+    </div>
+    
 }
 
 export default Location
