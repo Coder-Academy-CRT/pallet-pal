@@ -12,11 +12,12 @@ const initialState = {
     locations: [],
     seeds: [],
     lots: [],
-    clickedLocation:"", // location object contains all location info
+    clickedLocation: "", // location object contains all location info
     selectedMoveLocation: "", // these two values can be utilised to show where moved from and where moved to
     palletOption: "",
-    selectedPallet: "", // for edit, move, dispatch or we can replace it with logic if we don't want them to stay in store
+    selectedPallet: {}, // {pallet_id: #, products_on_pallet: []} 
     foundPallets: [],
+    availableLocations: [], // for move
     metaMode: "main", // options include "landing" "build" "main" to cater for various levels
     microModes: []
 }

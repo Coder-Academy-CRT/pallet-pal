@@ -9,6 +9,7 @@ function PalletCard({ palletId }) {
         state: { products },
         dispatch
     } = useContext(palletpalContext)
+    
     // state to manage pallet card mode
     const [palletCardClicked, setPalletCardClicked] = useState(false)
     // pallet products is an arry of product objects which are on this pallet
@@ -50,7 +51,8 @@ function PalletCard({ palletId }) {
                     <Button text='Move' />
                     <Button text='Dispatch' />
                 </div>
-            ) : null}
+            )
+            : null}
         </div>
     )
 }

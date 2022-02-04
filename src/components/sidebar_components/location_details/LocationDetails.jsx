@@ -21,7 +21,7 @@ function LocationDetails() {
     // prepare pallet cards
     const palletCards = []
     // get location object
-    const locationDisplayed = clickedLocation? getLocation(clickedLocation.coordinates) : null
+    const locationDisplayed = clickedLocation ? getLocation(clickedLocation.coordinates) : null
     // if a location object is found...
     if (locationDisplayed) {
         // prepare array of pallet ids at location id
