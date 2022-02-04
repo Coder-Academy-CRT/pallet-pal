@@ -85,6 +85,7 @@ $highlight: turquoise;
             display: flex;
             flex-direction: column;
             background-color: white;
+            overflow: scroll;
 
             > #lotList {
                 background-color: $darkest;
@@ -92,11 +93,57 @@ $highlight: turquoise;
 
                 > .lotCard {
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: row;
                     justify-content: space-between;
                     padding: 1px;
                     margin-top: 1px;
-                    background-color: white
+                    background-color: white;
+
+                    > div {
+                        color: white;
+                        background-color:rgb(12, 11, 15);
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 1px;
+                        margin-top: 1px;
+                        padding: 20px;
+                    }
+
+                    > #lotCardLhs {
+                        width: 50%;
+                        flex-direction: row;
+                        padding-right: 10%;
+                    }
+
+                        > div > button {
+                            color: darkslateblue;
+                            background-color:rgb(241, 144, 64);
+                            height: 45px;
+                            width: 45px;
+                            border: none;
+                            margin: 2px;
+                            border-radius: 50%;
+                        }
+
+                    > #lotCardRhs {
+                        width: 50%; 
+                        display: flex;
+                        flex-direction: column; 
+                        justify-content: center;
+                        color: lightgrey;  
+                    }
+
+                        > div > h3 {
+                            color: white;
+                        }
+
+                        > div > ul > li {
+                            margin: 0.8em;
+                            list-style: none;
+                            margin-top: 0.8em;
+                        }
+            
                 }
             }
         }
