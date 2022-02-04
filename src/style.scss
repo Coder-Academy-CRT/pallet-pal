@@ -23,6 +23,10 @@ $highlight: turquoise;
     display: grid;
     height: 100vh;
 
+    > * .found {
+        background-color: $highlight;
+    }
+
     > #warehouse {
         display: grid;
         grid-row: 1 / 1;
@@ -43,6 +47,7 @@ $highlight: turquoise;
                 border: 1px solid white;
                 padding: 2px;
                 height: 25%;
+                color: white;
             }
         }
     }

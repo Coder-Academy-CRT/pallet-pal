@@ -9,10 +9,9 @@ function SearchWindow() {
     const [lots, setLots] = useState([])
     const [options, setOptions] = useState(null)
     const [summary, setSummary] = useState(null)
-    const [foundPallets, setFoundPallets] = useState([])
     const {
         dispatch,
-        state: { products }
+        state: { products, foundPallets }
     } = useContext(palletpalContext)
 
     useEffect(() => {
@@ -22,7 +21,7 @@ function SearchWindow() {
         let lotList = new Set([])
         let lotOptions = []
 
-        // get every current lot and seed (including duplicates) and push to temp lists
+        // get every current lot and seed and push to temp lists
         products.forEach((element) => {
             seedList.add(
                 `${element.seed_type} - ${element.seed_variety}`.toLowerCase()
@@ -45,6 +44,10 @@ function SearchWindow() {
 
     function setOff() {
         setActive(false)
+        dispatch({
+            type: "setFoundPallets",
+            data: []
+        })
     }
 
     function setOn() {
@@ -52,28 +55,32 @@ function SearchWindow() {
     }
 
     function search(event) {
-        setFoundPallets([])
         const searchValue = event.target.value
         let bags = 0
         let totalWeight = 0
+        const foundPalletIds = new Set([])
         console.log(products)
         let matchingProducts = products.filter(
             (product) =>
                 product.lot_code == searchValue ||
                 `${product.seed_type} - ${product.seed_variety}` == searchValue
         )
-        console.log(matchingProducts)
 
         matchingProducts.forEach((product) => {
             console.log()
             bags += Number(product.number_of_bags)
             totalWeight +=
                 Number(product.number_of_bags, 2) * Number(product.bag_size, 2)
+            foundPalletIds.add(product.pallet_id)
         })
         setSummary({
             kind: searchValue,
             bags: bags,
             totalWeight: totalWeight
+        })
+        dispatch({
+            type: "setFoundPallets",
+            data: Array.from(foundPalletIds)
         })
     }
 

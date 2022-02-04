@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import palletpalContext from '../../palletpalContext'
+import React, { useContext } from "react"
+import palletpalContext from "../../palletpalContext"
 import Location from "./Location"
 
 function Warehouse() {
@@ -10,7 +10,6 @@ function Warehouse() {
         gridTemplateRows: `repeat(${warehouse.rows}, calc(100% / ${warehouse.rows}))`,
         gridTemplateColumns: `repeat(${warehouse.columns}, calc(100% / ${warehouse.columns}))`
     }
-
 
     if (metaMode == "build") {
         return(
