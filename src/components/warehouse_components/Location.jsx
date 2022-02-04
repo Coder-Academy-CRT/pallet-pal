@@ -1,19 +1,18 @@
-import React, { useContext, useEffect, useState } from "react"
-import palletpalContext from "../../palletpalContext"
+import React, { useContext, useEffect, useState } from 'react'
+import palletpalContext from '../../palletpalContext'
 
 function Location({ arrOfPallet, id }) {
     const {
         state: { foundPallets },
         dispatch
     } = useContext(palletpalContext)
-    const [classes, setClasses] = useState("location")
+    const [classes, setClasses] = useState('location')
 
     useEffect(() => {
-        setClasses("location")
+        setClasses('location')
         arrOfPallet.forEach((palletId) => {
             if (foundPallets.includes(palletId)) {
-                setClasses("location found")
-                console.log(`found on pallet ${palletId}`)
+                setClasses('location found')
             }
         })
     }, [foundPallets])
@@ -21,14 +20,14 @@ function Location({ arrOfPallet, id }) {
     const handleClickOnBox = (e) => {
         e.stopPropagation()
         dispatch({
-            type: "setClickedLocation",
+            type: 'setClickedLocation',
             data: e.target.parentNode.id
         })
     }
 
     const handleClick = (e) => {
         dispatch({
-            type: "setClickedLocation",
+            type: 'setClickedLocation',
             data: e.target.id
         })
     }

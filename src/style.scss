@@ -1,7 +1,7 @@
 // Font variables
 // roboto
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap");
-$text: "Roboto", sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+$text: 'Roboto', sans-serif;
 
 // Colour Variables
 // No other colours should exist on the page (except white and black).
@@ -77,6 +77,9 @@ $highlight: turquoise;
                     margin-top: 1px;
                     background-color: white;
                 }
+            }
+            > .found {
+                background-color: $highlight;
             }
         }
 
