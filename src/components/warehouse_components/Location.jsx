@@ -17,6 +17,7 @@ function Location({ arrOfPallet, id }) {
             }
         })
     }, [foundPallets])
+    
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()

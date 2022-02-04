@@ -42,9 +42,16 @@ export default function reducer (state, action) {
             }
 
         case 'setClickedLocation' :
+            let foundLocation = {}
+            state.locations.flat(1).forEach(location => {
+                if (location.coordinates == action.data) {
+                    foundLocation = location
+                }
+            })
+
             return {
             ... state,
-            clickedLocation : action.data
+            clickedLocation : foundLocation
             }
 
         case 'setSelectedMoveLocation' :

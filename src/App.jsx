@@ -12,7 +12,7 @@ const initialState = {
     locations: [],
     seeds: [],
     lots: [],
-    clickedLocation: "", // coordinates
+    clickedLocation:"", // location object contains all location info
     selectedMoveLocation: "", // these two values can be utilised to show where moved from and where moved to
     palletOption: "",
     selectedPallet: "", // for edit, move, dispatch or we can replace it with logic if we don't want them to stay in store
