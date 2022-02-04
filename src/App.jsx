@@ -19,7 +19,7 @@ const initialState = {
     palletOption: '',
     selectedPallet: '', // for edit, move, dispatch or we can replace it with logic if we don't want them to stay in store
     foundPallets: [],
-    metaMode: 'build', // options include "landing" "build" "main" to cater for various levels
+    metaMode: 'landing', // options include "landing" "build" "main" to cater for various levels
     microModes: [],
 
     // ***NOTE*** replace this list when warehouse list enpoint ready
