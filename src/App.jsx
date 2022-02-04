@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useReducer } from 'react'
 import Warehouse from './components/warehouse_components/Warehouse'
 import Sidebar from './components/sidebar_components/Sidebar'
+import LandingPage from './components/landing_components/LandingPage'
 import './style.scss'
 import palletpalContext from './palletpalContext'
 import reducer from './reducer'
@@ -8,6 +9,7 @@ import api from './api'
 
 const initialState = {
     warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
+    // warehouse: {},
     products: [],
     locations: [],
     seeds: [],
@@ -17,8 +19,14 @@ const initialState = {
     palletOption: '',
     selectedPallet: '', // for edit, move, dispatch or we can replace it with logic if we don't want them to stay in store
     foundPallets: [],
-    metaMode: 'main', // options include "landing" "build" "main" to cater for various levels
-    microModes: []
+    metaMode: 'build', // options include "landing" "build" "main" to cater for various levels
+    microModes: [],
+
+    // ***NOTE*** replace this list when warehouse list enpoint ready
+    warehouseList: [
+        { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
+        { id: 2, name: 'warehouse_02', rows: 4, columns: 4 }
+    ]
 }
 
 export default function App() {
@@ -60,10 +68,14 @@ export default function App() {
             type: 'setLotsInWarehouse',
             data: res_lots.data
         })
-    }, [])
+    }, [state.metaMode])
 
     if (state.metaMode == 'landing') {
-        return <h1>LandingPage</h1>
+        return (
+            <palletpalContext.Provider value={{ state, dispatch }}>
+                <LandingPage />
+            </palletpalContext.Provider>
+        )
     } else {
         // other two modes will only apply directly to Warehouse or Sidebar rendered components
 

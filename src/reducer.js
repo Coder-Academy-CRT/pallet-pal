@@ -1,9 +1,6 @@
-export default function reducer (state, action) {
-
+export default function reducer(state, action) {
     switch (action.type) {
-
         case 'setLocationData':
-
             let final_list = []
             let index = 0
 
@@ -15,87 +12,91 @@ export default function reducer (state, action) {
                     index++
                 }
 
-                final_list.push(current_list)      
+                final_list.push(current_list)
             }
 
-            return { 
-                ...state,
-                locations : final_list
-            }
-
-        case 'setLotsInWarehouse' :
             return {
                 ...state,
-                lots : action.data
+                locations: final_list
             }
 
-        case 'setProductData' :
+        case 'setLotsInWarehouse':
+            return {
+                ...state,
+                lots: action.data
+            }
+
+        case 'setProductData':
             return {
                 ...state,
                 products: action.data
             }
 
-        case 'setSeeds' :
+        case 'setSeeds':
             return {
                 ...state,
                 seeds: action.data
             }
 
-        case 'setClickedLocation' :
+        case 'setClickedLocation':
             return {
-            ... state,
-            clickedLocation : action.data
+                ...state,
+                clickedLocation: action.data
             }
 
-        case 'setSelectedMoveLocation' :
+        case 'setSelectedMoveLocation':
             return {
-            ... state,
-            selectedMoveLocation : action.data
-            }
-            
-        case 'setPalletOption' :
-            return {
-                ...state, 
-                palletOption : action.data
+                ...state,
+                selectedMoveLocation: action.data
             }
 
-        case 'setSelectedPallet' :
+        case 'setPalletOption':
             return {
-                ...state, 
-                selectedPallet : action.data
+                ...state,
+                palletOption: action.data
             }
 
-        case 'setFoundPallets' :
+        case 'setSelectedPallet':
             return {
-                ...state, 
-                foundPallets : action.data
+                ...state,
+                selectedPallet: action.data
             }
 
-        case 'setMetaMode' :
+        case 'setFoundPallets':
             return {
-                ...state, 
-                metaMode : action.data
+                ...state,
+                foundPallets: action.data
             }
 
-        case 'addMicroMode' :
-            return state.microModes.includes(action.data) ? 
-            state
-            : 
-            { ... state, microModes : [action.data, ...state.microModes] }
+        case 'setWarehouse':
+            console.log(action.data)
+            return {
+                ...state,
+                warehouse: action.data
+            }
 
-            
-        case 'removeMicroMode' :
+        case 'setMetaMode':
+            return {
+                ...state,
+                metaMode: action.data
+            }
+
+        case 'addMicroMode':
+            return state.microModes.includes(action.data)
+                ? state
+                : { ...state, microModes: [action.data, ...state.microModes] }
+
+        case 'removeMicroMode':
             index = state.microModes.indexOf(action.data)
             if (index > -1) {
                 state.microModes.splice(index, 1)
             }
             return state
 
-
         default:
-        // return state // this is an optional default, however this alternative provides more feedback
-        throw new Error(`action.type: ${action.type} is not recognised. Switch statement defaulted to throw Error`)
+            // return state // this is an optional default, however this alternative provides more feedback
+            throw new Error(
+                `action.type: ${action.type} is not recognised. Switch statement defaulted to throw Error`
+            )
     }
 }
-
-
