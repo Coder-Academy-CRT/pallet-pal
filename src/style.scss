@@ -92,10 +92,11 @@ $highlight: turquoise;
 
                 > .lotCard {
                     display: flex;
+                    flex-direction: column;
                     justify-content: space-between;
                     padding: 1px;
                     margin-top: 1px;
-                    background-color: white;
+                    background-color: white
                 }
             }
         }
