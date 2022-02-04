@@ -11,6 +11,7 @@ $light: lightgray;
 $mid: gray;
 $dark: lightslategray;
 $darkest: darkslategray;
+$mostdarkest: rgb(12, 11, 15);
 $highlight: turquoise;
 
 * {
@@ -18,6 +19,26 @@ $highlight: turquoise;
     padding: 0px;
     margin: 0px;
 }
+
+// TO BE MOVED AS APPROPRIATE //////
+#lotForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    padding: 5px 15px 0px;
+}
+
+.lotInputs {
+    font-weight: 900;
+    height: 40px;
+    font-size: 1.5em;
+    padding: 5px;
+    margin: 10px;
+    background-color: lightyellow;
+    border: none;
+}
+/////////////////////////////////
 
 #root {
     display: grid;
@@ -88,8 +109,38 @@ $highlight: turquoise;
             overflow: scroll;
 
             > #lotList {
-                background-color: $darkest;
-                padding: 5px;
+                background-color: $mostdarkest;
+
+                > .editLotCard {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    background-color: $mostdarkest;
+                    height: 20%;
+                }
+
+                    > div > h2 {
+                        color: white;
+                        margin: 15px 15px 0px;
+                    }
+
+                    > div > div {
+                        position: relative;
+                        padding: 10px;
+                    }
+
+                    > div > div > button {
+                        color: darkslateblue;
+                        position: relative;
+                        bottom: 0px;
+                        background-color:rgb(255, 233, 215);
+                        height: 60px;
+                        width: 60px;
+                        border: none;
+                        margin: 10px;
+                        border-radius: 50%;
+                    }
+                
 
                 > .lotCard {
                     display: flex;
@@ -101,19 +152,19 @@ $highlight: turquoise;
 
                     > div {
                         color: white;
-                        background-color:rgb(12, 11, 15);
+                        background-color: $mostdarkest;
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
                         padding: 1px;
                         margin-top: 1px;
                         padding: 20px;
+
                     }
 
                     > #lotCardLhs {
                         width: 50%;
                         flex-direction: row;
-                        padding-right: 10%;
                     }
 
                         > div > button {
@@ -126,12 +177,22 @@ $highlight: turquoise;
                             border-radius: 50%;
                         }
 
+                        > div > div {
+                            padding-left: 40px;
+                            white-space: nowrap;
+                        }
+
+                        > div > div > p {
+                            color: lightgrey;
+                        }
+
                     > #lotCardRhs {
                         width: 50%; 
                         display: flex;
                         flex-direction: column; 
                         justify-content: center;
-                        color: lightgrey;  
+                        align-items: left;
+                        color: lightgrey; 
                     }
 
                         > div > h3 {

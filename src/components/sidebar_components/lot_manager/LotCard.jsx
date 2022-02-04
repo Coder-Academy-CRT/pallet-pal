@@ -1,7 +1,14 @@
-import { useState } from "react"
+import React, { useState, useContext } from "react"
+import api from "../../../api"
+import palletpalContext from "../../../palletpalContext"
 
 function LotCard( {lot} ) {
+
+    const { state: { warehouse }, dispatch } = useContext(palletpalContext)
+
     const [editMode, setEditMode] = useState(false)
+
+    const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
 
     function setEditOn() {
         setEditMode(true)
@@ -26,13 +33,77 @@ function LotCard( {lot} ) {
         }   
     }
 
+    async function submit(event) {
+        event.preventDefault()
+
+        const res = await api.put(
+            `/${warehouse.id}/lot/${lot.lot_code}`, 
+            { 
+                lot_code: updatedLot.lot_code,
+                seed_type: updatedLot.seed_type,
+                seed_variety: updatedLot.seed_variety
+             } )
+
+        dispatch({
+            type: "",
+            data: ""
+        })
+    }
+ 
+  
 
     if (editMode) {
         return (
-            <div className='lotCard'>
-                <h3>insert lot</h3>
-                <h3>dropdown</h3>
-                <button onClick={setEditOff}>save</button>
+            <div className='editLotCard'>
+
+
+                <h2>{lot.lot_code}</h2>
+
+                <div>
+
+                    <form onSubmit={submit}>
+                        <div id="lotForm">
+                            <label for="lotCode">Please enter lot code:</label>
+                            <input
+                                class="lotInputs"
+                                id="lotCode"
+                                value={updatedLot.lot_code}
+                                onChange={(event) => setUpdatedLot(event.target.value)}
+                            ></input>
+
+                            <label for="lotSeedType">Please select seed type:</label>
+                            <input
+                                class="lotInputs"
+                                id="lotSeedType"
+                                value={updatedLot.seed_type}
+                                onChange={(event) => setUpdatedLot(event.target.value)}
+                            ></input>
+
+                            <label for="lotSeedType">Please select seed variety</label>
+                            <input
+                                class="lotInputs"
+                                id="lotSeedVariety"
+                                value={updatedLot.seed_variety}
+                                onChange={(event) => setUpdatedLot(event.target.value)}
+                            ></input>
+                            
+                        </div>
+                        <button>Submit</button>
+                    </form>
+                </div>
+
+                <div id='buttonContainer'>
+                    <button onClick={setEditOff}>save</button>
+                    <button onClick={setEditOff}>exit</button>
+                </div>
+               
+
+
+
+
+
+
+
             </div>
         )
     } else {
@@ -41,7 +112,10 @@ function LotCard( {lot} ) {
                 <div className='lotCard'>
                     <div id="lotCardLhs">
                         <button onClick={setEditOn}>edit</button>
-                        <h2>{lot.lot_code}</h2>
+                        <div>
+                            <h2>{lot.lot_code}</h2>
+                            <p>{`${lot.seed_type} - ${lot.seed_variety}`}</p>
+                        </div>
                     </div>
                     <div id="lotCardRhs">
                         <ul>
@@ -50,8 +124,9 @@ function LotCard( {lot} ) {
                         <h3>{
                             total_amount == "0" ? "no stock" : `Total: ${total_amount} kg` }
                         </h3>
-                    </div>
+                    </div>  
                 </div>
+             
             </>
         )
     }
