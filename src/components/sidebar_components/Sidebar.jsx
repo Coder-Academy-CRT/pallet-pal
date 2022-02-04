@@ -4,12 +4,13 @@ import LocationDetails from './location_details/LocationDetails'
 import SearchWindow from './search_window/SearchWindow'
 import LotManager from './lot_manager/LotManager'
 import palletpalContext from '../../palletpalContext'
-import DispatchBox from './location_details/DispatchBox'
+import MoveOption from './location_details/MoveOption';
 
 function Sidebar() {
     const {
         state: { palletOption }
     } = useContext(palletpalContext)
+
 
     return (
         <div id='sidebar'>
@@ -17,7 +18,7 @@ function Sidebar() {
             <LotManager />
             <SearchWindow />
             <LocationDetails />
-            {palletOption == 'dispatch' ? <DispatchBox /> : null}
+            {palletOption == "move" ? <MoveOption /> : null}
         </div>
     )
 }

@@ -8,6 +8,7 @@ function PalletCard({ palletId }) {
         state: { products, foundPallets, clickedLocation },
         dispatch
     } = useContext(palletpalContext)
+    
     // state to manage pallet card mode
     const [palletCardClicked, setPalletCardClicked] = useState(false)
     // set classes to style when found/not found
@@ -58,7 +59,8 @@ function PalletCard({ palletId }) {
                     <Button text='Move' />
                     <Button text='Dispatch' />
                 </div>
-            ) : null}
+            )
+            : null}
         </div>
     )
 }
