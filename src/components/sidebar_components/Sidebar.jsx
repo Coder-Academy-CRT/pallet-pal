@@ -1,13 +1,16 @@
-import React, { useContext } from 'react';
-import SidebarNav from "./SidebarNav"
-import LocationDetails from "./location_details/LocationDetails"
-import SearchWindow from "./search_window/SearchWindow"
-import LotManager from "./lot_manager/LotManager"
-import palletpalContext from '../../palletpalContext';
+import { useContext, useState } from 'react'
+import SidebarNav from './SidebarNav'
+import LocationDetails from './location_details/LocationDetails'
+import SearchWindow from './search_window/SearchWindow'
+import LotManager from './lot_manager/LotManager'
+import palletpalContext from '../../palletpalContext'
 import MoveOption from './location_details/MoveOption';
 
 function Sidebar() {
-    const { state: { palletOption, selectedPallet }, dispatch } = useContext(palletpalContext)
+    const {
+        state: { palletOption }
+    } = useContext(palletpalContext)
+
 
     return (
         <div id='sidebar'>

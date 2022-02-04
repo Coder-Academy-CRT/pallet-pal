@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from "react"
-import palletpalContext from "../../../palletpalContext"
-import CustomSelect from "./CustomSelect"
-import Summary from "./Summary"
+import { useState, useEffect, useContext } from 'react'
+import palletpalContext from '../../../palletpalContext'
+import CustomSelect from './CustomSelect'
+import Summary from './Summary'
 
 function SearchWindow() {
     const [active, setActive] = useState(true)
@@ -45,7 +45,7 @@ function SearchWindow() {
     function setOff() {
         setActive(false)
         dispatch({
-            type: "setFoundPallets",
+            type: 'setFoundPallets',
             data: []
         })
     }
@@ -59,7 +59,6 @@ function SearchWindow() {
         let bags = 0
         let totalWeight = 0
         const foundPalletIds = new Set([])
-        console.log(products)
         let matchingProducts = products.filter(
             (product) =>
                 product.lot_code == searchValue ||
@@ -67,7 +66,6 @@ function SearchWindow() {
         )
 
         matchingProducts.forEach((product) => {
-            console.log()
             bags += Number(product.number_of_bags)
             totalWeight +=
                 Number(product.number_of_bags, 2) * Number(product.bag_size, 2)
@@ -79,7 +77,7 @@ function SearchWindow() {
             totalWeight: totalWeight
         })
         dispatch({
-            type: "setFoundPallets",
+            type: 'setFoundPallets',
             data: Array.from(foundPalletIds)
         })
     }

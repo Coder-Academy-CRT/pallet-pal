@@ -1,9 +1,6 @@
-export default function reducer (state, action) {
-
+export default function reducer(state, action) {
     switch (action.type) {
-
         case 'setLocationData':
-
             let final_list = []
             let index = 0
 
@@ -15,31 +12,32 @@ export default function reducer (state, action) {
                     index++
                 }
 
-                final_list.push(current_list)      
+                final_list.push(current_list)
             }
 
-            return { 
-                ...state,
-                locations : final_list
-            }
-
-        case 'setLotsInWarehouse' :
             return {
                 ...state,
-                lots : action.data
+                locations: final_list
             }
 
-        case 'setProductData' :
+        case 'setLotsInWarehouse':
+            return {
+                ...state,
+                lots: action.data
+            }
+
+        case 'setProductData':
             return {
                 ...state,
                 products: action.data
             }
 
-        case 'setSeeds' :
+        case 'setSeeds':
             return {
                 ...state,
                 seeds: action.data
             }
+
 
         case 'setClickedLocation' :
             let foundLocation = {}
@@ -54,11 +52,18 @@ export default function reducer (state, action) {
             clickedLocation : foundLocation
             }
 
-        case 'setSelectedMoveLocation' :
+        case 'setSelectedMoveLocation':
             return {
-            ... state,
-            selectedMoveLocation : action.data
+                ...state,
+                selectedMoveLocation: action.data
             }
+
+        case 'setPalletOption':
+            return {
+                ...state,
+                palletOption: action.data
+            }
+
 
         case 'updateLocationAfterMove' :
             const loc = state.locations
@@ -114,12 +119,18 @@ export default function reducer (state, action) {
                 products : filteredList, 
                 // this trigger re-rendering of that pallet card so it will show the updated details on the sidebar
                 clickedLocation: { ...state.clickedLocation, coordinates: state.clickedLocation.coordinates}
+=======
+        case 'setFoundPallets':
+            return {
+                ...state,
+                foundPallets: action.data
             }
 
-        case 'setFoundPallets' :
+        case 'setWarehouse':
+            console.log(action.data)
             return {
-                ...state, 
-                foundPallets : action.data
+                ...state,
+                warehouse: action.data
             }
 
         case 'setAvailableLocations' :
@@ -128,31 +139,28 @@ export default function reducer (state, action) {
                 availableLocations : action.data
             }
 
-        case 'setMetaMode' :
+        case 'setMetaMode':
             return {
-                ...state, 
-                metaMode : action.data
+                ...state,
+                metaMode: action.data
             }
 
-        case 'addMicroMode' :
-            return state.microModes.includes(action.data) ? 
-            state
-            : 
-            { ... state, microModes : [action.data, ...state.microModes] }
+        case 'addMicroMode':
+            return state.microModes.includes(action.data)
+                ? state
+                : { ...state, microModes: [action.data, ...state.microModes] }
 
-            
-        case 'removeMicroMode' :
+        case 'removeMicroMode':
             index = state.microModes.indexOf(action.data)
             if (index > -1) {
                 state.microModes.splice(index, 1)
             }
             return state
 
-
         default:
-        // return state // this is an optional default, however this alternative provides more feedback
-        throw new Error(`action.type: ${action.type} is not recognised. Switch statement defaulted to throw Error`)
+            // return state // this is an optional default, however this alternative provides more feedback
+            throw new Error(
+                `action.type: ${action.type} is not recognised. Switch statement defaulted to throw Error`
+            )
     }
 }
-
-

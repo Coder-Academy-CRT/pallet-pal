@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
 
 function CustomSelect({ options, name, watching, change }) {
     const optionElements = []
-    const [selectedValue, setSelectedValue] = useState("")
+    const [selectedValue, setSelectedValue] = useState('')
 
     function handleChange(event) {
         change(event)
@@ -10,8 +10,7 @@ function CustomSelect({ options, name, watching, change }) {
     }
 
     useEffect(() => {
-        console.log({ options })
-        setSelectedValue("")
+        setSelectedValue('')
     }, [watching])
 
     // if (options) {
