@@ -3,7 +3,7 @@ import palletpalContext from '../../palletpalContext'
 
 function Location({ arrOfPallet, id, details }) {
     const {
-        state: { foundPallets },
+        state: { foundPallets, availableLocations, palletOption, locations },
         dispatch
     } = useContext(palletpalContext)
     const [classes, setClasses] = useState([details.category, 'location'])
@@ -16,6 +16,15 @@ function Location({ arrOfPallet, id, details }) {
             }
         })
     }, [foundPallets])
+
+    // Light up available location during 'move' 
+    useEffect(() => {
+        setClasses("location")
+        availableLocations.forEach(location => {
+            setClasses("location found")
+        })
+    }, [availableLocations])
+    
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -30,6 +39,25 @@ function Location({ arrOfPallet, id, details }) {
             type: 'setClickedLocation',
             data: e.target.id
         })
+        if (palletOption == "move") {
+            dispatch({
+                type: "setSelectedMoveLocation",
+                data: e.target.id
+            })
+            confirm("You want to move to this location?")
+            if (true) {
+                dispatch({
+                    type: "updateLocationAfterMove",
+                    data: e.target.id
+                })
+            }
+            console.log(e.target.id)
+            dispatch({
+                type: "setAvailableLocations",
+                data: []
+            })
+
+        }
     }
 
     const boxes = []

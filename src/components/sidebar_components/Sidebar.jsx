@@ -4,8 +4,10 @@ import LocationDetails from './location_details/LocationDetails'
 import SearchWindow from './search_window/SearchWindow'
 import LotManager from './lot_manager/LotManager'
 import palletpalContext from '../../palletpalContext'
+
 import DispatchBox from './location_details/DispatchBox'
 import BuildSidebar from './BuildSidebar'
+import MoveOption from './location_details/MoveOption';
 
 function Sidebar() {
     const {
