@@ -8,8 +8,8 @@ import reducer from './reducer'
 import api from './api'
 
 const initialState = {
-    warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
-    // warehouse: {},
+    // warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
+    warehouse: {},
     products: [],
     locations: [],
     seeds: [],
@@ -33,40 +33,40 @@ export default function App() {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(async () => {
-        // location information into state
+        if (state.metaMode == 'main') {
+            // location information into state
 
-        const res_locations = await api.get(
-            `warehouse/${state.warehouse.id}/locations`
-        )
-        dispatch({
-            type: 'setLocationData',
-            data: res_locations.data
-        })
+            const res_locations = await api.get(
+                `warehouse/${state.warehouse.id}/locations`
+            )
+            dispatch({
+                type: 'setLocationData',
+                data: res_locations.data
+            })
+            //  product information into state
+            const res_products = await api.get(
+                `warehouse/${state.warehouse.id}/products`
+            )
+            dispatch({
+                type: 'setProductData',
+                data: res_products.data
+            })
 
-        //  product information into state
+            //  lot information into state
 
-        const res_products = await api.get(
-            `warehouse/${state.warehouse.id}/products`
-        )
-        dispatch({
-            type: 'setProductData',
-            data: res_products.data
-        })
-
-        //  product information into state
+            const res_lots = await api.get(
+                `warehouse/${state.warehouse.id}/lots`
+            )
+            dispatch({
+                type: 'setLotsInWarehouse',
+                data: res_lots.data
+            })
+        }
 
         const res_seeds = await api.get('seeds')
         dispatch({
             type: 'setSeeds',
             data: res_seeds.data
-        })
-
-        //  lot information into state
-
-        const res_lots = await api.get(`warehouse/${state.warehouse.id}/lots`)
-        dispatch({
-            type: 'setLotsInWarehouse',
-            data: res_lots.data
         })
     }, [state.metaMode])
 

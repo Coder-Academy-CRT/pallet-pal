@@ -1,18 +1,17 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import palletpalContext from '../../palletpalContext'
 
 function WarehouseCard({ info }) {
     const {
-        state: { warehouse, metaMode },
+        state: { warehouse },
         dispatch
     } = useContext(palletpalContext)
-
-    useEffect(() => {}, [])
+    const [warehouseInfo, setWarehouseInfo] = useState(info)
 
     function loadWarehouse() {
         console.log('loading warehouse')
         dispatch({ type: 'setWarehouse', data: info })
-        dispatch({ type: 'setMetaMode', data: 'Main' })
+        dispatch({ type: 'setMetaMode', data: 'main' })
         console.log(warehouse)
     }
 

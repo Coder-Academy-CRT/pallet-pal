@@ -150,21 +150,35 @@ $highlight: turquoise;
     > #warehouse {
         display: grid;
         grid-row: 1 / 1;
-        background-color: $dark-accent;
+        background-color: $space-cadet;
 
         > .location {
             display: flex;
             flex-direction: column-reverse;
-            border: 1px solid white;
             padding: 5%;
+            border-top: 1px dotted $white;
+            border-right: 1px dotted $white;
 
             &:hover {
                 background-color: $bright-accent;
             }
 
+            &.allocated_storage {
+                background-color: $independence;
+            }
+
+            &.inaccessible {
+                background-color: transparent;
+            }
+
+            &.spare_floor {
+                background-color: $silver;
+            }
+
             > .palletBox {
-                background-color: $darkest;
-                border: 1px solid white;
+                background-color: $mandarin;
+                border: 1px solid rgb(255, 160, 120);
+                margin-top: 1px;
                 padding: 2px;
                 height: 25%;
                 color: white;
@@ -176,10 +190,10 @@ $highlight: turquoise;
         display: flex;
         overflow-y: auto;
         flex-direction: column;
-        background-color: $dark;
+        background-color: $space-cadet;
 
         #locationDetails {
-            background-color: $bright-accent;
+            background-color: $independence;
             display: flex;
             flex-direction: column;
             overflow-y: scroll;
@@ -190,7 +204,7 @@ $highlight: turquoise;
                 margin-top: 5px;
                 display: flex;
                 flex-direction: column;
-                background-color: $darkest;
+                background-color: $mandarin;
 
                 > .productCard {
                     flex: 1;

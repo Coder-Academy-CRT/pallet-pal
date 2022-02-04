@@ -68,8 +68,13 @@ export default function reducer(state, action) {
                 foundPallets: action.data
             }
 
+        case 'setLocations':
+            return {
+                ...state,
+                locations: action.data
+            }
+
         case 'setWarehouse':
-            console.log(action.data)
             return {
                 ...state,
                 warehouse: action.data

@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react'
 import palletpalContext from '../../palletpalContext'
 
-function Location({ arrOfPallet, id }) {
+function Location({ arrOfPallet, id, details }) {
     const {
         state: { foundPallets },
         dispatch
     } = useContext(palletpalContext)
-    const [classes, setClasses] = useState('location')
+    const [classes, setClasses] = useState([details.category, 'location'])
 
     useEffect(() => {
-        setClasses('location')
+        setClasses([details.category, 'location'])
         arrOfPallet.forEach((palletId) => {
             if (foundPallets.includes(palletId)) {
-                setClasses('location found')
+                setClasses([...classes, 'found'])
             }
         })
     }, [foundPallets])
@@ -48,7 +48,7 @@ function Location({ arrOfPallet, id }) {
     }
 
     return (
-        <div className={classes} onClick={handleClick} id={id}>
+        <div className={classes.join(' ')} onClick={handleClick} id={id}>
             {boxes}
         </div>
     )

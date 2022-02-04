@@ -8,6 +8,41 @@ function LandingPage() {
         dispatch
     } = useContext(palletpalContext)
 
+    function buildNewWarehouse(rows, columns) {
+        // prepare a list to store built location objects
+        const newLocationList = []
+        // for every row on the Y AXIS
+        for (let y = 0; y < columns; y++) {
+            // create a row of locations X AXIS
+            const currentList = []
+            for (let x = 0; x < rows; x++) {
+                currentList.push({
+                    coordinate: `0${x}_0${y}`,
+                    category: 'spare_floor',
+                    pallets_on_location: []
+                })
+            }
+            newLocationList.push(currentList)
+        }
+        dispatch({
+            type: 'setLocations',
+            data: newLocationList
+        })
+        dispatch({
+            type: 'setMetaMode',
+            data: 'build'
+        })
+        dispatch({
+            type: 'setWarehouse',
+            data: {
+                id: warehouseList.length + 1,
+                name: 'new warehouse',
+                rows: 4,
+                columns: 4
+            }
+        })
+    }
+
     return (
         <div id='landingPage'>
             <h1>
@@ -20,7 +55,11 @@ function LandingPage() {
                     <WarehouseCard info={obj} key={index} />
                 ))}
             </div>
-            <button id='newWarehouseButton'>build new warehouse</button>
+            <button
+                id='newWarehouseButton'
+                onClick={() => buildNewWarehouse(4, 4)}>
+                build new warehouse
+            </button>
         </div>
     )
 }

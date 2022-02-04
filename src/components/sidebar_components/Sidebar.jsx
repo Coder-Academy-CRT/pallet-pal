@@ -5,21 +5,31 @@ import SearchWindow from './search_window/SearchWindow'
 import LotManager from './lot_manager/LotManager'
 import palletpalContext from '../../palletpalContext'
 import DispatchBox from './location_details/DispatchBox'
+import BuildSidebar from './BuildSidebar'
 
 function Sidebar() {
     const {
-        state: { palletOption }
+        state: { palletOption, metaMode, locations }
     } = useContext(palletpalContext)
 
-    return (
-        <div id='sidebar'>
-            <SidebarNav />
-            <LotManager />
-            <SearchWindow />
-            <LocationDetails />
-            {palletOption == 'dispatch' ? <DispatchBox /> : null}
-        </div>
-    )
+    // ****NOTE**** the condition for locations length is to prevent location details trying to set up before locations are ready.
+    if (metaMode == 'main' && locations.length > 1) {
+        return (
+            <div id='sidebar'>
+                {/* <SidebarNav /> */}
+                <LotManager />
+                <SearchWindow />
+                <LocationDetails />
+                {palletOption == 'dispatch' ? <DispatchBox /> : null}
+            </div>
+        )
+    } else {
+        return (
+            <div id='sidebar'>
+                <BuildSidebar />
+            </div>
+        )
+    }
 }
 
 export default Sidebar
