@@ -40,7 +40,7 @@ function SearchWindow() {
         // set state from option lists
         setSeeds(seedOptions)
         setLots(lotOptions)
-    }, [])
+    }, [products])
 
     function setOff() {
         setActive(false)

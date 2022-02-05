@@ -12,7 +12,6 @@ function WarehouseCard({ info }) {
         console.log('loading warehouse')
         dispatch({ type: 'setWarehouse', data: info })
         dispatch({ type: 'setMetaMode', data: 'main' })
-        console.log(warehouse)
     }
 
     return (

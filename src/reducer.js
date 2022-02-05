@@ -73,11 +73,23 @@ export default function reducer(state, action) {
                 ...state,
                 locations: action.data
             }
-
+        // NEW
         case 'setWarehouse':
             return {
                 ...state,
                 warehouse: action.data
+            }
+        // NEW
+        case 'addWarehouse':
+            return {
+                ...state,
+                warehouseList: [...state.warehouseList, action.data]
+            }
+        // NEW
+        case 'setTempWarehouse':
+            return {
+                ...state,
+                tempWarehouse: action.data
             }
 
         case 'setMetaMode':

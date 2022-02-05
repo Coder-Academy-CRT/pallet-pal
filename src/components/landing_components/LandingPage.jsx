@@ -33,12 +33,12 @@ function LandingPage() {
             data: 'build'
         })
         dispatch({
-            type: 'setWarehouse',
+            type: 'setTempWarehouse',
             data: {
                 id: warehouseList.length + 1,
                 name: 'new warehouse',
-                rows: 4,
-                columns: 4
+                rows: rows,
+                columns: columns
             }
         })
     }
@@ -57,6 +57,7 @@ function LandingPage() {
             </div>
             <button
                 id='newWarehouseButton'
+                // set rows cols to 4, 4 but this can be altered without breaking new warehouse
                 onClick={() => buildNewWarehouse(4, 4)}>
                 build new warehouse
             </button>

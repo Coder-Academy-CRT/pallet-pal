@@ -13,16 +13,6 @@ function CustomSelect({ options, name, watching, change }) {
         setSelectedValue('')
     }, [watching])
 
-    // if (options) {
-    //     options.forEach((element, index) => {
-    //         optionElements.push(
-    //             <option value={element.value} key={index}>
-    //                 {element.label}
-    //             </option>
-    //         )
-    //     })
-    // }
-
     return (
         <select
             name={name}
@@ -32,7 +22,7 @@ function CustomSelect({ options, name, watching, change }) {
             value={selectedValue}>
             {options ? (
                 <>
-                    <option value='' disabled selected>
+                    <option value='' disabled>
                         please select
                     </option>
                     {options.map((element, index) => (

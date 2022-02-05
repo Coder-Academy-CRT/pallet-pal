@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import Warehouse from './components/warehouse_components/Warehouse'
 import Sidebar from './components/sidebar_components/Sidebar'
 import LandingPage from './components/landing_components/LandingPage'
@@ -10,6 +10,7 @@ import api from './api'
 const initialState = {
     // warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
     warehouse: {},
+    tempWarehouse: null,
     products: [],
     locations: [],
     seeds: [],
@@ -22,7 +23,7 @@ const initialState = {
     metaMode: 'landing', // options include "landing" "build" "main" to cater for various levels
     microModes: [],
 
-    // ***NOTE*** replace this list when warehouse list enpoint ready
+    // ***NOTE*** replace this list when warehouse list endpoint ready
     warehouseList: [
         { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
         { id: 2, name: 'warehouse_02', rows: 4, columns: 4 }

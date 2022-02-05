@@ -4,23 +4,20 @@ import Location from './Location'
 
 function Warehouse() {
     const {
-        state: { warehouse, locations, metaMode }
+        state: { warehouse, locations, metaMode, tempWarehouse }
     } = useContext(palletpalContext)
 
+    // if there is a temp WH style from its rows and cols (for build mode)
+    const currentWh = tempWarehouse ? tempWarehouse : warehouse
     const dynamicStyling = {
-        gridTemplateRows: `repeat(${warehouse.rows}, calc(100% / ${warehouse.rows}))`,
-        gridTemplateColumns: `repeat(${warehouse.columns}, calc(100% / ${warehouse.columns}))`
+        gridTemplateRows: `repeat(${currentWh.rows}, calc(100% / ${currentWh.rows}))`,
+        gridTemplateColumns: `repeat(${currentWh.columns}, calc(100% / ${currentWh.columns}))`
     }
 
     return (
         <div id='warehouse' style={dynamicStyling}>
             {locations.flat(1).map((location, index) => (
-                <Location
-                    arrOfPallet={location.pallets_on_location}
-                    key={index}
-                    id={location.coordinates}
-                    details={location}
-                />
+                <Location details={location} key={index} />
             ))}
         </div>
     )
