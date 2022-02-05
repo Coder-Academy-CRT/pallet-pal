@@ -24,15 +24,14 @@ $highlight: turquoise;
 #lotForm {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     color: white;
     padding: 5px 15px 0px;
 }
 
 .lotInputs {
     font-weight: 900;
-    height: 40px;
-    font-size: 1.5em;
+    height: 20px;
+    font-size: 1.2em;
     padding: 5px;
     margin: 10px;
     background-color: lightyellow;
@@ -114,9 +113,9 @@ $highlight: turquoise;
                 > .editLotCard {
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-between;
+                    // justify-content: space-between;
                     background-color: $mostdarkest;
-                    height: 20%;
+                    height: 400px;
                 }
 
                     > div > h2 {
@@ -148,61 +147,74 @@ $highlight: turquoise;
                     justify-content: space-between;
                     padding: 1px;
                     margin-top: 1px;
-                    background-color: white;
+                    background-color: $mostdarkest;
+                    border-bottom: solid 1px $darkest;
 
                     > div {
                         color: white;
-                        background-color: $mostdarkest;
                         display: flex;
-                        align-items: center;
-                        justify-content: space-between;
                         padding: 1px;
-                        margin-top: 1px;
-                        padding: 20px;
-
                     }
 
                     > #lotCardLhs {
-                        width: 50%;
+                        width: 20%;
                         flex-direction: row;
+                        justify-content: space-evenly;
+                        align-items: center;
                     }
 
                         > div > button {
+                            box-sizing: border-box;
+                            border: solid $mostdarkest 5px;
+                            // border: none;
                             color: darkslateblue;
-                            background-color:rgb(241, 144, 64);
-                            height: 45px;
-                            width: 45px;
-                            border: none;
-                            margin: 2px;
+                            background-color:rgb(255, 184, 125);
+                            margin: 5%;
                             border-radius: 50%;
                         }
 
-                        > div > div {
-                            padding-left: 40px;
-                            white-space: nowrap;
-                        }
-
-                        > div > div > p {
-                            color: lightgrey;
-                        }
-
-                    > #lotCardRhs {
-                        width: 50%; 
+                    > #lotCardMid {
+                        max-width: 0%;
+                        position: relative;
+                        right: 20%;
                         display: flex;
-                        flex-direction: column; 
+                        flex-direction: column;
                         justify-content: center;
-                        align-items: left;
-                        color: lightgrey; 
+                        white-space: nowrap;
+                        padding: 3%;
                     }
 
-                        > div > h3 {
+                         > div > h2 {
+                            font-size: 1em;
                             color: white;
                         }
 
+                        > div > p {
+                            color: lightgrey;
+                            font-size: 0.8em;
+                        }
+
+                    > #lotCardRhs {
+                        width: 30%; 
+                        display: flex;
+                        flex-direction: column; 
+                        justify-content: center;
+                        align-items: flex-start;
+                        color: lightgrey; 
+                    }
+
                         > div > ul > li {
+                            font-size: 0.8em;
                             margin: 0.8em;
                             list-style: none;
-                            margin-top: 0.8em;
+                        }
+
+                        > div > ul > li > hr {
+                            width: 50px;
+                        }
+
+                        > div > ul > li > h3 {
+                            color: white;
                         }
             
                 }

@@ -34,6 +34,9 @@ function LotCard( {lot} ) {
         }   
     }
 
+    bag_sizes.push( total_amount== "0" ? null : <li><hr></hr></li>)
+    bag_sizes.push( <li><h3>{total_amount == "0" ? "no stock" : `${total_amount} kg`}</h3></li>)
+
     async function submit(event) {
         event.preventDefault()
 
@@ -56,7 +59,6 @@ function LotCard( {lot} ) {
     if (editMode) {
         return (
             <div className='editLotCard'>
-
 
                 <h2>{lot.lot_code}</h2>
 
@@ -98,34 +100,28 @@ function LotCard( {lot} ) {
                     <button onClick={setEditOff}>exit</button>
                 </div>
                
-
-
-
-
-
-
-
             </div>
         )
     } else {
         return (
             <>
                 <div className='lotCard'>
+
                     <div id="lotCardLhs">
                         <button onClick={setEditOn}>edit</button>
-                        <div>
-                            <h2>{lot.lot_code}</h2>
-                            <p>{`${lot.seed_type} - ${lot.seed_variety}`}</p>
-                        </div>
                     </div>
+
+                    <div id="lotCardMid">
+                        <h2>{lot.lot_code}</h2>
+                        <p>{`${lot.seed_type} - ${lot.seed_variety}`}</p>
+                    </div>
+
                     <div id="lotCardRhs">
                         <ul>
                             { bag_sizes }
                         </ul>
-                        <h3>{
-                            total_amount == "0" ? "no stock" : `Total: ${total_amount} kg` }
-                        </h3>
                     </div>  
+
                 </div>
              
             </>

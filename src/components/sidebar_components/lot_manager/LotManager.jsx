@@ -16,7 +16,6 @@ function LotManager() {
         return (
             <div id='lotManager'>
                 <button onClick={setOff}>close Lot Manager</button>
-                LOT MANAGER
                 <LotList />
             </div>
         )
