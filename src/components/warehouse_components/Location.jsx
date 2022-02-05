@@ -4,13 +4,21 @@ import palletpalContext from '../../palletpalContext'
 // passing the whole location object in rather than bits
 function Location({ details }) {
     const {
-        state: { foundPallets, metaMode, locations },
+        state: {
+            foundPallets,
+            metaMode,
+            locations,
+            palletOption,
+            availableLocations
+        },
         dispatch
     } = useContext(palletpalContext)
+
     // set initial category
     const [category, setCategory] = useState(details.category)
     const [classes, setClasses] = useState([category, 'location'])
-    // all available categories
+
+    // store all available categories
     const categories = ['spare_floor', 'allocated_storage', 'inaccessible']
 
     useEffect(() => {
@@ -20,7 +28,11 @@ function Location({ details }) {
                 setClasses([...classes, 'found'])
             }
         })
-    }, [foundPallets, category])
+        // Light up available location during 'move'
+        availableLocations.forEach((location) => {
+            setClasses([...classes, 'found'])
+        })
+    }, [foundPallets, category, availableLocations])
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -56,6 +68,24 @@ function Location({ details }) {
             type: 'setLocations',
             data: newLocations
         })
+        if (palletOption == 'move') {
+            dispatch({
+                type: 'setSelectedMoveLocation',
+                data: e.target.id
+            })
+            confirm('You want to move to this location?')
+            if (true) {
+                dispatch({
+                    type: 'updateLocationAfterMove',
+                    data: e.target.id
+                })
+            }
+            console.log(e.target.id)
+            dispatch({
+                type: 'setAvailableLocations',
+                data: []
+            })
+        }
     }
 
     const handleClick = (e) => {

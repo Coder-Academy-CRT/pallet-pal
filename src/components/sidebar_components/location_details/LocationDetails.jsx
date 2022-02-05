@@ -1,6 +1,6 @@
-import React, { useContext } from "react"
-import PalletCard from "./PalletCard"
-import palletpalContext from "../../../palletpalContext"
+import React, { useContext } from 'react'
+import PalletCard from './PalletCard'
+import palletpalContext from '../../../palletpalContext'
 
 function LocationDetails() {
     const {
@@ -10,7 +10,7 @@ function LocationDetails() {
     // this function retrieves the location object directly from the array of arrays of location objects
     function getLocation(coordString) {
         // split coordinate into x and y coords, example ["01","02"]
-        const coords = coordString.split("_")
+        const coords = coordString.split('_')
         // convert to numbers
         let x = Number(coords[0])
         let y = Number(coords[1])
@@ -21,7 +21,7 @@ function LocationDetails() {
     // prepare pallet cards
     const palletCards = []
     // get location object
-    const locationDisplayed = getLocation(clickedLocation)
+    const locationDisplayed = clickedLocation ? clickedLocation : null
     // if a location object is found...
     if (locationDisplayed) {
         // prepare array of pallet ids at location id

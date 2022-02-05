@@ -6,6 +6,7 @@ import LotManager from './lot_manager/LotManager'
 import palletpalContext from '../../palletpalContext'
 import DispatchBox from './location_details/DispatchBox'
 import BuildSidebar from './BuildSidebar'
+import MoveOption from './location_details/MoveOption'
 
 function Sidebar() {
     const {
@@ -20,15 +21,17 @@ function Sidebar() {
                 <LotManager />
                 <SearchWindow />
                 <LocationDetails />
-                {palletOption == 'dispatch' ? <DispatchBox /> : null}
+                {palletOption == 'move' ? <MoveOption /> : null}
             </div>
         )
-    } else {
+    } else if (metaMode == 'build') {
         return (
             <div id='sidebar'>
                 <BuildSidebar />
             </div>
         )
+    } else {
+        return <div id='sidebar'></div>
     }
 }
 
