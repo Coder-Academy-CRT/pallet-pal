@@ -91,7 +91,7 @@ function LotCard( {lot} ) {
             <div className='editLotCard'>
 
                 <h2>{lot.lot_code}</h2>
-                <h1>{updatedLot.lot_code}</h1>
+
                 <div>
 
                     <form onSubmit={submit}>
@@ -132,20 +132,21 @@ function LotCard( {lot} ) {
                             </select>
                             
                         </div>
-                        <button>Submit</button>
+                        {/* <button>Submit</button> */}
                     </form>
                 </div>
 
                 <div id='buttonContainer'>
-                    <button onClick={setEditOff}>save</button>
-                    <button onClick={setEditOff}>exit</button>
+                    <button onClick={setEditOff} id="saveLotButton">save</button>
+                    <button onClick={setEditOff} id="exitLotButton">exit</button>
+                    <button onClick={setEditOff} id="deleteLotButton">delete</button>
                 </div>
                
             </div>
         )
 
     } else {
-        
+
         return (
             <>
                 <div className='lotCard'>

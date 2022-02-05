@@ -14,6 +14,7 @@ $darkest: darkslategray;
 $mostdarkest: rgb(12, 11, 15);
 $highlight: turquoise;
 $lot-card-edit-buttons: rgb(255, 184, 125);
+$edit-lot-card-height: 375px;
 
 * {
     font-family: $text;
@@ -39,7 +40,27 @@ $lot-card-edit-buttons: rgb(255, 184, 125);
 }
 
 .lotSelect {
-    height: 35px;
+    height: 33px;
+}
+
+#buttonContainerAddLot {   // New Lot, container holding the buttons
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-bottom: 10px;
+    border-bottom: solid 2px $darkest;
+}
+
+#buttonContainerAddLot > button {   // New Lot, save / exit buttons
+    color: darkslateblue;
+    position: relative;
+    bottom: 0px;
+    background-color:rgb(255, 233, 215);
+    height: 60px;
+    width: 60px;
+    border: none;
+    margin: 5px ;
+    border-radius: 50%;
 }
 
     
@@ -110,14 +131,47 @@ $lot-card-edit-buttons: rgb(255, 184, 125);
         > #lotManager {
             display: flex;
             flex-direction: column;
-            background-color: white;
             overflow: scroll;
+            background-color: $mostdarkest;
+
+            > #lotManagerHeader {
+                z-index: 2;
+                margin: 10px;
+                padding: 5px 25px 10px 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: solid 1px $darkest;
+            }
+
+                > #lotManagerHeader > div {
+                    color: white
+                }
+
+                > #lotManagerHeader > div > h2 {
+                    font-size: 1.4em;
+                }
+
+                > #lotManagerHeader > div > button {
+                    color: darkslateblue;
+                    background-color:rgb(255, 233, 215);
+                    height: 30px;
+                    width: 30px;
+                    border: none;
+                    margin: 5px ;
+                    border-radius: 50%;
+                }
+
+            > div > #addLotFormButton {
+                // div containing button
+            }
 
             > #lotList {
                 background-color: $mostdarkest;
                 display: flex;
                 flex-direction: column;
 
+                
                 > .editLotCard {
                     justify-self: center;
                     align-self: center;
@@ -126,32 +180,46 @@ $lot-card-edit-buttons: rgb(255, 184, 125);
                     box-shadow: $darkest 0px 20px 75px -5px, white 0px 20px 0px -5px;
                     display: flex;
                     flex-direction: column;
+                    justify-content: flex-start;
                     background-color: $mostdarkest;
-                    height: 400px;
+                    height: $edit-lot-card-height;
                 }
                 
-
                     > div > h2 {
                         color: $lot-card-edit-buttons;
-                        margin: 15px 15px 0px;
+                        margin: 15px 15px 10px 15px;
                     }
 
-                    > div > div {
-                        position: relative;
-                        padding: 10px;
+                    >   div > #buttonContainer {
+                        display: flex;
+                        justify-content: space-evenly;
+                        padding: 5px;
+                        margin-top: 5px;
                     }
 
-                    > div > div > button {
-                        color: darkslateblue;
-                        position: relative;
-                        bottom: 0px;
-                        background-color:rgb(255, 233, 215);
-                        height: 60px;
-                        width: 60px;
-                        border: none;
-                        margin: 10px;
-                        border-radius: 50%;
-                    }
+                        > div > div > button {
+                            color: darkslateblue;
+                            position: relative;
+                            bottom: 0px;
+                            background-color:rgb(255, 233, 215);
+                            height: 60px;
+                            width: 60px;
+                            border: none;
+                            margin: 5px ;
+                            border-radius: 50%;
+                        }
+
+                        >  div > #buttonContainer > #exitLotButton {
+                            background-color: white;
+                        }
+
+                        >  div > #buttonContainer > #saveLotButton {
+                            background-color: white;
+                        }
+
+                        >  div > #buttonContainer > #deleteLotButton {
+                            background-color: white;
+                        }
                 
 
                 > .lotCard {

@@ -1,11 +1,14 @@
-import React, { useContext} from "react"
+import React, { useState, useContext} from "react"
 import palletpalContext from "../../../palletpalContext"
 import LotCard from "./LotCard"
+import AddLot from "./AddLot"
 
 
 function LotList() {
 
     const { state: { lots, products } } = useContext(palletpalContext)
+    const [openAddLot, setOpenAddLot] = useState(false)
+    
 
     let all_lots = []
     
@@ -31,11 +34,27 @@ function LotList() {
         all_lots.push( <LotCard key={index} lot={lot}/> )
     })}   
 
+  
    
     return (
-        <div id='lotList'>
-            {all_lots.sort( (a,b) => (a.props.lot.lot_code > b.props.lot.lot_code) ? 1 : -1)}
-        </div>
+        <>
+            <div id="lotManagerHeader">
+                <div>
+                    <h2>Lot Manager</h2>
+                </div>
+
+                <div id="addLotFormButton">
+                    {openAddLot ? 
+                    <button onClick={setOpenAddLot}><h1>+</h1></button>
+                    :
+                    <button onClick={setOpenAddLot}><h1>+</h1></button> }
+                </div>
+            </div>
+            {openAddLot ? <AddLot setOpenAddLot={ setOpenAddLot }/> : null}
+            <div id='lotList'>
+                {all_lots.sort( (a,b) => (a.props.lot.lot_code > b.props.lot.lot_code) ? 1 : -1)}
+            </div>
+        </>
     )
 }
 
