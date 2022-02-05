@@ -31,10 +31,10 @@ function LotList() {
         all_lots.push( <LotCard key={index} lot={lot}/> )
     })}   
 
-
+   
     return (
         <div id='lotList'>
-            {all_lots}
+            {all_lots.sort( (a,b) => (a.props.lot.lot_code > b.props.lot.lot_code) ? 1 : -1)}
         </div>
     )
 }

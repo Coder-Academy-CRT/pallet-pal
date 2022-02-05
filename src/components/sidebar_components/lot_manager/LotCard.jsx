@@ -7,7 +7,6 @@ function LotCard( {lot} ) {
     const { state: { warehouse }, dispatch } = useContext(palletpalContext)
 
     const [editMode, setEditMode] = useState(false)
-
     const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
 
     function setEditOn() {
@@ -19,13 +18,15 @@ function LotCard( {lot} ) {
     }
 
 
-    let bag_sizes = []
-    let total_amount = 0
+    let bag_sizes = []  // collection of <li> with both bag_size and cumulative total 
+    let total_amount = 0 // cumulative total of each lot by bag_size
+    let count = 0  // for providing a key prop in li children
 
     for (let property in lot) {
         if (property != "lot_code" && property != "seed_variety" && property != "seed_type") {
+            count++
             bag_sizes.push(
-                <li>
+                <li key={count}>
                     {(`${property}kg bags:    `) + `${lot[property]}kg`}    
                 </li>
             )
