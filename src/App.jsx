@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import Warehouse from './components/warehouse_components/Warehouse'
 import Sidebar from './components/sidebar_components/Sidebar'
 import LandingPage from './components/landing_components/LandingPage'
@@ -8,8 +8,9 @@ import reducer from './reducer'
 import api from './api'
 
 const initialState = {
-    warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
-    // warehouse: {},
+    // warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
+    warehouse: {},
+    tempWarehouse: null,
     products: [],
     locations: [],
     seeds: [],
@@ -23,7 +24,7 @@ const initialState = {
     metaMode: 'landing', // options include "landing" "build" "main" to cater for various levels
     microModes: [],
 
-    // ***NOTE*** replace this list when warehouse list enpoint ready
+    // ***NOTE*** replace this list when warehouse list endpoint ready
     warehouseList: [
         { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
         { id: 2, name: 'warehouse_02', rows: 4, columns: 4 }
@@ -34,40 +35,40 @@ export default function App() {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(async () => {
-        // location information into state
+        if (state.metaMode == 'main') {
+            // location information into state
 
-        const res_locations = await api.get(
-            `warehouse/${state.warehouse.id}/locations`
-        )
-        dispatch({
-            type: 'setLocationData',
-            data: res_locations.data
-        })
+            const res_locations = await api.get(
+                `warehouse/${state.warehouse.id}/locations`
+            )
+            dispatch({
+                type: 'setLocationData',
+                data: res_locations.data
+            })
+            //  product information into state
+            const res_products = await api.get(
+                `warehouse/${state.warehouse.id}/products`
+            )
+            dispatch({
+                type: 'setProductData',
+                data: res_products.data
+            })
 
-        //  product information into state
+            //  lot information into state
 
-        const res_products = await api.get(
-            `warehouse/${state.warehouse.id}/products`
-        )
-        dispatch({
-            type: 'setProductData',
-            data: res_products.data
-        })
-
-        //  product information into state
+            const res_lots = await api.get(
+                `warehouse/${state.warehouse.id}/lots`
+            )
+            dispatch({
+                type: 'setLotsInWarehouse',
+                data: res_lots.data
+            })
+        }
 
         const res_seeds = await api.get('seeds')
         dispatch({
             type: 'setSeeds',
             data: res_seeds.data
-        })
-
-        //  lot information into state
-
-        const res_lots = await api.get(`warehouse/${state.warehouse.id}/lots`)
-        dispatch({
-            type: 'setLotsInWarehouse',
-            data: res_lots.data
         })
     }, [state.metaMode])
 

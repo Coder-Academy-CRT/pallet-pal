@@ -1,30 +1,38 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useReducer } from 'react'
 import palletpalContext from '../../palletpalContext'
 
-function Location({ arrOfPallet, id }) {
+// passing the whole location object in rather than bits
+function Location({ details }) {
     const {
-        state: { foundPallets, availableLocations, palletOption, locations },
+        state: {
+            foundPallets,
+            metaMode,
+            locations,
+            palletOption,
+            availableLocations
+        },
         dispatch
     } = useContext(palletpalContext)
-    const [classes, setClasses] = useState('location')
+
+    // set initial category
+    const [category, setCategory] = useState(details.category)
+    const [classes, setClasses] = useState([category, 'location'])
+
+    // store all available categories
+    const categories = ['spare_floor', 'allocated_storage', 'inaccessible']
 
     useEffect(() => {
-        setClasses('location')
-        arrOfPallet.forEach((palletId) => {
+        setClasses([category, 'location'])
+        details.pallets_on_location.forEach((palletId) => {
             if (foundPallets.includes(palletId)) {
-                setClasses('location found')
+                setClasses([...classes, 'found'])
             }
         })
-    }, [foundPallets])
-
-    // Light up available location during 'move' 
-    useEffect(() => {
-        setClasses("location")
-        availableLocations.forEach(location => {
-            setClasses("location found")
+        // Light up available location during 'move'
+        availableLocations.forEach((location) => {
+            setClasses([...classes, 'found'])
         })
-    }, [availableLocations])
-    
+    }, [foundPallets, category, availableLocations])
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -34,36 +42,70 @@ function Location({ arrOfPallet, id }) {
         })
     }
 
-    const handleClick = (e) => {
+    // manage cleanup when category changes
+    function incrementCategory() {
+        // set new category
+        setCategory(
+            categories[(categories.indexOf(category) + 1) % categories.length]
+        )
+        // cleanup classes
+        setClasses([category, 'location'])
+    }
+
+    function updateLocation(coordString) {
+        // increment category and class cleanup
+        incrementCategory()
+        // split coordinate into x and y coords, example ["01","02"]
+        const coords = coordString.split('_')
+        // convert to numbers
+        let x = Number(coords[0])
+        let y = Number(coords[1])
+        // prepare new locations object
+        const newLocations = locations
+        //update global locations object
+        newLocations[x][y].category = category
         dispatch({
-            type: 'setClickedLocation',
-            data: e.target.id
+            type: 'setLocations',
+            data: newLocations
         })
-        if (palletOption == "move") {
+        if (palletOption == 'move') {
             dispatch({
-                type: "setSelectedMoveLocation",
+                type: 'setSelectedMoveLocation',
                 data: e.target.id
             })
-            confirm("You want to move to this location?")
+            confirm('You want to move to this location?')
             if (true) {
                 dispatch({
-                    type: "updateLocationAfterMove",
+                    type: 'updateLocationAfterMove',
                     data: e.target.id
                 })
             }
             console.log(e.target.id)
             dispatch({
-                type: "setAvailableLocations",
+                type: 'setAvailableLocations',
                 data: []
             })
+        }
+    }
 
+    const handleClick = (e) => {
+        // if in build mode location click is different than in if in main mode
+        switch (metaMode) {
+            case 'build':
+                // get location object and set its new category
+                updateLocation(details.coordinate, category)
+            case 'main':
+                dispatch({
+                    type: 'setClickedLocation',
+                    data: e.target.id
+                })
         }
     }
 
     const boxes = []
 
-    if (arrOfPallet[0]) {
-        arrOfPallet.forEach((pallet) => {
+    if (details.pallets_on_location[0] != null) {
+        details.pallets_on_location.forEach((pallet) => {
             boxes.push(
                 <div
                     className='palletBox'
@@ -76,7 +118,10 @@ function Location({ arrOfPallet, id }) {
     }
 
     return (
-        <div className={classes} onClick={handleClick} id={id}>
+        <div
+            className={classes.join(' ')}
+            onClick={handleClick}
+            id={details.coordinates}>
             {boxes}
         </div>
     )

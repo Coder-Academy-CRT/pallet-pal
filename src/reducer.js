@@ -63,18 +63,18 @@ export default function reducer(state, action) {
                 seeds: action.data
             }
 
-
-        case 'setClickedLocation' :
-            let foundLocation = {}
-            state.locations.flat(1).forEach(location => {
+        // ****NOTE**** returning and empty object {} is still truthy and thus you can not do ternary on it. Must return null if no location clicked.
+        case 'setClickedLocation':
+            let foundLocation = null // << changed this to null.
+            state.locations.flat(1).forEach((location) => {
                 if (location.coordinates == action.data) {
                     foundLocation = location
                 }
             })
 
             return {
-            ... state,
-            clickedLocation : foundLocation
+                ...state,
+                clickedLocation: foundLocation
             }
 
         case 'setSelectedMoveLocation':
@@ -89,8 +89,7 @@ export default function reducer(state, action) {
                 palletOption: action.data
             }
 
-
-        case 'updateLocationAfterMove' :
+        case 'updateLocationAfterMove':
             const loc = state.locations
             for (let i = 0; i < loc.length; i++) {
                 if (loc[i].coordinates == action.data) {
@@ -101,67 +100,99 @@ export default function reducer(state, action) {
 
             return {
                 ...state,
-                locations : loc
-            }
-            
-        case 'setPalletOption' :
-            return {
-                ...state, 
-                palletOption : action.data
+                locations: loc
             }
 
-        case 'setSelectedPallet' :
-            const palletInfo = state.products.filter(product => product.pallet_id == action.data)
-            return {
-                ...state, 
-                selectedPallet : { pallet_id: action.data, products_on_pallet: palletInfo}
-            }
-
-        case 'updatePalletDataAfterDispatch' :
+        case 'setPalletOption':
             return {
                 ...state,
-                selectedPallet : { ...state.selectedPallet,  products_on_pallet: action.data }
+                palletOption: action.data
+            }
+
+        case 'setSelectedPallet':
+            const palletInfo = state.products.filter(
+                (product) => product.pallet_id == action.data
+            )
+            return {
+                ...state,
+                selectedPallet: {
+                    pallet_id: action.data,
+                    products_on_pallet: palletInfo
+                }
+            }
+
+        case 'updatePalletDataAfterDispatch':
+            return {
+                ...state,
+                selectedPallet: {
+                    ...state.selectedPallet,
+                    products_on_pallet: action.data
+                }
             }
 
         // Specific for dispatch button in the dispatch box
-        case 'updateProducts' :
+        case 'updateProducts':
             // Merge two array together and only keep the one from seletedPallet if there is duplicate
             const array1 = state.selectedPallet.products_on_pallet
             const array2 = state.products
             for (var i = 0; i < array2.length; i++) {
                 for (var k = 0; k < array1.length; k++) {
-                if (array2[i].product_id == array1[k].product_id) {
-                    array2[i].number_of_bags = array1[k].number_of_bags;
-                    break;
-                }}
+                    if (array2[i].product_id == array1[k].product_id) {
+                        array2[i].number_of_bags = array1[k].number_of_bags
+                        break
+                    }
+                }
             }
             // filtered out products that has no bags left
             // only product that still has bag of product will be updated to state.products
-            const filteredList = array2.filter(product => product.number_of_bags != 0)
+            const filteredList = array2.filter(
+                (product) => product.number_of_bags != 0
+            )
 
             return {
-                ...state, 
-                products : filteredList, 
+                ...state,
+                products: filteredList,
                 // this trigger re-rendering of that pallet card so it will show the updated details on the sidebar
-                clickedLocation: { ...state.clickedLocation, coordinates: state.clickedLocation.coordinates}
-              
+                clickedLocation: {
+                    ...state.clickedLocation,
+                    coordinates: state.clickedLocation.coordinates
+                }
+            }
+
         case 'setFoundPallets':
             return {
                 ...state,
                 foundPallets: action.data
             }
 
+        case 'setLocations':
+            return {
+                ...state,
+                locations: action.data
+            }
+        // NEW
         case 'setWarehouse':
-            console.log(action.data)
             return {
                 ...state,
                 warehouse: action.data
             }
-
-        case 'setAvailableLocations' :
+        // NEW
+        case 'addWarehouse':
             return {
-                ...state, 
-                availableLocations : action.data
+                ...state,
+                warehouseList: [...state.warehouseList, action.data]
+            }
+        // NEW
+        case 'setTempWarehouse':
+            return {
+                ...state,
+                tempWarehouse: action.data
+            }
+
+        case 'setAvailableLocations':
+            return {
+                ...state,
+                availableLocations: action.data
             }
 
         case 'setMetaMode':

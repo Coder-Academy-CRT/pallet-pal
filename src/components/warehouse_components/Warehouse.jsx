@@ -1,35 +1,33 @@
-import React, { useContext } from "react"
-import palletpalContext from "../../palletpalContext"
-import Location from "./Location"
-import DispatchBox from "../sidebar_components/location_details/DispatchBox"
+import React, { useContext, useEffect } from 'react'
+import palletpalContext from '../../palletpalContext'
+import Location from './Location'
+import DispatchBox from '../sidebar_components/location_details/DispatchBox'
 
 function Warehouse() {
+    const {
+        state: { warehouse, locations, metaMode, tempWarehouse, palletOption }
+    } = useContext(palletpalContext)
 
-    const { state: { warehouse, locations, metaMode, palletOption } } = useContext(palletpalContext)
+    // if there is a temp WH style from its rows and cols (for build mode)
+    const currentWh = tempWarehouse ? tempWarehouse : warehouse
 
     const dynamicStyling = {
-        gridTemplateRows: `repeat(${warehouse.rows}, calc(100% / ${warehouse.rows}))`,
-        gridTemplateColumns: `repeat(${warehouse.columns}, calc(100% / ${warehouse.columns}))`
+        gridTemplateRows: `repeat(${currentWh.rows}, calc(100% / ${currentWh.rows}))`,
+        gridTemplateColumns: `repeat(${currentWh.columns}, calc(100% / ${currentWh.columns}))`
     }
 
-    if (metaMode == "build") {
-        return(
-            <h1>BUILD WAREHOUSE VIEW</h1>
-        )
-    } else {
-        return (
-            <div id='warehouse' style={dynamicStyling}>
-                {locations.flat(1).map((location, index) => (       
-                    <Location arrOfPallet={location.pallets_on_location} key={index} id={location.coordinates}/>
-                ))}
-                {palletOption == 'dispatch' ? 
-                <div className="blockout-bg">
+    return (
+        <div id='warehouse' style={dynamicStyling}>
+            {locations.flat(1).map((location, index) => (
+                <Location details={location} key={index} />
+            ))}
+            {palletOption == 'dispatch' ? (
+                <div className='blockout-bg'>
                     <DispatchBox />
                 </div>
-                : null }
-            </div>
-        ) 
-    }
+            ) : null}
+        </div>
+    )
 }
 
 export default Warehouse
