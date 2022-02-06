@@ -34,10 +34,7 @@ export default function AddLot( {setCreateLotForm} ) {
 
     // all lots in warehouse to ensure that no duplicate lot codes are created
     const existing_lots = lots.map(lot => lot.lot_code)
-    console.log(lots)
 
-
-    // 
     async function createNewLot(e) {
         e.preventDefault()
 
@@ -149,7 +146,7 @@ export default function AddLot( {setCreateLotForm} ) {
             </div>
 
             <div id='footerNewLot'>
-                <button onClick={(e) => createNewLot(e)} id="addLotButton">save</button>
+                <button onClick={(e) => createNewLot(e)} id="addLotButton">add</button>
                 <br></br><p>{alertMessage}</p>
             </div>
         

@@ -41,6 +41,17 @@ export default function reducer (state, action) {
                 lot.lot_code == action.data
             ), 1)
             return { ...state }
+
+        case 'updateLot' :
+            state.lots[
+                state.lots.findIndex( (lot) =>
+                lot.lot_code == action.original_lot_code )
+                ] = {
+                        lot_code : action.new_lot_code,
+                        seed_type : action.new_seed_type,
+                        seed_variety : action.new_seed_variety
+                    }
+            return { ...state }
             
         case 'setProductData' :
             return {

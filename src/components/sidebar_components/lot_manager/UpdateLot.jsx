@@ -8,6 +8,9 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
     const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
     const [confirmation, setConfirmation] = useState("no")
 
+    // all lots in warehouse to ensure that no duplicate lot codes are created
+    const existing_lots = lots.map(lot => lot.lot_code)
+
      /////////////////////// SEED TYPE AND VARIETY FORM SELECT INPUT OPTIONS ////////////////////
 
     let seedTypes = new Set([])
@@ -35,29 +38,46 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
 
     /////////////////////// PUT REQUEST TO API => DATABASE  ////////////////////
 
-    async function submit(event) {
-    event.preventDefault()
+    async function updateLot(e) {
+        e.preventDefault()
 
-    // const res = await api.put(
-    //     `/${warehouse.id}/lot/${lot.lot_code}`, 
-    //     { 
-    //         lot_code: updatedLot.lot_code,
-    //         seed_type: updatedLot.seed_type,
-    //         seed_variety: updatedLot.seed_variety
-    //      } )
+        if (existing_lots.includes(updatedLot.lot_code) && updatedLot.lot_code != lot.lot_code) {
+            
+            window.alert("Another lot with the same code already exists")
 
-    // dispatch({
-    //     type: "",
-    //     data: ""
-    // })
+        } else {
+            try {
+                const response = await api.put(
+                    `warehouse/${warehouse.id}/lot/${lot.lot_code}`, 
+                    { 
+                        lot_code: updatedLot.lot_code,
+                        seed_type: updatedLot.seed_type,
+                        seed_variety: updatedLot.seed_variety
+                    } )
 
+                if (response.data == `lot ${lot.lot_code} updated to ${updatedLot.lot_code}: ${updatedLot.seed_type} - ${updatedLot.seed_variety}`) {
+                    dispatch({
+                        type: "updateLot",
+                        original_lot_code: lot.lot_code,
+                        new_lot_code: updatedLot.lot_code,
+                        new_seed_type: updatedLot.seed_type,
+                        new_seed_variety: updatedLot.seed_variety
+                    })
+                    window.alert(`Success ! Lot ${lot.lot_code} updated`)
+                    setEditMode(false)
+                }
+            } catch (err) {
+                window.alert("Lot could not be updated. Please close and try again later")
+                console.log(err)
+            }
+        }
     }
+
 
     /////////////////////// DELETE REQUEST TO API => DATABASE  ////////////////////
 
     function checkDeleteLot(e) {
         e.preventDefault()
-
         if (lot_stocks[lot.lot_code] > -1 ) {
             setConfirmation("check") 
         } else {
@@ -65,7 +85,6 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
         }
     }
 
-  
     async function deleteLot() {
   
         try {
@@ -87,11 +106,13 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
         }
     }
 
+    console.log(updatedLot)
+
     return (          
         <div className='editLotCard'>
             <h2>{lot.lot_code}</h2>
             <div>
-                <form onSubmit={submit}>
+                <form >
                     <div id="lotForm">
                         <label htmlFor="lotCode">Please enter new lot code :</label>
                         <input
@@ -141,7 +162,7 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
             </>
             :
             <div id='buttonContainer'>
-                <button onClick={ () => setEditMode(true)} id="saveLotButton">save</button>
+                <button onClick={ (e) => updateLot(e) } id="saveLotButton">save</button>
                 <button onClick={ () => setEditMode(false)} id="exitLotButton">exit</button>
                 <button onClick={ (e) => checkDeleteLot(e)} id="deleteLotButton">delete</button>
             </div> }
