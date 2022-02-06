@@ -1,15 +1,15 @@
 import React, {useState, useContext} from 'react';
 import palletpalContext from "../../../palletpalContext"
+import api from '../../../api';
 
-export default function AddLot( {setOpenAddLot}) {
+export default function AddLot( {setCreateLotForm} ) {
 
     const { state: { warehouse, seeds, lots }, dispatch } = useContext(palletpalContext)
     const [newLot, setNewLot] = useState( { lot_code : "", seed_type: "none declared", seed_variety: ''} )
-    const [alertMessage, setAlertMessage] = useState("alertMessage")
+    const [alertMessage, setAlertMessage] = useState("")
 
 
-    /// SEED
-
+    /// SEED TYPES and VARIETIES for adding to select options
     let seedTypes = new Set([])
     let seedVarieties = []
 
@@ -32,15 +32,13 @@ export default function AddLot( {setOpenAddLot}) {
         }
     })
 
-  /// make sure none of the existing lot
-
-    console.log(newLot)
-
+    // all lots in warehouse to ensure that no duplicate lot codes are created
     const existing_lots = lots.map(lot => lot.lot_code)
     console.log(lots)
 
 
-    function createNewLot(e) {
+    // 
+    async function createNewLot(e) {
         e.preventDefault()
 
         if (existing_lots.includes(newLot.lot_code)) {
@@ -48,17 +46,40 @@ export default function AddLot( {setOpenAddLot}) {
         } else if (newLot.lot_code == "") {
             setAlertMessage("Please write in a lot code")
         } else if (newLot.seed_type == "none declared") {
-            setAlertMessage("Please select a seed type") 
+            setAlertMessage("Please select a seed type")
+        } else if (alertMessage == "... connecting to database ...") {
+            console.log("Guarding against additional clicks")
         } else {
-            setAlertMessage("Attempting to add lot") 
+            setAlertMessage("... connecting to database ...") 
 
-            dispatch({
-                type: "addNewLot",
-                data: newLot
-            })
+            try {
+                const response = await api.post(
+                    `warehouse/${warehouse.id}/lot/${newLot.lot_code}`,
+                    { 
+                        seed_type : newLot.seed_type,
+                        seed_variety : newLot.seed_variety
+                    }
+                )
+                // only want the reducer to update state if we have a success
+                if (response.data == `lot code ${newLot.lot_code} added to warehouse database`) {
+                    dispatch({
+                        type: "addNewLot",
+                        data: newLot
+                    })
+                    
+                    // provide the message for 3 seconds and then close lot manager
+                    setAlertMessage("Lot successfully added")
+                    setTimeout(() => {
+                        setCreateLotForm(false)
+                        setAlertMessage("")
+                        clearTimeout(self)
+                    }, 3000);
+                }
 
-            console.log(lots)
-
+            } catch (err) {
+                setAlertMessage("Lot could not be added. Please close and try again later")
+                console.log(err)
+            }
         }
     }
 
@@ -67,6 +88,8 @@ export default function AddLot( {setOpenAddLot}) {
     const select_seed_value = (state) => {
         return newLot.seed_type == "none declared" ? "to be selected" : state
     }
+
+    
 
     return (
       
@@ -122,7 +145,6 @@ export default function AddLot( {setOpenAddLot}) {
                         </select>
                         
                     </div>
-                    {/* <button>Submit</button> */}
                 </form>
             </div>
 

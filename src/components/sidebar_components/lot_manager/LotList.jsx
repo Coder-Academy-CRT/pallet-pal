@@ -57,7 +57,7 @@ function LotList() {
                     <button onClick={() => setCreateLotForm(true)}><h1 style={ newLotButton("black", 0) }>+</h1></button> }
                 </div>
             </div>
-            {createLotForm ? <CreateLot/> : null}
+            {createLotForm ? <CreateLot setCreateLotForm={ setCreateLotForm }/> : null}
             <div id='lotList'>
                 {all_lots.sort( (a,b) => (a.props.lot.lot_code > b.props.lot.lot_code) ? 1 : -1)}
             </div>
