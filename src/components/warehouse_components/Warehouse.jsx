@@ -1,30 +1,33 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import palletpalContext from '../../palletpalContext'
-import Location from "./Location"
+import Location from './Location'
+import DispatchBox from '../sidebar_components/location_details/DispatchBox'
 
 function Warehouse() {
+    const {
+        state: { warehouse, locations, metaMode, tempWarehouse, palletOption }
+    } = useContext(palletpalContext)
 
-    const { state: { warehouse, locations, palletOption } } = useContext(palletpalContext)
-
-    let rows = warehouse.rows
-    let columns = warehouse.columns
-
-    // const locations = []
-    const locationCount = rows * columns
-    // alt locations.length
+    // if there is a temp WH style from its rows and cols (for build mode)
+    const currentWh = tempWarehouse ? tempWarehouse : warehouse
 
     const dynamicStyling = {
-        gridTemplateRows: `repeat(${rows}, calc(100% / ${rows}))`,
-        gridTemplateColumns: `repeat(${columns}, calc(100% / ${columns}))`
+        gridTemplateRows: `repeat(${currentWh.rows}, calc(100% / ${currentWh.rows}))`,
+        gridTemplateColumns: `repeat(${currentWh.columns}, calc(100% / ${currentWh.columns}))`
     }
 
     return (
         <div id='warehouse' style={dynamicStyling}>
-             {locations.map((location, index) => (       
-                <Location arrOfPallet={location.pallets_on_location} key={index} id={location.coordinates}/>
+            {locations.flat(1).map((location, index) => (
+                <Location details={location} key={index} />
             ))}
+            {palletOption == 'dispatch' ? (
+                <div className='blockout-bg'>
+                    <DispatchBox />
+                </div>
+            ) : null}
         </div>
-    ) 
+    )
 }
 
 export default Warehouse
