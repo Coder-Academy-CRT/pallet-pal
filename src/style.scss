@@ -43,15 +43,16 @@ $edit-lot-card-height: 375px;
     height: 33px;
 }
 
-#buttonContainerAddLot {   // New Lot, container holding the buttons
+#footerNewLot {   // New Lot, container holding the buttons
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    align-items: center;
     padding-bottom: 10px;
     border-bottom: solid 2px $darkest;
 }
 
-#buttonContainerAddLot > button {   // New Lot, save / exit buttons
+#footerNewLot > button {   // New Lot, save / exit buttons
     color: darkslateblue;
     position: relative;
     bottom: 0px;
@@ -59,8 +60,15 @@ $edit-lot-card-height: 375px;
     height: 60px;
     width: 60px;
     border: none;
-    margin: 5px ;
+    margin: 5px 5px 5px 30px ;
     border-radius: 50%;
+}
+
+#footerNewLot > p {   // New Lot, save / exit buttons
+    color: rgb(255, 150, 150);
+    position: relative;
+    width: 80%;
+    left: 5%;
 }
 
     

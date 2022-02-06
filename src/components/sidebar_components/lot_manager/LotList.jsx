@@ -1,13 +1,13 @@
 import React, { useState, useContext} from "react"
 import palletpalContext from "../../../palletpalContext"
 import LotCard from "./LotCard"
-import AddLot from "./AddLot"
+import CreateLot from "./CreateLot"
 
 
 function LotList() {
 
     const { state: { lots, products } } = useContext(palletpalContext)
-    const [openAddLot, setOpenAddLot] = useState(false)
+    const [createLotForm, setCreateLotForm] = useState(false)
     
 
     let all_lots = []
@@ -34,8 +34,15 @@ function LotList() {
         all_lots.push( <LotCard key={index} lot={lot}/> )
     })}   
 
-  
-   
+    // rotation and color change for button display
+    const newLotButton = (color, degrees) => {
+        return {
+            color: color,
+            transform: `rotate(${degrees}deg)`,
+            transitionDuration: "0.5s"
+        }
+    }
+
     return (
         <>
             <div id="lotManagerHeader">
@@ -44,13 +51,13 @@ function LotList() {
                 </div>
 
                 <div id="addLotFormButton">
-                    {openAddLot ? 
-                    <button onClick={setOpenAddLot}><h1>+</h1></button>
+                    { createLotForm ? 
+                    <button onClick={() => setCreateLotForm(false)}><h1 style={ newLotButton("red", 45) }>+</h1></button>
                     :
-                    <button onClick={setOpenAddLot}><h1>+</h1></button> }
+                    <button onClick={() => setCreateLotForm(true)}><h1 style={ newLotButton("black", 0) }>+</h1></button> }
                 </div>
             </div>
-            {openAddLot ? <AddLot setOpenAddLot={ setOpenAddLot }/> : null}
+            {createLotForm ? <CreateLot/> : null}
             <div id='lotList'>
                 {all_lots.sort( (a,b) => (a.props.lot.lot_code > b.props.lot.lot_code) ? 1 : -1)}
             </div>

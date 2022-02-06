@@ -1,12 +1,11 @@
 import React, {useState, useContext} from 'react';
 import palletpalContext from "../../../palletpalContext"
 
-
-
 export default function AddLot( {setOpenAddLot}) {
 
     const { state: { warehouse, seeds, lots }, dispatch } = useContext(palletpalContext)
-    const [updatedLot, setUpdatedLot] = useState( { lot_code : "", seed_type: "none declared", seed_variety: ''} )
+    const [newLot, setNewLot] = useState( { lot_code : "", seed_type: "none declared", seed_variety: ''} )
+    const [alertMessage, setAlertMessage] = useState("alertMessage")
 
 
     /// SEED
@@ -24,7 +23,7 @@ export default function AddLot( {setOpenAddLot}) {
     })
 
     let filteredSeedVarieties = seedVarieties.map( (variety, index) => {
-        if (variety.type == updatedLot.seed_type) {
+        if (variety.type == newLot.seed_type) {
             return (
                 <option value={variety.value} key={index}>
                 {variety.label}
@@ -35,21 +34,16 @@ export default function AddLot( {setOpenAddLot}) {
 
   /// make sure none of the existing lot
 
-    const submit = () => {
-      console.log("Submit")
-    }
+    console.log(newLot)
 
-    console.log(updatedLot)
-
-    let conditional_grey = updatedLot.seed_type == "none declared" ? {color:"grey"} : {}
-
+    // duplicate code in the seed type and seed variety select menus
+    let conditional_grey = newLot.seed_type == "none declared" ? {color:"grey"} : {}
     const select_seed_value = (state) => {
-        return updatedLot.seed_type == "none declared" ? "to be selected" : state
+        return newLot.seed_type == "none declared" ? "to be selected" : state
     }
 
     return (
-    
-            
+      
         <div className='addLotCard'>
 
             <div>
@@ -60,23 +54,21 @@ export default function AddLot( {setOpenAddLot}) {
                         <input
                             className="lotInputs"
                             id="lotCode"
-                            value={ updatedLot.lot_code }
+                            value={ newLot.lot_code }
                             placeholder={"Add a new lot code"}
-                            style={updatedLot.lot_code == "" ? {color:"grey"} : {} }
+                            style={newLot.lot_code == "" ? {color:"grey"} : {} }
                             onChange={(event) => 
-                                setUpdatedLot( {...updatedLot, lot_code : event.target.value})}
+                                setNewLot( {...newLot, lot_code : event.target.value})}
                         ></input> 
 
                         <label htmlFor="lotSeedType">Please select seed type:</label>
                         <select
                             className="lotInputs lotSelect"
                             id="lotSeedType"
-                            value={ select_seed_value(updatedLot.seed_type) }
+                            value={ select_seed_value(newLot.seed_type) }
                             style={ conditional_grey }
-                            onChange={(event) => setUpdatedLot( { ... updatedLot, seed_type: event.target.value, seed_variety: "variety not stated" })}
-
+                            onChange={(event) => setNewLot( { ... newLot, seed_type: event.target.value, seed_variety: "variety not stated" })}
                         >
-                          
                             <option value="to be selected" disabled>
                                 Select a seed type
                             </option>
@@ -93,12 +85,12 @@ export default function AddLot( {setOpenAddLot}) {
                         <select
                             className="lotInputs lotSelect"
                             id="lotVarietyType"
-                            value={ select_seed_value(updatedLot.seed_variety) }
-                            onChange={(event) => setUpdatedLot( { ... updatedLot, seed_variety: event.target.value })}
+                            value={ select_seed_value(newLot.seed_variety) }
+                            onChange={(event) => setNewLot( { ... newLot, seed_variety: event.target.value })}
                             style={ conditional_grey }
                         >
                         <option value="to be selected" disabled>
-                            { updatedLot.seed_type == "none declared" ? "Select a seed type first" : "Select variety"}
+                            { newLot.seed_type == "none declared" ? "Select a seed type first" : "Select variety"}
                          </option>
                             {filteredSeedVarieties}
                         </select>
@@ -108,9 +100,9 @@ export default function AddLot( {setOpenAddLot}) {
                 </form>
             </div>
 
-            <div id='buttonContainerAddLot'>
+            <div id='footerNewLot'>
                 <button onClick={null} id="addLotButton">save</button>
-                {/* <button onClick={setOpenAddLot(false)} id="exitAddLotButton">exit</button> */}
+                <br></br><p>{alertMessage}</p>
             </div>
         
         </div>
