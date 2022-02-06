@@ -1,16 +1,30 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import palletpalContext from '../../palletpalContext'
 
 function Location({ arrOfPallet, id }) {
+    const {
+        state: { foundPallets, availableLocations, palletOption, locations },
+        dispatch
+    } = useContext(palletpalContext)
+    const [classes, setClasses] = useState('location')
 
-    const { state: { }, dispatch } = useContext(palletpalContext)
+    useEffect(() => {
+        setClasses('location')
+        arrOfPallet.forEach((palletId) => {
+            if (foundPallets.includes(palletId)) {
+                setClasses('location found')
+            }
+        })
+    }, [foundPallets])
 
-    const style = {
-        color: "white",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    }
+    // Light up available location during 'move' 
+    useEffect(() => {
+        setClasses("location")
+        availableLocations.forEach(location => {
+            setClasses("location found")
+        })
+    }, [availableLocations])
+    
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -25,24 +39,47 @@ function Location({ arrOfPallet, id }) {
             type: 'setClickedLocation',
             data: e.target.id
         })
+        if (palletOption == "move") {
+            dispatch({
+                type: "setSelectedMoveLocation",
+                data: e.target.id
+            })
+            confirm("You want to move to this location?")
+            if (true) {
+                dispatch({
+                    type: "updateLocationAfterMove",
+                    data: e.target.id
+                })
+            }
+            console.log(e.target.id)
+            dispatch({
+                type: "setAvailableLocations",
+                data: []
+            })
+
+        }
     }
 
     const boxes = []
 
     if (arrOfPallet[0]) {
-        arrOfPallet.forEach( (pallet) => { 
-            boxes.push(<div className='palletBox' key={pallet} style={style} onClick={handleClickOnBox}># {pallet}</div>) }
-    )}
+        arrOfPallet.forEach((pallet) => {
+            boxes.push(
+                <div
+                    className='palletBox'
+                    key={pallet}
+                    onClick={handleClickOnBox}>
+                    # {pallet}
+                </div>
+            )
+        })
+    }
 
-    return <div 
-        className='location' 
-        onClick={handleClick} 
-        id={id}>
-        {boxes}
-    </div>
-    
+    return (
+        <div className={classes} onClick={handleClick} id={id}>
+            {boxes}
+        </div>
+    )
 }
 
 export default Location
-
-
