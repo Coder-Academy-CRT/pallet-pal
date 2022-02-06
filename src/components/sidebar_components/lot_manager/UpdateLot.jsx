@@ -5,7 +5,6 @@ import api from '../../../api';
 export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
 
     const { state: { warehouse, seeds, lots }, dispatch } = useContext(palletpalContext)
-
     const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
 
 
