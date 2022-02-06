@@ -106,56 +106,59 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
         }
     }
 
-    console.log(updatedLot)
 
     return (          
         <div className='editLotCard'>
-            <h2>{lot.lot_code}</h2>
-            <div>
-                <form >
-                    <div id="lotForm">
-                        <label htmlFor="lotCode">Please enter new lot code :</label>
-                        <input
-                            className="lotInputs"
-                            id="lotCode"
-                            value={updatedLot.lot_code}
-                            onChange={(event) => 
-                                setUpdatedLot( {...updatedLot, lot_code : event.target.value})}
-                        ></input> 
-
-                        <label htmlFor="lotSeedType">Please select seed type:</label>
-                        <select
-                            className="lotInputs lotSelect"
-                            id="lotSeedType"
-                            value={updatedLot.seed_type}
-                            onChange={(event) => setUpdatedLot( { ... updatedLot, seed_type: event.target.value, seed_variety: "variety not stated" })}
-
-                        >
-                            { uniqueSeedTypes.map( (seed, index) => (
-                                <option value={seed.value} key={index}>
-                                    {seed.label}
-                                </option>
-                            ))}
-                        </select>
-
-                        <label htmlFor="lotSeedVariety">Please select seed variety :</label>
-
-                        <select
-                            className="lotInputs lotSelect"
-                            id="lotVarietyType"
-                            value={ updatedLot.seed_variety == lot.seed_variety ? lot.seed_variety : updatedLot.seed_variety}
-                            onChange={(event) => setUpdatedLot( { ... updatedLot, seed_variety: event.target.value })}
-                        >
-                            {filteredSeedVarieties}
-                        </select>                        
-                    </div>
-                </form>
+            <div id="editLotHeader">
+                <h3 id="editLot-Heading">Edit Lot</h3>
+                <h3 id="editLot-LotCode">{lot.lot_code}</h3>
             </div>
+            
+
+            <form className="lotForm">
+
+                <label htmlFor="lotCode">Please enter new lot code :</label>
+                <input
+                    className="lotInputs"
+                    id="lotCode"
+                    value={updatedLot.lot_code}
+                    onChange={(event) => 
+                        setUpdatedLot( {...updatedLot, lot_code : event.target.value})}
+                ></input> 
+
+                <label htmlFor="lotSeedType">Please select seed type:</label>
+                <select
+                    className="lotInputs lotSelect"
+                    id="lotSeedType"
+                    value={updatedLot.seed_type}
+                    onChange={(event) => setUpdatedLot( { ... updatedLot, seed_type: event.target.value, seed_variety: "variety not stated" })}
+
+                >
+                    { uniqueSeedTypes.map( (seed, index) => (
+                        <option value={seed.value} key={index}>
+                            {seed.label}
+                        </option>
+                    ))}
+                </select>
+
+                <label htmlFor="lotSeedVariety">Please select seed variety :</label>
+
+                <select
+                    className="lotInputs lotSelect"
+                    id="lotVarietyType"
+                    value={ updatedLot.seed_variety == lot.seed_variety ? lot.seed_variety : updatedLot.seed_variety}
+                    onChange={(event) => setUpdatedLot( { ... updatedLot, seed_variety: event.target.value })}
+                >
+                    {filteredSeedVarieties}
+                </select>                        
+
+            </form>
+
 
             {confirmation == "check" ? 
             <>
             <div id='buttonContainer'>
-                <p style={{color:"red"}}>{`${lot_stocks[lot.lot_code]}kg in stock. If you delete the lot, products will also be removed from warehouse`}</p>
+                <p>{`${lot_stocks[lot.lot_code]}kg in stock. If you delete the lot, products will also be removed from warehouse`}</p>
                 <button style={{width:"200px"}} onClick={ () => deleteLot()}>continue</button>
                 <button style={{width:"200px"}} onClick={ () => setConfirmation("no")}>cancel</button>
             </div>

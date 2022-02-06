@@ -36,26 +36,34 @@ function LotList() {
     })}   
 
     // rotation and color change for button display
-    const newLotButton = (color, degrees) => {
+    const rotateButton = (color, degrees, time) => {
         return {
             color: color,
             transform: `rotate(${degrees}deg)`,
-            transitionDuration: "0.5s"
+            transitionDuration: time
+        }
+    }
+
+    // translation into the menu and back to header
+    const moveButton = (pixels, time) => {
+        return {
+            transform: `translateY(${pixels})`,
+            transitionDuration: time
         }
     }
 
     return (
         <>
             <div id="lotManagerHeader">
-                <div>
-                    <h2>Lot Manager</h2>
-                </div>
-
-                <div id="addLotFormButton">
+ 
+                <h2>Lot Manager</h2>
+    
+                <div id="lotManagerHeaderRhs">
+                    {createLotForm ? null : <p>Add Lot</p> }
                     { createLotForm ? 
-                    <button onClick={() => setCreateLotForm(false)}><h1 style={ newLotButton("red", 45) }>+</h1></button>
+                    <button style={moveButton("60px", "1s")} onClick={() => setCreateLotForm(false)}><h1 style={ rotateButton("red", 45, "1s") }>+</h1></button>
                     :
-                    <button onClick={() => setCreateLotForm(true)}><h1 style={ newLotButton("black", 0) }>+</h1></button> }
+                    <button style={moveButton("0px", "0.5s")} onClick={() => setCreateLotForm(true)}><h1 style={ rotateButton("black", 0, "0.5s") }>+</h1></button> }
                 </div>
             </div>
             {createLotForm ? <CreateLot setCreateLotForm={ setCreateLotForm }/> : null}
