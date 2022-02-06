@@ -26,7 +26,32 @@ export default function reducer(state, action) {
                 lots: action.data
             }
 
-        case 'setProductData':
+
+        case 'addNewLot' :
+            return {
+                ...state,
+                lots : [ ...state.lots, action.data ] // payload is another lot object
+            }
+
+        case 'deleteLot' :
+            state.lots.splice(
+                state.lots.findIndex( (lot) =>
+                lot.lot_code == action.data
+            ), 1)
+            return { ...state }
+
+        case 'updateLot' :
+            state.lots[
+                state.lots.findIndex( (lot) =>
+                lot.lot_code == action.original_lot_code )
+                ] = {
+                        lot_code : action.new_lot_code,
+                        seed_type : action.new_seed_type,
+                        seed_variety : action.new_seed_variety
+                    }
+            return { ...state }
+            
+        case 'setProductData' :
             return {
                 ...state,
                 products: action.data
