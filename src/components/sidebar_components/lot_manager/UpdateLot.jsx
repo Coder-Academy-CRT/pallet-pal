@@ -6,7 +6,7 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
 
     const { state: { warehouse, seeds, lots }, dispatch } = useContext(palletpalContext)
     const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
-
+    const [confirmation, setConfirmation] = useState("no")
 
      /////////////////////// SEED TYPE AND VARIETY FORM SELECT INPUT OPTIONS ////////////////////
 
@@ -55,38 +55,42 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
 
     /////////////////////// DELETE REQUEST TO API => DATABASE  ////////////////////
 
-    async function deleteLot(e) {
+    function checkDeleteLot(e) {
         e.preventDefault()
 
-        // consider warning if stock in place
-        console.log(` CURRENT STOCK = ${lot.lot_code} : ${lot_stocks[lot.lot_code]}`)
-
-            try {
-                const response = await api.delete(
-                    `warehouse/${warehouse.id}/lot/${lot.lot_code}`
-                )
-                // only want the reducer to delete from state if we have a success
-                if (response.data == `lot ${lot.lot_code} deleted`) {
-                    dispatch({
-                        type: "deleteLot",
-                        data: lot.lot_code
-                    })
-                    window.alert(`Success ! Lot ${lot.lot_code} deleted`)
-                }
-            } catch (err) {
-                window.alert("Lot could not be deleted. Please close and try again later")
-                console.log(err)
-            }
+        if (lot_stocks[lot.lot_code] > -1 ) {
+            setConfirmation("check") 
+        } else {
+            deleteLot()
         }
+    }
 
-    return (
-            
+  
+    async function deleteLot() {
+  
+        try {
+            const response = await api.delete(
+                `warehouse/${warehouse.id}/lot/${lot.lot_code}`
+            )
+            // only want the reducer to delete from state if we have a success
+            if (response.data == `lot ${lot.lot_code} deleted`) {
+                dispatch({
+                    type: "deleteLot",
+                    data: lot.lot_code
+                })
+                window.alert(`Success ! Lot ${lot.lot_code} deleted`)
+                setEditMode(false)
+            }
+        } catch (err) {
+            window.alert("Lot could not be deleted. Please close and try again later")
+            console.log(err)
+        }
+    }
+
+    return (          
         <div className='editLotCard'>
-
             <h2>{lot.lot_code}</h2>
-
             <div>
-
                 <form onSubmit={submit}>
                     <div id="lotForm">
                         <label htmlFor="lotCode">Please enter new lot code :</label>
@@ -122,18 +126,25 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
                             onChange={(event) => setUpdatedLot( { ... updatedLot, seed_variety: event.target.value })}
                         >
                             {filteredSeedVarieties}
-                        </select>
-                        
+                        </select>                        
                     </div>
-                    {/* <button>Submit</button> */}
                 </form>
             </div>
 
+            {confirmation == "check" ? 
+            <>
+            <div id='buttonContainer'>
+                <p style={{color:"red"}}>{`${lot_stocks[lot.lot_code]}kg in stock. If you delete the lot, products will also be removed from warehouse`}</p>
+                <button style={{width:"200px"}} onClick={ () => deleteLot()}>continue</button>
+                <button style={{width:"200px"}} onClick={ () => setConfirmation("no")}>cancel</button>
+            </div>
+            </>
+            :
             <div id='buttonContainer'>
                 <button onClick={ () => setEditMode(true)} id="saveLotButton">save</button>
                 <button onClick={ () => setEditMode(false)} id="exitLotButton">exit</button>
-                <button onClick={ (e) => deleteLot(e)} id="deleteLotButton">delete</button>
-            </div>
+                <button onClick={ (e) => checkDeleteLot(e)} id="deleteLotButton">delete</button>
+            </div> }
            
         </div>
     )
