@@ -36,6 +36,32 @@ export default function AddLot( {setOpenAddLot}) {
 
     console.log(newLot)
 
+    const existing_lots = lots.map(lot => lot.lot_code)
+    console.log(lots)
+
+
+    function createNewLot(e) {
+        e.preventDefault()
+
+        if (existing_lots.includes(newLot.lot_code)) {
+            setAlertMessage("Lot already exists")
+        } else if (newLot.lot_code == "") {
+            setAlertMessage("Please write in a lot code")
+        } else if (newLot.seed_type == "none declared") {
+            setAlertMessage("Please select a seed type") 
+        } else {
+            setAlertMessage("Attempting to add lot") 
+
+            dispatch({
+                type: "addNewLot",
+                data: newLot
+            })
+
+            console.log(lots)
+
+        }
+    }
+
     // duplicate code in the seed type and seed variety select menus
     let conditional_grey = newLot.seed_type == "none declared" ? {color:"grey"} : {}
     const select_seed_value = (state) => {
@@ -101,7 +127,7 @@ export default function AddLot( {setOpenAddLot}) {
             </div>
 
             <div id='footerNewLot'>
-                <button onClick={null} id="addLotButton">save</button>
+                <button onClick={(e) => createNewLot(e)} id="addLotButton">save</button>
                 <br></br><p>{alertMessage}</p>
             </div>
         

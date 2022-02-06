@@ -29,6 +29,12 @@ export default function reducer (state, action) {
                 lots : action.data
             }
 
+        case 'addNewLot' :
+            return {
+                ...state,
+                lots : [ ...state.lots, action.data ] // payload is another lot object
+            }
+
         case 'setProductData' :
             return {
                 ...state,
