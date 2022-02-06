@@ -1,31 +1,18 @@
 import { useState } from "react"
 import LotList from "./LotList"
 
-function LotManager() {
-    const [active, setActive] = useState(true)
+export default function LotManager() {
+    const [active, setActive] = useState(false)
 
-    function setOff() {
-        setActive(false)
-    }
-
-    function setOn() {
-        setActive(true)
-    }
-
-    if (active) {
-        return (
-            <div id='lotManager'>
-                <button onClick={setOff}>close Lot Manager</button>
+    return (
+        <div id='lotManager'>
+            { active ? 
+            <>
+                <button onClick={ () => setActive(false) }>close Lot Manager</button>
                 <LotList />
-            </div>
-        )
-    } else {
-        return (
-            <div id='lotManager'>
-                <button onClick={setOn}>open Lot Manager</button>
-            </div>
-        )
-    }
+            </>
+            :
+            <button onClick={ () => setActive(true)}>open Lot Manager</button> }
+        </div>
+    )
 }
-
-export default LotManager

@@ -13,11 +13,12 @@ function LotList() {
     let all_lots = []
     
     {lots.forEach( (lot, index) => {
-
+        // for every lot, go through the products and find matches in the products
         products.forEach( (product) => {
             if (product.lot_code == lot.lot_code) {
                 
                 let product_amount = Number(product.bag_size) * Number(product.number_of_bags)
+                // for any matches, take the total volume of the product, and add it to a new property in the lot
                 
                 switch (lot[product.bag_size]) {
                     case undefined:
@@ -29,8 +30,8 @@ function LotList() {
                         break
                 }        
             }
-        })
-
+        }) 
+        // once each lot matches with every product, push the Lotcard, sending the updated lot details as a prop
         all_lots.push( <LotCard key={index} lot={lot}/> )
     })}   
 

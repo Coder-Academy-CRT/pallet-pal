@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react"
 import api from "../../../api"
 import palletpalContext from "../../../palletpalContext"
+import UpdateLot from "./UpdateLot"
 
 function LotCard( {lot} ) {
 
-    const { state: { warehouse, seeds }, dispatch } = useContext(palletpalContext)
+    const { state: { seeds } } = useContext(palletpalContext)
 
     const [editMode, setEditMode] = useState(false)
     const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
@@ -41,11 +42,14 @@ function LotCard( {lot} ) {
         }
     })
 
-   /////////////////////// SEED BAG SIZE & AMOUNTS OF EACH PLUS TOTAL ////////////////////
+    ///////////// VOLUME SECTION OF LotCard => SEED BAG SIZE & AMOUNTS OF EACH PLUS TOTAL ////////////////////
+    // this is not modifying the lots, it is collecting the bag details of every lot to assign alongside it in the LotCard
 
     let bag_sizes = []  // collection of <li> with both bag_size and cumulative total 
     let total_amount = 0 // cumulative total of each lot by bag_size
     let count = -1  // for providing a key prop in li children
+
+    let lot_stocks = {}
 
     for (let property in lot) {
         if (property != "lot_code" && property != "seed_variety" && property != "seed_type") {
@@ -56,118 +60,41 @@ function LotCard( {lot} ) {
                 </li>
             )
             total_amount += lot[property]
-        }   
+            
+        } 
+        lot_stocks[lot.lot_code] = total_amount // summary of total amounts against stock, to pass as prop when deleting lots
     }
 
+    // a "no stock" or total amount is then added to the end of each summary, after an optional horizontal line
     bag_sizes.push( total_amount== "0" ? null : <li key={bag_sizes.length}><hr></hr></li>)
     bag_sizes.push( <li key={bag_sizes.length}><h3>{total_amount == "0" ? "no stock" : `${total_amount} kg`}</h3></li>)
 
 
-    /////////////////////// PUT REQUEST TO API => DATABASE  ////////////////////
-
-    async function submit(event) {
-        event.preventDefault()
-
-        // const res = await api.put(
-        //     `/${warehouse.id}/lot/${lot.lot_code}`, 
-        //     { 
-        //         lot_code: updatedLot.lot_code,
-        //         seed_type: updatedLot.seed_type,
-        //         seed_variety: updatedLot.seed_variety
-        //      } )
-
-        // dispatch({
-        //     type: "",
-        //     data: ""
-        // })
-
-    }
+    
 
 
     if (editMode) {
-
         return (
-            
-            <div className='editLotCard'>
-
-                <h2>{lot.lot_code}</h2>
-
-                <div>
-
-                    <form onSubmit={submit}>
-                        <div id="lotForm">
-                            <label htmlFor="lotCode">Please enter new lot code :</label>
-                            <input
-                                className="lotInputs"
-                                id="lotCode"
-                                value={updatedLot.lot_code}
-                                onChange={(event) => 
-                                    setUpdatedLot( {...updatedLot, lot_code : event.target.value})}
-                            ></input> 
-
-                            <label htmlFor="lotSeedType">Please select seed type:</label>
-                            <select
-                                className="lotInputs lotSelect"
-                                id="lotSeedType"
-                                value={updatedLot.seed_type}
-                                onChange={(event) => setUpdatedLot( { ... updatedLot, seed_type: event.target.value, seed_variety: "variety not stated" })}
-
-                            >
-                                { uniqueSeedTypes.map( (seed, index) => (
-                                    <option value={seed.value} key={index}>
-                                        {seed.label}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <label htmlFor="lotSeedVariety">Please select seed variety :</label>
-
-                            <select
-                                className="lotInputs lotSelect"
-                                id="lotVarietyType"
-                                value={ updatedLot.seed_variety == lot.seed_variety ? lot.seed_variety : updatedLot.seed_variety}
-                                onChange={(event) => setUpdatedLot( { ... updatedLot, seed_variety: event.target.value })}
-                            >
-                                {filteredSeedVarieties}
-                            </select>
-                            
-                        </div>
-                        {/* <button>Submit</button> */}
-                    </form>
-                </div>
-
-                <div id='buttonContainer'>
-                    <button onClick={setEditOff} id="saveLotButton">save</button>
-                    <button onClick={setEditOff} id="exitLotButton">exit</button>
-                    <button onClick={setEditOff} id="deleteLotButton">delete</button>
-                </div>
-               
-            </div>
+            <UpdateLot lot={lot} lot_stocks={lot_stocks} setEditMode={setEditMode} ></UpdateLot> 
         )
-
     } else {
 
         return (
             <>
                 <div className='lotCard'>
-
                     <div id="lotCardLhs">
                         <button onClick={setEditOn}>edit</button>
                     </div>
-
                     <div id="lotCardMid">
                         <h2>{lot.lot_code}</h2>
                         <p>{`${lot.seed_type} - ${lot.seed_variety}`}</p>
                     </div>
-
                     <div id="lotCardRhs">
                         <ul>
                             { bag_sizes }
                         </ul>
                     </div>  
-
                 </div>
-             
             </>
         )
     }

@@ -35,6 +35,13 @@ export default function reducer (state, action) {
                 lots : [ ...state.lots, action.data ] // payload is another lot object
             }
 
+        case 'deleteLot' :
+            state.lots.splice(
+                state.lots.findIndex( (lot) =>
+                lot.lot_code == action.data
+            ), 1)
+            return { ...state }
+            
         case 'setProductData' :
             return {
                 ...state,
