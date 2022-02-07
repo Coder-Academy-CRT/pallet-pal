@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import api from '../../../api'
 import palletpalContext from '../../../palletpalContext'
 
 export default function DispatchBox() {
@@ -77,7 +78,7 @@ export default function DispatchBox() {
 	}
 
 	// Dispatch button
-	const handleSubmit = (e) => {
+	async function handleSubmit(e) {
 		e.preventDefault()
 		const isConfirmed = confirm("You want to dispatch listed products?")
 		if (isConfirmed) {
@@ -89,14 +90,40 @@ export default function DispatchBox() {
 				}
 			  }
 			}
+
+
 			// --------------------------------------------------------------------- //
-			// ---- SEND REQUEST TO DATABASE INSTEAD OF BELOW ONLY UPDATE STATE ---- //
+			// ---- SEND REQUEST TO DATABASE --------------------------------------- //
+			// ---- Haven't test it yet -------------------------------------------- //
 
 
+			// // use below to keep track all response from database as we want all products has been updated successfully before we update state
+			// // But!!!!!!!!! What if the first product gone through but the second one doesn't, state will not be updated but first product has been updated in DB?
+			// const feedback = []
+			// for (const product of productList) {
+			// 	const response = await api.post(
+			// 		`product/${product.product_id}`,
+			// 		{
+			// 			lot_code: product.lot_code,
+			// 			bag_size: product.bag_size,
+			// 			number_of_bags: product.number_of_bags
+			// 		}
+			// 	)
+			// 	if (response.data == `product ${product.product_id} updated`) {
+			// 		feedback.push("success")
+			// 	} else {
+			// 		feedback.push("fail")
+			// 	}
+			// }
+			// if (!feedback.includes("fail")) {
+			// 	// update state with below codes //
+			// } else {
+			// 	setAlertMessage("Sorry, something goes wrong. Please close and try again later")
+			// }
 
-
-			
 			// --------------------------------------------------------------------- //
+			// --------------------------------------------------------------------- //
+
 
 
 			// Update selectedPallet data
@@ -157,7 +184,7 @@ export default function DispatchBox() {
 					))}
 						<div className='button-wrapper'>
 							<button style={styleButton} onClick={handleClose}>Cancel</button>
-							<button type="submit" style={styleButton} onClick={handleSubmit}>Dispatch</button>
+							<button type="submit" style={styleButton} onClick={(e) => handleSubmit(e)}>Dispatch</button>
 						</div>
 					</form>
 					: (
