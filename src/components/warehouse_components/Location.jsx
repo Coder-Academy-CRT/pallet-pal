@@ -9,7 +9,7 @@ function Location({ details }) {
             metaMode,
             locations,
             palletOption,
-            availableLocations
+            availableLocations, 
         },
         dispatch
     } = useContext(palletpalContext)
@@ -28,11 +28,15 @@ function Location({ details }) {
                 setClasses([...classes, 'found'])
             }
         })
-        // Light up available location during 'move'
+
+        // Light up available locations during 'move'
         availableLocations.forEach((location) => {
-            setClasses([...classes, 'found'])
+            if (location.coordinates == details.coordinates) {
+                setClasses([...classes, 'found'])
+            }
         })
     }, [foundPallets, category, availableLocations])
+
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -95,12 +99,20 @@ function Location({ details }) {
                 // get location object and set its new category
                 updateLocation(details.coordinate, category)
             case 'main':
-                dispatch({
-                    type: 'setClickedLocation',
-                    data: e.target.id
-                })
+                if (palletOption == "move") {
+                    dispatch({
+                        type: 'setSelectedMoveLocation',
+                        data: e.target.id
+                    })
+                } else {
+                    dispatch({
+                        type: 'setClickedLocation',
+                        data: e.target.id
+                    })
+                }
         }
     }
+    
 
     const boxes = []
 

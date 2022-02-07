@@ -2,9 +2,12 @@ import React, { useContext, useEffect } from 'react';
 import palletpalContext from '../../../palletpalContext';
 
 export default function MoveOption() {
-    const { state: { selectedPallet, locations }, dispatch } = useContext(palletpalContext)
-    // Add location that are under allocated storage
-    const avaLocations = locations.flat(1).filter(location => location.category == "allocated_storage")
+    const { state: { selectedPallet, clickedLocation, locations }, dispatch } = useContext(palletpalContext)
+    // Add locations that are "allocated_storage" minus clickedLocation
+    const avaLocations = locations.flat(1)
+        .filter(location => location.category == "allocated_storage")
+        .filter(location => location.coordinates != clickedLocation.coordinates)
+
     useEffect(() => {
         dispatch({
             type: 'setAvailableLocations',
@@ -12,12 +15,9 @@ export default function MoveOption() {
         })
     }, [])
 
-
-
-
     return (
         <>
-        <h1>Move option is on! # {selectedPallet.pallet_id}</h1>
+            <h1 style={{ color: "white" }}>Please select a location for pallet #{selectedPallet.pallet_id}</h1>
         </>
     );
 }
