@@ -89,6 +89,16 @@ export default function DispatchBox() {
 				}
 			  }
 			}
+			// --------------------------------------------------------------------- //
+			// ---- SEND REQUEST TO DATABASE INSTEAD OF BELOW ONLY UPDATE STATE ---- //
+
+
+
+
+			
+			// --------------------------------------------------------------------- //
+
+
 			// Update selectedPallet data
 			dispatch({
 				type: "updatePalletDataAfterDispatch",
