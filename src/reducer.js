@@ -86,18 +86,17 @@ export default function reducer(state, action) {
         case 'updateProductsAfterMoved':
             state.products.forEach(product => {
                 if (product.pallet_id == state.selectedPallet.pallet_id) {
-                    product.coordinates = state.selectedMoveLocation
+                    product.coordinates = action.data
                 }
             })
             return { ...state }
 
         case 'updateLocationsAfterMoved':
-            const palletId = state.selectedPallet.pallet_id
             // Remove pallet_id from corresponding location
             state.locations.forEach(row => {
                 row.forEach(location => {
-                    if (location.pallets_on_location.includes(palletId)) {
-                        const i = location.pallets_on_location.indexOf(palletId)
+                    if (location.pallets_on_location.includes(action.data)) {
+                        const i = location.pallets_on_location.indexOf(action.data)
                         location.pallets_on_location.splice(i, 1)
                     }
                 })
@@ -107,9 +106,9 @@ export default function reducer(state, action) {
                 row.forEach(location => {
                     if (location.coordinates == state.selectedMoveLocation) {
                         if (location.pallets_on_location[0] == null) {
-                            location.pallets_on_location.splice(0, 1, palletId)
+                            location.pallets_on_location.splice(0, 1, action.data)
                         } else {
-                            location.pallets_on_location.push(palletId)
+                            location.pallets_on_location.push(action.data)
                         }
                     }
                 })
@@ -165,6 +164,18 @@ export default function reducer(state, action) {
                     coordinates: state.clickedLocation.coordinates
                 }
             }
+
+        case 'removePalletFromLocation':
+            // Remove pallet_id from corresponding location
+            state.locations.forEach(row => {
+                row.forEach(location => {
+                    if (location.pallets_on_location.includes(action.data)) {
+                        const i = location.pallets_on_location.indexOf(action.data)
+                        location.pallets_on_location.splice(i, 1)
+                    }
+                })
+            })
+            return { ...state }
 
         case 'setFoundPallets':
             return {

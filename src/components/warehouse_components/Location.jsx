@@ -11,7 +11,8 @@ function Location({ details }) {
             availableLocations, 
             microModes,
             selectedMoveLocation,
-            products
+            products, 
+            selectedPallet
         },
         dispatch
     } = useContext(palletpalContext)
@@ -101,7 +102,7 @@ function Location({ details }) {
                         })
                         dispatch({
                             type: 'updateLocationsAfterMoved',
-                            data: products
+                            data: selectedPallet.pallet_id
                         })
                         dispatch({
                             type: 'removeMicroMode',
