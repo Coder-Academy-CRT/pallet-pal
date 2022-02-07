@@ -57,12 +57,15 @@ export default function DispatchBox() {
 			const productId = e.target.parentElement.id
 			const updatedProductInfo = productList.map(product => {
 				if (product.product_id == productId) {
-					return { ...product, number_of_bags: 0 }
+					// dispatched: true use for rendering <div>Product has been dispatched</div> in dispatch box after user click the close button
+					return { ...product, number_of_bags: product.number_of_bags, dispatched: true }
 				}
 				return product
 			})
+			setCopyProductList(updatedProductInfo)
 			setProductList(updatedProductInfo)
 		}
+		e.preventDefault()
 	}
 
 	// Close button
@@ -76,13 +79,12 @@ export default function DispatchBox() {
 	// Dispatch button
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		
-		const isConfirmed = confirm("You want to dispatch all products?")
+		const isConfirmed = confirm("You want to dispatch listed products?")
 		if (isConfirmed) {
 			// Update productList.number_of_bags with the dispatched number of bags
 			for ( let i = 0; i < productList.length; i++ ) {
 				for ( let k = 0; k < copyProductList.length; k++) {
-				  if (copyProductList[k].pallet_id == productList[i].pallet_id) {
+				  if (copyProductList[k].product_id == productList[i].product_id) {
 					productList[i].number_of_bags = (productList[i].number_of_bags - copyProductList[k].number_of_bags)
 				}
 			  }
@@ -114,7 +116,8 @@ export default function DispatchBox() {
 				{productList.length > 0 ? 
 					<form onSubmit={handleSubmit}>
 					{productList.map(product => (
-						product.number_of_bags > 0 ?  
+						product.number_of_bags > 0 ? 
+							product.dispatched ? <div><p>Product has been dispatched</p></div> :
 						<div id={product.product_id} key={product.id} style={styleWrapper} >
 							<div>
 								<p>{product.seed_type.toUpperCase()}</p>
