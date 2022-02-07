@@ -17,7 +17,6 @@ const initialState = {
     lots: [],
     clickedLocation: "", // location object contains all location info
     selectedMoveLocation: '', // these two values can be utilised to show where moved from and where moved to
-    palletOption: '',
     selectedPallet: {}, // {pallet_id: #, products_on_pallet: []} 
     foundPallets: [],
     availableLocations: [], // for move

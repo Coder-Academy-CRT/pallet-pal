@@ -69,12 +69,13 @@ export default function DispatchBox() {
 		e.preventDefault()
 	}
 
-	// Close button
-	const handleClose = () => {
+	// Cancel button
+	const handleClose = (e) => {
 		dispatch({
-			type: 'setPalletOption',
-			data: ''
+			type: 'removeMicroMode',
+			data: 'dispatchMode'
 		})
+		e.preventDefault()
 	}
 
 	// Dispatch button
@@ -138,8 +139,8 @@ export default function DispatchBox() {
 			}),
 			// To close the dispatch box
 			dispatch({
-				type: 'setPalletOption',
-				data: ""
+				type: 'removeMicroMode',
+				data: 'dispatchMode'
 			})
 			alert("Products have been dispatched")
 			}

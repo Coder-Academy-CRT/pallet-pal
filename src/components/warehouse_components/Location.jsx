@@ -8,8 +8,10 @@ function Location({ details }) {
             foundPallets,
             metaMode,
             locations,
-            palletOption,
             availableLocations, 
+            microModes,
+            selectedMoveLocation,
+            products
         },
         dispatch
     } = useContext(palletpalContext)
@@ -68,28 +70,6 @@ function Location({ details }) {
         const newLocations = locations
         //update global locations object
         newLocations[x][y].category = category
-        dispatch({
-            type: 'setLocations',
-            data: newLocations
-        })
-        if (palletOption == 'move') {
-            dispatch({
-                type: 'setSelectedMoveLocation',
-                data: e.target.id
-            })
-            confirm('You want to move to this location?')
-            if (true) {
-                dispatch({
-                    type: 'updateLocationAfterMove',
-                    data: e.target.id
-                })
-            }
-            console.log(e.target.id)
-            dispatch({
-                type: 'setAvailableLocations',
-                data: []
-            })
-        }
     }
 
     const handleClick = (e) => {
@@ -99,11 +79,42 @@ function Location({ details }) {
                 // get location object and set its new category
                 updateLocation(details.coordinate, category)
             case 'main':
-                if (palletOption == "move") {
+                // ----------------------------------------- //
+                // ---- Moving pallet to other location ---- // 
+                // NOTE:: Reckon should separate these from Location.jsx and move it to MoveOption.jsx, need help on this //
+                // ----------------------------------------- //
+                if (microModes.includes('moveMode')) {
                     dispatch({
                         type: 'setSelectedMoveLocation',
                         data: e.target.id
                     })
+                    confirm("You want to move to this location?")
+                    if (confirm) {
+                        dispatch({
+                            type: 'setAvailableLocations',
+                            data: []
+                        })
+                        alert('Pallet has been moved.')
+                        dispatch({
+                            type: 'updateProductsAfterMoved',
+                            data: selectedMoveLocation
+                        })
+                        dispatch({
+                            type: 'updateLocationsAfterMoved',
+                            data: products
+                        })
+                        dispatch({
+                            type: 'removeMicroMode',
+                            data: 'moveMode'
+                        })
+                        dispatch({
+                            type: 'setSelectedMoveLocation',
+                            data: ''
+                        })
+                    }
+                 // ----------------------------------------- //
+                 // ----------------------------------------- //
+
                 } else {
                     dispatch({
                         type: 'setClickedLocation',
