@@ -6,6 +6,8 @@ export default function DispatchBox() {
 
 	// This state is for the delete button next to each product (when user want to dispatch the whole product)
 	const [productList, setProductList] = useState(selectedPallet.products_on_pallet)
+	// Use to store form data and update it to productList once user hit dispatch
+	const [copyProductList, setCopyProductList] = useState(productList)
 
 	const style = {
 			position: "absolute",
@@ -31,19 +33,19 @@ export default function DispatchBox() {
 		justifyContent: "space-between",
 	}
 
-	// Update the number of bags with user input
+	// Update the number of bags that user want to dispatch
 	const handleChange = (e) => {
 		// product id of that product
 		const productId = e.target.parentElement.parentElement.id
-		const dispatchNum = e.target.value
 
-		const updatedProductInfo = productList.map(product => {
+		const updatedProductInfo = copyProductList.map(product => {
 			if (product.product_id == productId) {
-				return { ...product, number_of_bags: product.number_of_bags - dispatchNum }
+				// e.target.value is the number of bags that user want to dispatch
+				return { ...product, number_of_bags: e.target.value }
 			}
 			return product
 		})
-		setProductList(updatedProductInfo)
+		setCopyProductList(updatedProductInfo)
 	}
 
 
@@ -77,6 +79,14 @@ export default function DispatchBox() {
 		
 		const isConfirmed = confirm("You want to dispatch all products?")
 		if (isConfirmed) {
+			// Update productList.number_of_bags with the dispatched number of bags
+			for ( let i = 0; i < productList.length; i++ ) {
+				for ( let k = 0; k < copyProductList.length; k++) {
+				  if (copyProductList[k].pallet_id == productList[i].pallet_id) {
+					productList[i].number_of_bags = (productList[i].number_of_bags - copyProductList[k].number_of_bags)
+				}
+			  }
+			}
 			// Update selectedPallet data
 			dispatch({
 				type: "updatePalletDataAfterDispatch",
@@ -86,14 +96,14 @@ export default function DispatchBox() {
 			dispatch({
 				type: 'updateProducts', 
 				data: productList
+			}),
+			// To close the dispatch box
+			dispatch({
+				type: 'setPalletOption',
+				data: ""
 			})
-		}
-		// To close the dispatch box
-		dispatch({
-			type: 'setPalletOption',
-			data: ""
-		})
-		alert("Products have been dispatched")
+			alert("Products have been dispatched")
+			}
 	}
 
 
@@ -117,11 +127,14 @@ export default function DispatchBox() {
 							</div>
 							<div style={{ display: "flex"}}>
 								<input 
-									type="text"
+									type="number"
+									min="0"
+									max={parseInt(product.number_of_bags)}
 									size="5"
 									name={product.id}
 									placeholder={parseInt(product.number_of_bags)}
-									onBlur={handleChange}
+									onChange={handleChange}
+									onInput={handleChange}
 								/>
 								<p style={{marginLeft: "5px"}}>BAG</p>
 							</div>
