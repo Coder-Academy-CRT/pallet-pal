@@ -5,7 +5,7 @@ import DispatchBox from '../sidebar_components/location_details/DispatchBox'
 
 function Warehouse() {
     const {
-        state: { warehouse, locations, metaMode, tempWarehouse, palletOption }
+        state: { warehouse, locations, metaMode, tempWarehouse, microModes }
     } = useContext(palletpalContext)
 
     // if there is a temp WH style from its rows and cols (for build mode)
@@ -21,7 +21,7 @@ function Warehouse() {
             {locations.flat(1).map((location, index) => (
                 <Location details={location} key={index} />
             ))}
-            {palletOption == 'dispatch' ? (
+            {microModes.includes('dispatchMode') ? (
                 <div className='blockout-bg'>
                     <DispatchBox />
                 </div>

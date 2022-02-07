@@ -8,8 +8,11 @@ function Location({ details }) {
             foundPallets,
             metaMode,
             locations,
-            palletOption,
-            availableLocations
+            availableLocations, 
+            microModes,
+            selectedMoveLocation,
+            products, 
+            selectedPallet
         },
         dispatch
     } = useContext(palletpalContext)
@@ -28,11 +31,15 @@ function Location({ details }) {
                 setClasses([...classes, 'found'])
             }
         })
-        // Light up available location during 'move'
+
+        // Light up available locations during 'move'
         availableLocations.forEach((location) => {
-            setClasses([...classes, 'found'])
+            if (location.coordinates == details.coordinates) {
+                setClasses([...classes, 'found'])
+            }
         })
     }, [foundPallets, category, availableLocations])
+
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -64,28 +71,6 @@ function Location({ details }) {
         const newLocations = locations
         //update global locations object
         newLocations[x][y].category = category
-        dispatch({
-            type: 'setLocations',
-            data: newLocations
-        })
-        if (palletOption == 'move') {
-            dispatch({
-                type: 'setSelectedMoveLocation',
-                data: e.target.id
-            })
-            confirm('You want to move to this location?')
-            if (true) {
-                dispatch({
-                    type: 'updateLocationAfterMove',
-                    data: e.target.id
-                })
-            }
-            console.log(e.target.id)
-            dispatch({
-                type: 'setAvailableLocations',
-                data: []
-            })
-        }
     }
 
     const handleClick = (e) => {
@@ -95,12 +80,51 @@ function Location({ details }) {
                 // get location object and set its new category
                 updateLocation(details.coordinate, category)
             case 'main':
-                dispatch({
-                    type: 'setClickedLocation',
-                    data: e.target.id
-                })
+                // ----------------------------------------- //
+                // ---- Moving pallet to other location ---- // 
+                // NOTE:: Reckon should separate these from Location.jsx and move it to MoveOption.jsx, need help on this //
+                // ----------------------------------------- //
+                if (microModes.includes('moveMode')) {
+                    dispatch({
+                        type: 'setSelectedMoveLocation',
+                        data: e.target.id
+                    })
+                    confirm("You want to move to this location?")
+                    if (confirm) {
+                        dispatch({
+                            type: 'setAvailableLocations',
+                            data: []
+                        })
+                        alert('Pallet has been moved.')
+                        dispatch({
+                            type: 'updateProductsAfterMoved',
+                            data: selectedMoveLocation
+                        })
+                        dispatch({
+                            type: 'updateLocationsAfterMoved',
+                            data: selectedPallet.pallet_id
+                        })
+                        dispatch({
+                            type: 'removeMicroMode',
+                            data: 'moveMode'
+                        })
+                        dispatch({
+                            type: 'setSelectedMoveLocation',
+                            data: ''
+                        })
+                    }
+                 // ----------------------------------------- //
+                 // ----------------------------------------- //
+
+                } else {
+                    dispatch({
+                        type: 'setClickedLocation',
+                        data: e.target.id
+                    })
+                }
         }
     }
+    
 
     const boxes = []
 

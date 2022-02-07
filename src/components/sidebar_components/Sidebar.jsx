@@ -4,13 +4,12 @@ import LocationDetails from './location_details/LocationDetails'
 import SearchWindow from './search_window/SearchWindow'
 import LotManager from './lot_manager/LotManager'
 import palletpalContext from '../../palletpalContext'
-import DispatchBox from './location_details/DispatchBox'
 import BuildSidebar from './BuildSidebar'
 import MoveOption from './location_details/MoveOption'
 
 function Sidebar() {
     const {
-        state: { palletOption, metaMode, locations }
+        state: { metaMode, locations, microModes }
     } = useContext(palletpalContext)
 
     // ****NOTE**** the condition for locations length is to prevent location details trying to set up before locations are ready.
@@ -21,7 +20,7 @@ function Sidebar() {
                 <LotManager />
                 <SearchWindow />
                 <LocationDetails />
-                {palletOption == 'move' ? <MoveOption /> : null}
+                {microModes.includes('moveMode')  ? <MoveOption /> : null}
             </div>
         )
     } else if (metaMode == 'build') {

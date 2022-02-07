@@ -9,7 +9,7 @@ function PalletCard({ palletId }) {
         dispatch
     } = useContext(palletpalContext)
     
-    // state to manage pallet card mode
+    // to check if palletCard has been clicked, toggle buttons showing or not
     const [palletCardClicked, setPalletCardClicked] = useState(false)
     // set classes to style when found/not found
     const [classes, setClasses] = useState('palletCard')

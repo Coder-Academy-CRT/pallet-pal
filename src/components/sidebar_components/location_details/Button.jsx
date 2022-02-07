@@ -7,8 +7,8 @@ export default function Button({ text }) {
   const handleClick = (e) => {
     e.stopPropagation()
     dispatch({
-      type: 'setPalletOption',
-      data: e.target.innerText.toLowerCase()
+      type: 'addMicroMode',
+      data: e.target.innerText.toLowerCase() + 'Mode'
     })
 	} 
 

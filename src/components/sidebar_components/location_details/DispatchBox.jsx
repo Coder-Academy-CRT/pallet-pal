@@ -69,18 +69,19 @@ export default function DispatchBox() {
 		e.preventDefault()
 	}
 
-	// Close button
-	const handleClose = () => {
+	// Cancel button
+	const handleClose = (e) => {
 		dispatch({
-			type: 'setPalletOption',
-			data: ''
+			type: 'removeMicroMode',
+			data: 'dispatchMode'
 		})
+		e.preventDefault()
 	}
 
 	// Dispatch button
 	async function handleSubmit(e) {
 		e.preventDefault()
-		const isConfirmed = confirm("You want to dispatch listed products?")
+		const isConfirmed = confirm("Confirm?")
 		if (isConfirmed) {
 			// Update productList.number_of_bags with the dispatched number of bags
 			for ( let i = 0; i < productList.length; i++ ) {
@@ -138,10 +139,21 @@ export default function DispatchBox() {
 			}),
 			// To close the dispatch box
 			dispatch({
-				type: 'setPalletOption',
-				data: ""
+				type: 'removeMicroMode',
+				data: 'dispatchMode'
 			})
 			alert("Products have been dispatched")
+			}
+			if (productList.length > 0) {
+				alert(`No product left on pallet#${selectedPallet.pallet_id}, this pallet will be removed.`)
+				dispatch({
+					type: 'removePalletFromLocation',
+					data: selectedPallet.pallet_id
+				})
+				dispatch({
+					type: 'setSelectedPallet',
+					data: ''
+				})
 			}
 	}
 
