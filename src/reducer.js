@@ -26,32 +26,32 @@ export default function reducer(state, action) {
                 lots: action.data
             }
 
-
-        case 'addNewLot' :
+        case 'addNewLot':
             return {
                 ...state,
-                lots : [ ...state.lots, action.data ] // payload is another lot object
+                lots: [...state.lots, action.data] // payload is another lot object
             }
 
-        case 'deleteLot' :
+        case 'deleteLot':
             state.lots.splice(
-                state.lots.findIndex( (lot) =>
-                lot.lot_code == action.data
-            ), 1)
+                state.lots.findIndex((lot) => lot.lot_code == action.data),
+                1
+            )
             return { ...state }
 
-        case 'updateLot' :
+        case 'updateLot':
             state.lots[
-                state.lots.findIndex( (lot) =>
-                lot.lot_code == action.original_lot_code )
-                ] = {
-                        lot_code : action.new_lot_code,
-                        seed_type : action.new_seed_type,
-                        seed_variety : action.new_seed_variety
-                    }
+                state.lots.findIndex(
+                    (lot) => lot.lot_code == action.original_lot_code
+                )
+            ] = {
+                lot_code: action.new_lot_code,
+                seed_type: action.new_seed_type,
+                seed_variety: action.new_seed_variety
+            }
             return { ...state }
-            
-        case 'setProductData' :
+
+        case 'setProductData':
             return {
                 ...state,
                 products: action.data
@@ -212,6 +212,24 @@ export default function reducer(state, action) {
                 state.microModes.splice(index, 1)
             }
             return state
+
+        // NEW
+        case 'setMicroMode':
+            // receive an object of {mode: "a_string", bool: true/false} and sets new key value
+            const newModes = { ...state.microModes }
+            newModes[action.data.mode] = action.data.bool
+            return {
+                ...state,
+                microModes: newModes
+            }
+        // NEW
+        case 'toggleMicroMode':
+            const newObject = { ...state.microModes }
+            newObject[action.data] = !state.microModes[action.data]
+            return {
+                ...state,
+                microModes: newObject
+            }
 
         default:
             // return state // this is an optional default, however this alternative provides more feedback

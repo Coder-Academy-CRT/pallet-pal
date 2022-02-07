@@ -11,7 +11,7 @@ function SearchWindow() {
     const [summary, setSummary] = useState(null)
     const {
         dispatch,
-        state: { products, foundPallets }
+        state: { products, foundPallets, microModes }
     } = useContext(palletpalContext)
 
     useEffect(() => {
@@ -44,14 +44,16 @@ function SearchWindow() {
 
     function setOff() {
         setActive(false)
+        // clear search results
         dispatch({
             type: 'setFoundPallets',
             data: []
         })
-    }
-
-    function setOn() {
-        setActive(true)
+        // update micromode
+        dispatch({
+            type: 'toggleMicroMode',
+            data: 'SearchWindow'
+        })
     }
 
     function search(event) {
@@ -83,10 +85,9 @@ function SearchWindow() {
     }
 
     // only render while active
-    if (active) {
+    if (microModes.SearchWindow) {
         return (
             <div id='searchWindow'>
-                <button onClick={setOff}>close Search</button>
                 <h3>Search</h3>
                 <section id='searchModes'>
                     <button
@@ -114,11 +115,7 @@ function SearchWindow() {
             </div>
         )
     } else {
-        return (
-            <div id='searchWindow'>
-                <button onClick={setOn}>open Search</button>
-            </div>
-        )
+        return <></>
     }
 }
 

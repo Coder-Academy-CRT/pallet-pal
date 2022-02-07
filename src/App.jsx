@@ -15,14 +15,18 @@ const initialState = {
     locations: [],
     seeds: [],
     lots: [],
-    clickedLocation: "", // location object contains all location info
+    clickedLocation: '', // location object contains all location info
     selectedMoveLocation: '', // these two values can be utilised to show where moved from and where moved to
     palletOption: '',
-    selectedPallet: {}, // {pallet_id: #, products_on_pallet: []} 
+    selectedPallet: {}, // {pallet_id: #, products_on_pallet: []}
     foundPallets: [],
     availableLocations: [], // for move
     metaMode: 'landing', // options include "landing" "build" "main" to cater for various levels
-    microModes: [],
+    microModes: {
+        SearchWindow: true,
+        LotManager: false,
+        LocationDetails: false
+    },
 
     // ***NOTE*** replace this list when warehouse list endpoint ready
     warehouseList: [

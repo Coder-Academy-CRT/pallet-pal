@@ -9,7 +9,9 @@ function Location({ details }) {
             metaMode,
             locations,
             palletOption,
-            availableLocations
+            availableLocations,
+            microModes,
+            clickedLocation
         },
         dispatch
     } = useContext(palletpalContext)
@@ -32,7 +34,10 @@ function Location({ details }) {
         availableLocations.forEach((location) => {
             setClasses([...classes, 'found'])
         })
-    }, [foundPallets, category, availableLocations])
+        clickedLocation?.coordinates == details.coordinates
+            ? setClasses([...classes, 'selected'])
+            : null
+    }, [foundPallets, category, availableLocations, clickedLocation])
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -93,12 +98,18 @@ function Location({ details }) {
         switch (metaMode) {
             case 'build':
                 // get location object and set its new category
-                updateLocation(details.coordinate, category)
+                updateLocation(details.coordinates, category)
             case 'main':
                 dispatch({
                     type: 'setClickedLocation',
                     data: e.target.id
                 })
+                if (!microModes.LocationDetails) {
+                    dispatch({
+                        type: 'toggleMicroMode',
+                        data: 'LocationDetails'
+                    })
+                }
         }
     }
 
