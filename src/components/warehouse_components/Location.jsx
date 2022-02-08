@@ -11,6 +11,8 @@ function Location({ details }) {
             foundPallets,
             availableLocations,
             selectedMoveLocation,
+            moveFromLocation,
+            moveToLocation,
             movingPalletId,
             clickedLocation
         },
@@ -44,7 +46,13 @@ function Location({ details }) {
         metaMode == 'main'
             ? setClasses([...classes, 'selected'])
             : null
-    }, [foundPallets, category, availableLocations, clickedLocation])
+    }, [
+        foundPallets,
+        category,
+        availableLocations,
+        clickedLocation,
+        microModes
+    ])
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -88,26 +96,32 @@ function Location({ details }) {
             case 'main':
                 // if in move mode
                 if (microModes.Move) {
-                    // set moveToLocation global
-                    dispatch({
-                        type: 'setMoveToLocation',
-                        data: e.target.id
-                    })
-                    confirm('You want to move to this location?')
-                    if (confirm) {
-                        alert('Pallet has been moved.')
-                        dispatch({
-                            type: 'movePallet',
-                            data: {
-                                palletId: movingPalletId,
-                                moveFromLocation: moveFromLocation,
-                                moveToLocation: moveToLocation
+                    switch (details.category) {
+                        case 'inaccessible':
+                            alert(
+                                'You may not move pallets here, try allocated storage or spare floor.'
+                            )
+                            break
+                        default:
+                            confirm('You want to move to this location?')
+                            if (confirm) {
+                                alert('Pallet has been moved.')
+                                dispatch({
+                                    type: 'movePallet',
+                                    data: {
+                                        palletId: movingPalletId,
+                                        moveFromLocation: moveFromLocation,
+                                        moveToLocation: details.coordinates
+                                    }
+                                })
+                                dispatch({
+                                    type: 'setMicroMode',
+                                    data: { mode: 'Move', bool: false }
+                                })
+                            } else {
+                                alert('move cancelled')
+                                break
                             }
-                        })
-                        dispatch({
-                            type: 'setMicroMode',
-                            data: { mode: 'Move', bool: false }
-                        })
                     }
                 } else {
                     dispatch({
