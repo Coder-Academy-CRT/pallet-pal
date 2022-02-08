@@ -8,6 +8,7 @@ import palletpalContext from '../../palletpalContext'
 import BuildSidebar from './BuildSidebar'
 import SidebarNav from './SidebarNav'
 import MoveOption from './location_details/MoveOption'
+import AddPallet from './location_details/AddPallet'
 
 function Sidebar() {
     const {
@@ -21,6 +22,7 @@ function Sidebar() {
                 <SearchWindow />
                 <LocationDetails />
                 <LotManager />
+                {microModes.AddPallet ? <AddPallet /> : null}
                 <SidebarNav />
                 {microModes.Move ? <MoveOption /> : null}
             </div>
