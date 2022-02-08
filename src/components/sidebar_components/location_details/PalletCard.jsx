@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react'
-import Button from './Button'
 import ProductCard from './ProductCard'
 import palletpalContext from '../../../palletpalContext'
 
@@ -58,6 +57,11 @@ function PalletCard({ palletId, locationId }) {
         console.log(moveFromLocation)
     }
 
+    function setDispatchMode() {
+        // set dispatch mode to true
+        dispatch({ type: 'setMicroMode', data: { mode: 'Dispatch', bool: true } })
+    }
+
     // no conditional required, simply render all product cards with a map().
     // ****NOTE**** removed the outer fragment and now conditionally rendering options WITHIN pallet card
     return (
@@ -77,11 +81,9 @@ function PalletCard({ palletId, locationId }) {
             {palletCardClicked ? (
                 <div className='buttons'>
                     <button onClick={() => console.log('edit')}>Edit</button>
-                    <button onClick={(e) => handleMoveClick(e)}>Move</button>
-                    <button onClick={handleMoveClick}>Dispatch</button>
-                    {/* <Button text='Edit' onClick={console.log('edit')} />
-                    <Button text='Move' onClick={handleMoveClick} />
-                    <Button text='Dispatch' /> */}
+                    <button onClick={() => handleMoveClick()}>Move</button>
+                    <button onClick={() => setDispatchMode()}>Dispatch</button>
+
                 </div>
             ) : null}
         </div>
