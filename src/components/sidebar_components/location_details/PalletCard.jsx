@@ -3,9 +3,15 @@ import Button from './Button'
 import ProductCard from './ProductCard'
 import palletpalContext from '../../../palletpalContext'
 
-function PalletCard({ palletId }) {
+function PalletCard({ palletId, locationId }) {
     const {
-        state: { products, foundPallets, clickedLocation },
+        state: {
+            products,
+            foundPallets,
+            clickedLocation,
+            moveToLocation,
+            moveFromLocation
+        },
         dispatch
     } = useContext(palletpalContext)
 
@@ -38,7 +44,7 @@ function PalletCard({ palletId }) {
     }
 
     // IDEA HOW TO HANDLE MOVE OPERATION
-    const handleMoveClick = () => {
+    function handleMoveClick() {
         // set move mode to true
         dispatch({ type: 'setMicroMode', data: { mode: 'Move', bool: true } })
         // set pallet moving
@@ -47,7 +53,9 @@ function PalletCard({ palletId }) {
             data: palletId
         })
         // set the location coordinates of moveFromLocation
-        dispatch({ type: 'setMoveFromLocation', data: palletId })
+        dispatch({ type: 'setMoveFromLocation', data: locationId })
+        console.log('clicked')
+        console.log(moveFromLocation)
     }
 
     // no conditional required, simply render all product cards with a map().
@@ -68,9 +76,12 @@ function PalletCard({ palletId }) {
             ))}
             {palletCardClicked ? (
                 <div className='buttons'>
-                    <Button text='Edit' />
+                    <button onClick={() => console.log('edit')}>Edit</button>
+                    <button onClick={(e) => handleMoveClick(e)}>Move</button>
+                    <button onClick={handleMoveClick}>Dispatch</button>
+                    {/* <Button text='Edit' onClick={console.log('edit')} />
                     <Button text='Move' onClick={handleMoveClick} />
-                    <Button text='Dispatch' />
+                    <Button text='Dispatch' /> */}
                 </div>
             ) : null}
         </div>

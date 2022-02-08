@@ -31,7 +31,13 @@ function LocationDetails() {
         if (palletIds[0] != null) {
             // for every pallet id prepare a pallet card
             palletIds.map((palletId, index) =>
-                palletCards.push(<PalletCard palletId={palletId} key={index} />)
+                palletCards.push(
+                    <PalletCard
+                        palletId={palletId}
+                        key={index}
+                        locationId={locationDisplayed.coordinates}
+                    />
+                )
             )
         }
     }

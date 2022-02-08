@@ -15,6 +15,9 @@ function Warehouse() {
         gridTemplateRows: `repeat(${currentWh.rows}, calc(100% / ${currentWh.rows}))`,
         gridTemplateColumns: `repeat(${currentWh.columns}, calc(100% / ${currentWh.columns}))`
     }
+    useEffect(() => {
+        console.log('wh rendered')
+    }, [locations])
 
     return (
         <div id='warehouse' style={dynamicStyling}>

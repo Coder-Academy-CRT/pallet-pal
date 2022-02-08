@@ -120,7 +120,10 @@ export default function reducer(state, action) {
                 })
             })
             return { ...state }
-
+        case 'initiateMove':
+            return {
+                ...state
+            }
         case 'setMovingPalletId':
             return {
                 ...state,
@@ -178,38 +181,44 @@ export default function reducer(state, action) {
             }
 
         case 'movePallet':
+            // payload = {
+            //     palletId: '1',
+            //     moveFromLocation: '00_01',
+            //     moveToLocation: '00_03'
+            // }
+            const newLocations = [...state.locations]
             // helper function
             const parseCoords = (string) => {
                 return string.split('_')
-            }
-            const data = {
-                palletId: '1',
-                moveFromLocation: '00_01',
-                moveToLocation: '00_03'
             }
             // UPDATE LOCATIONS
             // get coords for location indexing
             const [fx, fy] = parseCoords(action.data.moveFromLocation)
             const [tx, ty] = parseCoords(action.data.moveToLocation)
             // get location object from coords
-            const fromLocation = state.locations[fx][fy]
-            const toLocation = state.locations[tx][ty]
+            const fromLocation = newLocations[Number(fx)][Number(fy)]
+            const toLocation = newLocations[Number(tx)][Number(ty)]
+            console.log(toLocation.pallets_on_location)
             // remove pallet from fromLocation
-            const palletIdIndex =
-                fromLocation.pallets_on_location.indexOf(palletId)
+            const palletIdIndex = fromLocation.pallets_on_location.indexOf(
+                action.data.palletId
+            )
             fromLocation.pallets_on_location.splice(palletIdIndex, 1)
             // push palletId to toLocation
-            toLocation.pallets_on_location.push(palletId)
+            toLocation.pallets_on_location[0]
+                ? toLocation.pallets_on_location.push(action.data.palletId)
+                : (toLocation.pallets_on_location = [action.data.palletId])
 
+            const newProducts = [...state.products]
             //UPDATE PRODUCTS LOCATIONS
             // for every product if pallet id matches moved pallet update coordinates
-            state.products.forEach((product) =>
+            newProducts.forEach((product) =>
                 product.pallet_id == action.data.palletId
                     ? (product.coordinates = action.data.moveToLocation)
                     : null
             )
 
-            return { ...state }
+            return { ...state, locations: newLocations, products: newProducts }
 
         case 'removePalletFromLocation':
             // Remove pallet_id from corresponding location
@@ -241,6 +250,12 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 moveFromLocation: action.data
+            }
+        // NEW
+        case 'setMoveToLocation':
+            return {
+                ...state,
+                moveToLocation: action.data
             }
         // NEW
         case 'setWarehouse':
