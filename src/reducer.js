@@ -26,32 +26,32 @@ export default function reducer(state, action) {
                 lots: action.data
             }
 
-
-        case 'addNewLot' :
+        case 'addNewLot':
             return {
                 ...state,
-                lots : [ ...state.lots, action.data ] // payload is another lot object
+                lots: [...state.lots, action.data] // payload is another lot object
             }
 
-        case 'deleteLot' :
+        case 'deleteLot':
             state.lots.splice(
-                state.lots.findIndex( (lot) =>
-                lot.lot_code == action.data
-            ), 1)
+                state.lots.findIndex((lot) => lot.lot_code == action.data),
+                1
+            )
             return { ...state }
 
-        case 'updateLot' :
+        case 'updateLot':
             state.lots[
-                state.lots.findIndex( (lot) =>
-                lot.lot_code == action.original_lot_code )
-                ] = {
-                        lot_code : action.new_lot_code,
-                        seed_type : action.new_seed_type,
-                        seed_variety : action.new_seed_variety
-                    }
+                state.lots.findIndex(
+                    (lot) => lot.lot_code == action.original_lot_code
+                )
+            ] = {
+                lot_code: action.new_lot_code,
+                seed_type: action.new_seed_type,
+                seed_variety: action.new_seed_variety
+            }
             return { ...state }
-            
-        case 'setProductData' :
+
+        case 'setProductData':
             return {
                 ...state,
                 products: action.data
@@ -84,7 +84,7 @@ export default function reducer(state, action) {
             }
 
         case 'updateProductsAfterMoved':
-            state.products.forEach(product => {
+            state.products.forEach((product) => {
                 if (product.pallet_id == state.selectedPallet.pallet_id) {
                     product.coordinates = action.data
                 }
@@ -93,20 +93,26 @@ export default function reducer(state, action) {
 
         case 'updateLocationsAfterMoved':
             // Remove pallet_id from corresponding location
-            state.locations.forEach(row => {
-                row.forEach(location => {
+            state.locations.forEach((row) => {
+                row.forEach((location) => {
                     if (location.pallets_on_location.includes(action.data)) {
-                        const i = location.pallets_on_location.indexOf(action.data)
+                        const i = location.pallets_on_location.indexOf(
+                            action.data
+                        )
                         location.pallets_on_location.splice(i, 1)
                     }
                 })
             })
             // Add pallet_id back to corresponding location
-            state.locations.forEach(row => {
-                row.forEach(location => {
+            state.locations.forEach((row) => {
+                row.forEach((location) => {
                     if (location.coordinates == state.selectedMoveLocation) {
                         if (location.pallets_on_location[0] == null) {
-                            location.pallets_on_location.splice(0, 1, action.data)
+                            location.pallets_on_location.splice(
+                                0,
+                                1,
+                                action.data
+                            )
                         } else {
                             location.pallets_on_location.push(action.data)
                         }
@@ -114,6 +120,12 @@ export default function reducer(state, action) {
                 })
             })
             return { ...state }
+
+        case 'setMovingPalletId':
+            return {
+                ...state,
+                movingPalletId: action.data
+            }
 
         case 'setSelectedPallet':
             const palletInfo = state.products.filter(
@@ -165,12 +177,48 @@ export default function reducer(state, action) {
                 }
             }
 
+        case 'movePallet':
+            // helper function
+            const parseCoords = (string) => {
+                return string.split('_')
+            }
+            const data = {
+                palletId: '1',
+                moveFromLocation: '00_01',
+                moveToLocation: '00_03'
+            }
+            // UPDATE LOCATIONS
+            // get coords for location indexing
+            const [fx, fy] = parseCoords(action.data.moveFromLocation)
+            const [tx, ty] = parseCoords(action.data.moveToLocation)
+            // get location object from coords
+            const fromLocation = state.locations[fx][fy]
+            const toLocation = state.locations[tx][ty]
+            // remove pallet from fromLocation
+            const palletIdIndex =
+                fromLocation.pallets_on_location.indexOf(palletId)
+            fromLocation.pallets_on_location.splice(palletIdIndex, 1)
+            // push palletId to toLocation
+            toLocation.pallets_on_location.push(palletId)
+
+            //UPDATE PRODUCTS LOCATIONS
+            // for every product if pallet id matches moved pallet update coordinates
+            state.products.forEach((product) =>
+                product.pallet_id == action.data.palletId
+                    ? (product.coordinates = action.data.moveToLocation)
+                    : null
+            )
+
+            return { ...state }
+
         case 'removePalletFromLocation':
             // Remove pallet_id from corresponding location
-            state.locations.forEach(row => {
-                row.forEach(location => {
+            state.locations.forEach((row) => {
+                row.forEach((location) => {
                     if (location.pallets_on_location.includes(action.data)) {
-                        const i = location.pallets_on_location.indexOf(action.data)
+                        const i = location.pallets_on_location.indexOf(
+                            action.data
+                        )
                         location.pallets_on_location.splice(i, 1)
                     }
                 })
@@ -187,6 +235,12 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 locations: action.data
+            }
+
+        case 'setMoveFromLocation':
+            return {
+                ...state,
+                moveFromLocation: action.data
             }
         // NEW
         case 'setWarehouse':
@@ -230,6 +284,24 @@ export default function reducer(state, action) {
                 state.microModes.splice(indexOfMicroMode, 1)
             }
             return { ...state }
+
+        // NEW
+        case 'setMicroMode':
+            // receive an object of {mode: "a_string", bool: true/false} and sets new key value
+            const newModes = { ...state.microModes }
+            newModes[action.data.mode] = action.data.bool
+            return {
+                ...state,
+                microModes: newModes
+            }
+        // NEW
+        case 'toggleMicroMode':
+            const newObject = { ...state.microModes }
+            newObject[action.data] = !state.microModes[action.data]
+            return {
+                ...state,
+                microModes: newObject
+            }
 
         default:
             // return state // this is an optional default, however this alternative provides more feedback

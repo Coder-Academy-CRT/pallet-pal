@@ -21,7 +21,7 @@ function Warehouse() {
             {locations.flat(1).map((location, index) => (
                 <Location details={location} key={index} />
             ))}
-            {microModes.includes('dispatchMode') ? (
+            {microModes.Dispatch ? (
                 <div className='blockout-bg'>
                     <DispatchBox />
                 </div>

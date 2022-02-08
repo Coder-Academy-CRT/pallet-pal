@@ -1,10 +1,12 @@
 import { useContext, useState } from 'react'
-import SidebarNav from './SidebarNav'
+import React from 'react'
+
 import LocationDetails from './location_details/LocationDetails'
 import SearchWindow from './search_window/SearchWindow'
 import LotManager from './lot_manager/LotManager'
 import palletpalContext from '../../palletpalContext'
 import BuildSidebar from './BuildSidebar'
+import SidebarNav from './SidebarNav'
 import MoveOption from './location_details/MoveOption'
 
 function Sidebar() {
@@ -16,11 +18,11 @@ function Sidebar() {
     if (metaMode == 'main' && locations.length > 1) {
         return (
             <div id='sidebar'>
-                {/* <SidebarNav /> */}
-                <LotManager />
                 <SearchWindow />
                 <LocationDetails />
-                {microModes.includes('moveMode')  ? <MoveOption /> : null}
+                <LotManager />
+                <SidebarNav />
+                {microModes.Move ? <MoveOption /> : null}
             </div>
         )
     } else if (metaMode == 'build') {

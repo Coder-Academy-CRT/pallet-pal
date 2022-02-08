@@ -4,7 +4,8 @@ import palletpalContext from '../../../palletpalContext'
 
 function LocationDetails() {
     const {
-        state: { locations, clickedLocation }
+        state: { locations, clickedLocation, microModes },
+        dispatch
     } = useContext(palletpalContext)
 
     // this function retrieves the location object directly from the array of arrays of location objects
@@ -35,13 +36,24 @@ function LocationDetails() {
         }
     }
 
-    // if there are pallet cards then render pallet cards
-    return palletCards.length > 0 ? (
-        <div id='locationDetails'>{palletCards}</div>
-    ) : (
-        // else render location details with no pallet cards but with information
-        <div id='locationDetails'>no pallets in selected location</div>
-    )
+    if (microModes.LocationDetails) {
+        if (clickedLocation) {
+            // if there are pallet cards then render pallet cards
+            return palletCards.length > 0 ? (
+                <div id='locationDetails'>{palletCards}</div>
+            ) : (
+                <div id='locationDetails'>no pallets in selected location</div>
+            )
+        } else {
+            dispatch({
+                type: 'setMicroMode',
+                data: { mode: 'LocationDetails', bool: false }
+            })
+            return <></>
+        }
+    } else {
+        return <></>
+    }
 }
 
 export default LocationDetails

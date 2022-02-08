@@ -1,8 +1,8 @@
-import React from "react"
-import { useEffect } from "react"
+import React from 'react'
+import { useEffect } from 'react'
 
-function Summary({ summary, watching }) {
-    useEffect(() => {}, [watching])
+function Summary({ summary }) {
+    useEffect(() => {}, [])
 
     if (summary) {
         return (

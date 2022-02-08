@@ -5,14 +5,14 @@ import palletpalContext from '../../palletpalContext'
 function Location({ details }) {
     const {
         state: {
-            foundPallets,
             metaMode,
-            locations,
-            availableLocations, 
             microModes,
+            locations,
+            foundPallets,
+            availableLocations,
             selectedMoveLocation,
-            products, 
-            selectedPallet
+            movingPalletId,
+            clickedLocation
         },
         dispatch
     } = useContext(palletpalContext)
@@ -32,14 +32,19 @@ function Location({ details }) {
             }
         })
 
-        // Light up available locations during 'move'
-        availableLocations.forEach((location) => {
-            if (location.coordinates == details.coordinates) {
-                setClasses([...classes, 'found'])
-            }
-        })
-    }, [foundPallets, category, availableLocations])
-
+        // Light up available locations during 'Move' mode
+        if (
+            microModes.Move &&
+            ['spare_floor', 'allocated_storage'].includes(category)
+        ) {
+            setClasses([...classes, 'moveActive'])
+        }
+        // Set selected class when location selected
+        clickedLocation?.coordinates == details.coordinates &&
+        metaMode == 'main'
+            ? setClasses([...classes, 'selected'])
+            : null
+    }, [foundPallets, category, availableLocations, clickedLocation])
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
@@ -73,58 +78,56 @@ function Location({ details }) {
         newLocations[x][y].category = category
     }
 
+    // when location clicked do different things in different modes.
     const handleClick = (e) => {
         // if in build mode location click is different than in if in main mode
         switch (metaMode) {
             case 'build':
                 // get location object and set its new category
-                updateLocation(details.coordinate, category)
+                updateLocation(details.coordinates, category)
             case 'main':
-                // ----------------------------------------- //
-                // ---- Moving pallet to other location ---- // 
-                // NOTE:: Reckon should separate these from Location.jsx and move it to MoveOption.jsx, need help on this //
-                // ----------------------------------------- //
-                if (microModes.includes('moveMode')) {
+                // if in move mode
+                if (microModes.Move) {
+                    // set moveToLocation global
                     dispatch({
-                        type: 'setSelectedMoveLocation',
+                        type: 'setMoveToLocation',
                         data: e.target.id
                     })
-                    confirm("You want to move to this location?")
+                    confirm('You want to move to this location?')
                     if (confirm) {
-                        dispatch({
-                            type: 'setAvailableLocations',
-                            data: []
-                        })
                         alert('Pallet has been moved.')
                         dispatch({
-                            type: 'updateProductsAfterMoved',
-                            data: selectedMoveLocation
+                            type: 'movePallet',
+                            data: {
+                                palletId: movingPalletId,
+                                moveFromLocation: moveFromLocation,
+                                moveToLocation: moveToLocation
+                            }
                         })
                         dispatch({
-                            type: 'updateLocationsAfterMoved',
-                            data: selectedPallet.pallet_id
-                        })
-                        dispatch({
-                            type: 'removeMicroMode',
-                            data: 'moveMode'
-                        })
-                        dispatch({
-                            type: 'setSelectedMoveLocation',
-                            data: ''
+                            type: 'setMicroMode',
+                            data: { mode: 'Move', bool: false }
                         })
                     }
-                 // ----------------------------------------- //
-                 // ----------------------------------------- //
-
                 } else {
                     dispatch({
                         type: 'setClickedLocation',
                         data: e.target.id
                     })
+                    if (!microModes.LocationDetails) {
+                        dispatch({
+                            type: 'toggleMicroMode',
+                            data: 'LocationDetails'
+                        })
+                    } else {
+                        dispatch({
+                            type: 'setClickedLocation',
+                            data: e.target.id
+                        })
+                    }
                 }
         }
     }
-    
 
     const boxes = []
 
