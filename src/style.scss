@@ -204,6 +204,10 @@ $lot-alert-color: rgb(255, 150, 150);
             border-top: 1px dotted $white;
             border-right: 1px dotted $white;
 
+            &.moveActive {
+                border: 3px solid $white;
+            }
+
             &.selected {
                 border: 2px solid $mandarin;
                 // filter: drop-shadow(0 0 0.75rem $mandarin);

@@ -8,8 +8,8 @@ function PalletCard({ palletId }) {
         state: { products, foundPallets, clickedLocation },
         dispatch
     } = useContext(palletpalContext)
-    
-    // state to manage pallet card mode
+
+    // to check if palletCard has been clicked, toggle buttons showing or not
     const [palletCardClicked, setPalletCardClicked] = useState(false)
     // set classes to style when found/not found
     const [classes, setClasses] = useState('palletCard')
@@ -37,6 +37,19 @@ function PalletCard({ palletId }) {
         })
     }
 
+    // IDEA HOW TO HANDLE MOVE OPERATION
+    const handleMoveClick = () => {
+        // set move mode to true
+        dispatch({ type: 'setMicroMode', data: { mode: 'Move', bool: true } })
+        // set pallet moving
+        dispatch({
+            type: 'setMovingPalletId',
+            data: palletId
+        })
+        // set the location coordinates of moveFromLocation
+        dispatch({ type: 'setMoveFromLocation', data: palletId })
+    }
+
     // no conditional required, simply render all product cards with a map().
     // ****NOTE**** removed the outer fragment and now conditionally rendering options WITHIN pallet card
     return (
@@ -56,11 +69,10 @@ function PalletCard({ palletId }) {
             {palletCardClicked ? (
                 <div className='buttons'>
                     <Button text='Edit' />
-                    <Button text='Move' />
+                    <Button text='Move' onClick={handleMoveClick} />
                     <Button text='Dispatch' />
                 </div>
-            )
-            : null}
+            ) : null}
         </div>
     )
 }

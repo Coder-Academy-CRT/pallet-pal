@@ -15,17 +15,21 @@ const initialState = {
     locations: [],
     seeds: [],
     lots: [],
-    clickedLocation: '', // location object contains all location info
-    selectedMoveLocation: '', // these two values can be utilised to show where moved from and where moved to
-    palletOption: '',
-    selectedPallet: {}, // {pallet_id: #, products_on_pallet: []}
+    clickedLocation: null, // location object contains all location info USE FOR LOCATION DETAILS RENDER ONLY
+    // selectedMoveLocation: '', // these two values can be utilised to show where moved from and where moved to
+    moveFromLocation: null, // this coordinates string is set on click of a palletcard Move button
+    moveToLocation: null, // this coordinates string is set by location when clicked while microMode MOVE is true
+    movingPalletId: null,
+    selectedPallet: {}, // {pallet_id: #, products_on_pallet: []} // IS THIS REQUIRED?
     foundPallets: [],
-    availableLocations: [], // for move
+    // availableLocations: [], // for move
     metaMode: 'landing', // options include "landing" "build" "main" to cater for various levels
     microModes: {
         SearchWindow: true,
         LotManager: false,
-        LocationDetails: false
+        LocationDetails: false,
+        Move: false,
+        Dispatch: false
     },
 
     // ***NOTE*** replace this list when warehouse list endpoint ready

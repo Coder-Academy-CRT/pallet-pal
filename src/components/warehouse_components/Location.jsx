@@ -5,12 +5,13 @@ import palletpalContext from '../../palletpalContext'
 function Location({ details }) {
     const {
         state: {
-            foundPallets,
             metaMode,
-            locations,
-            palletOption,
-            availableLocations,
             microModes,
+            locations,
+            foundPallets,
+            availableLocations,
+            selectedMoveLocation,
+            movingPalletId,
             clickedLocation
         },
         dispatch
@@ -30,11 +31,17 @@ function Location({ details }) {
                 setClasses([...classes, 'found'])
             }
         })
-        // Light up available location during 'move'
-        availableLocations.forEach((location) => {
-            setClasses([...classes, 'found'])
-        })
-        clickedLocation?.coordinates == details.coordinates
+
+        // Light up available locations during 'Move' mode
+        if (
+            microModes.Move &&
+            ['spare_floor', 'allocated_storage'].includes(category)
+        ) {
+            setClasses([...classes, 'moveActive'])
+        }
+        // Set selected class when location selected
+        clickedLocation?.coordinates == details.coordinates &&
+        metaMode == 'main'
             ? setClasses([...classes, 'selected'])
             : null
     }, [foundPallets, category, availableLocations, clickedLocation])
@@ -69,30 +76,9 @@ function Location({ details }) {
         const newLocations = locations
         //update global locations object
         newLocations[x][y].category = category
-        dispatch({
-            type: 'setLocations',
-            data: newLocations
-        })
-        if (palletOption == 'move') {
-            dispatch({
-                type: 'setSelectedMoveLocation',
-                data: e.target.id
-            })
-            confirm('You want to move to this location?')
-            if (true) {
-                dispatch({
-                    type: 'updateLocationAfterMove',
-                    data: e.target.id
-                })
-            }
-            console.log(e.target.id)
-            dispatch({
-                type: 'setAvailableLocations',
-                data: []
-            })
-        }
     }
 
+    // when location clicked do different things in different modes.
     const handleClick = (e) => {
         // if in build mode location click is different than in if in main mode
         switch (metaMode) {
@@ -100,15 +86,45 @@ function Location({ details }) {
                 // get location object and set its new category
                 updateLocation(details.coordinates, category)
             case 'main':
-                dispatch({
-                    type: 'setClickedLocation',
-                    data: e.target.id
-                })
-                if (!microModes.LocationDetails) {
+                // if in move mode
+                if (microModes.Move) {
+                    // set moveToLocation global
                     dispatch({
-                        type: 'toggleMicroMode',
-                        data: 'LocationDetails'
+                        type: 'setMoveToLocation',
+                        data: e.target.id
                     })
+                    confirm('You want to move to this location?')
+                    if (confirm) {
+                        alert('Pallet has been moved.')
+                        dispatch({
+                            type: 'movePallet',
+                            data: {
+                                palletId: movingPalletId,
+                                moveFromLocation: moveFromLocation,
+                                moveToLocation: moveToLocation
+                            }
+                        })
+                        dispatch({
+                            type: 'setMicroMode',
+                            data: { mode: 'Move', bool: false }
+                        })
+                    }
+                } else {
+                    dispatch({
+                        type: 'setClickedLocation',
+                        data: e.target.id
+                    })
+                    if (!microModes.LocationDetails) {
+                        dispatch({
+                            type: 'toggleMicroMode',
+                            data: 'LocationDetails'
+                        })
+                    } else {
+                        dispatch({
+                            type: 'setClickedLocation',
+                            data: e.target.id
+                        })
+                    }
                 }
         }
     }
