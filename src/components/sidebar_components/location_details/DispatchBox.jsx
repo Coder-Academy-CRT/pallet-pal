@@ -54,7 +54,6 @@ export default function DispatchBox() {
 	const handleDelete = (e) => {
 		const isConfirmed = confirm("You want to dispatch this product?")
 		if (isConfirmed) {
-			// update number of bag to 0 and filter out later
 			const productId = e.target.parentElement.id
 			const updatedProductInfo = productList.map(product => {
 				if (product.product_id == productId) {
@@ -71,10 +70,7 @@ export default function DispatchBox() {
 
 	// Cancel button
 	const handleClose = (e) => {
-		dispatch({
-			type: 'removeMicroMode',
-			data: 'dispatchMode'
-		})
+        dispatch({ type: 'setMicroMode', data: { mode: 'Dispatch', bool: false } })
 		e.preventDefault()
 	}
 
@@ -91,7 +87,6 @@ export default function DispatchBox() {
 				}
 			  }
 			}
-
 
 			// --------------------------------------------------------------------- //
 			// ---- SEND REQUEST TO DATABASE --------------------------------------- //
@@ -138,23 +133,24 @@ export default function DispatchBox() {
 				data: productList
 			}),
 			// To close the dispatch box
-			dispatch({
-				type: 'removeMicroMode',
-				data: 'dispatchMode'
-			})
 			alert("Products have been dispatched")
-			}
-			if (productList.length > 0) {
-				alert(`No product left on pallet#${selectedPallet.pallet_id}, this pallet will be removed.`)
-				dispatch({
-					type: 'removePalletFromLocation',
-					data: selectedPallet.pallet_id
-				})
-				dispatch({
-					type: 'setSelectedPallet',
-					data: ''
-				})
-			}
+		}
+		// If no product left on the pallet, remove the pallet
+		const filteredList = productList.filter(
+			(product) => product.number_of_bags != 0
+		)
+		if (filteredList.length == 0) {
+			alert(`No product left on pallet#${selectedPallet.pallet_id}, this pallet will be removed.`)
+			dispatch({
+				type: 'removePalletFromLocation',
+				data: selectedPallet.pallet_id
+			})
+			dispatch({
+				type: 'setSelectedPallet',
+				data: ''
+			})
+		}
+		dispatch({ type: 'setMicroMode', data: { mode: 'Dispatch', bool: false } })
 	}
 
 
@@ -196,7 +192,7 @@ export default function DispatchBox() {
 					))}
 						<div className='button-wrapper'>
 							<button style={styleButton} onClick={handleClose}>Cancel</button>
-							<button type="submit" style={styleButton} onClick={(e) => handleSubmit(e)}>Dispatch</button>
+							<button type="submit" style={styleButton} onClick={(e) => handleSubmit(e)}>Confirm</button>
 						</div>
 					</form>
 					: (
