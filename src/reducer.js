@@ -179,6 +179,11 @@ export default function reducer(state, action) {
                     coordinates: state.clickedLocation.coordinates
                 }
             }
+        
+        case 'addNewProductToProducts' :
+            return {
+
+            }
 
         case 'movePallet':
             // payload = {

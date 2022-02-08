@@ -42,13 +42,23 @@ function LocationDetails() {
         }
     }
 
+    const handleClick = () => {
+        dispatch({ type: 'setMicroMode', data: { mode: 'AddPallet', bool: true } })
+    }
+
     if (microModes.LocationDetails) {
-        if (clickedLocation) {
+        if (clickedLocation.category != "inaccessible" ) {
             // if there are pallet cards then render pallet cards
             return palletCards.length > 0 ? (
-                <div id='locationDetails'>{palletCards}</div>
+                <div>
+                    <button style={{ padding: "5px", margin: "5px"}} onClick={handleClick}>+</button>
+                    <div id='locationDetails'>{palletCards}</div>
+                </div>
             ) : (
-                <div id='locationDetails'>no pallets in selected location</div>
+                <div>
+                    <button onClick={handleClick}>+</button>
+                    <div id='locationDetails'>No pallets in this locations.</div>
+                </div>
             )
         } else {
             dispatch({

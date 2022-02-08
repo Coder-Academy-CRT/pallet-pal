@@ -29,7 +29,8 @@ const initialState = {
         LotManager: false,
         LocationDetails: false,
         Move: false,
-        Dispatch: false
+        Dispatch: false, 
+        AddPallet: false
     },
 
     // ***NOTE*** replace this list when warehouse list endpoint ready
