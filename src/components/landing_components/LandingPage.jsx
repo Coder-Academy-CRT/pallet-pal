@@ -12,12 +12,12 @@ function LandingPage() {
         // prepare a list to store built location objects
         const newLocationList = []
         // for every row on the Y AXIS
-        for (let y = 0; y < columns; y++) {
+        for (let y = 0; y < rows; y++) {
             // create a row of locations X AXIS
             const currentList = []
-            for (let x = 0; x < rows; x++) {
+            for (let x = 0; x < columns; x++) {
                 currentList.push({
-                    coordinate: `0${x}_0${y}`,
+                    coordinates: `0${x}_0${y}`,
                     category: 'spare_floor',
                     pallets_on_location: []
                 })
@@ -35,7 +35,7 @@ function LandingPage() {
         dispatch({
             type: 'setTempWarehouse',
             data: {
-                id: warehouseList.length + 1,
+                id: 0,
                 name: 'new warehouse',
                 rows: rows,
                 columns: columns
@@ -58,7 +58,7 @@ function LandingPage() {
             <button
                 id='newWarehouseButton'
                 // set rows cols to 4, 4 but this can be altered without breaking new warehouse
-                onClick={() => buildNewWarehouse(4, 4)}>
+                onClick={() => buildNewWarehouse(8, 5)}>
                 build new warehouse
             </button>
         </div>

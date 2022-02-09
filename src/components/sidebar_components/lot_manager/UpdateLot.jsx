@@ -1,63 +1,77 @@
-import React, {useState, useContext} from 'react';
-import palletpalContext from '../../../palletpalContext';
-import api from '../../../api';
+import React, { useState, useContext } from 'react'
+import palletpalContext from '../../../palletpalContext'
+import api from '../../../api'
 
-export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
-
-    const { state: { warehouse, seeds, lots }, dispatch } = useContext(palletpalContext)
-    const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
-    const [confirmation, setConfirmation] = useState("no")
+export default function UpdateLot({ lot, lot_stocks, setEditMode }) {
+    const {
+        state: { warehouse, seeds, lots },
+        dispatch
+    } = useContext(palletpalContext)
+    const [updatedLot, setUpdatedLot] = useState({
+        lot_code: lot.lot_code,
+        seed_type: lot.seed_type,
+        seed_variety: lot.seed_variety
+    })
+    const [confirmation, setConfirmation] = useState('no')
 
     // all lots in warehouse to ensure that no duplicate lot codes are created
-    const existing_lots = lots.map(lot => lot.lot_code)
+    const existing_lots = lots.map((lot) => lot.lot_code)
 
-     /////////////////////// SEED TYPE AND VARIETY FORM SELECT INPUT OPTIONS ////////////////////
+    /////////////////////// SEED TYPE AND VARIETY FORM SELECT INPUT OPTIONS ////////////////////
 
     let seedTypes = new Set([])
     let seedVarieties = []
 
-    seeds.forEach( (seed) => {
-        seedTypes.add( seed.type)
-        seedVarieties.push( {type: seed.type, value: seed.variety, label: seed.variety } )
+    seeds.forEach((seed) => {
+        seedTypes.add(seed.type)
+        seedVarieties.push({
+            type: seed.type,
+            value: seed.variety,
+            label: seed.variety
+        })
     })
-    
-    let uniqueSeedTypes = Array.from(seedTypes).map( (seed) => {
+
+    let uniqueSeedTypes = Array.from(seedTypes).map((seed) => {
         return { value: seed, label: seed }
     })
 
-    let filteredSeedVarieties = seedVarieties.map( (variety, index) => {
+    let filteredSeedVarieties = seedVarieties.map((variety, index) => {
         if (variety.type == updatedLot.seed_type) {
             return (
                 <option value={variety.value} key={index}>
-                {variety.label}
-                </option> 
+                    {variety.label}
+                </option>
             )
         }
     })
-
 
     /////////////////////// PUT REQUEST TO API => DATABASE  ////////////////////
 
     async function updateLot(e) {
         e.preventDefault()
 
-        if (existing_lots.includes(updatedLot.lot_code) && updatedLot.lot_code != lot.lot_code) {
-            
-            window.alert("Another lot with the same code already exists")
-
+        if (
+            existing_lots.includes(updatedLot.lot_code) &&
+            updatedLot.lot_code != lot.lot_code
+        ) {
+            window.alert('Another lot with the same code already exists')
         } else {
             try {
                 const response = await api.put(
-                    `warehouse/${warehouse.id}/lot/${lot.lot_code}`, 
-                    { 
+                    `warehouse/${warehouse.id}/lot/${lot.lot_code}`,
+                    {
                         lot_code: updatedLot.lot_code,
                         seed_type: updatedLot.seed_type,
                         seed_variety: updatedLot.seed_variety
-                    } )
+                    }
+                )
 
-                if (response.data == `lot ${lot.lot_code} updated to ${updatedLot.lot_code}: ${updatedLot.seed_type} - ${updatedLot.seed_variety}`) {
+                if (
+                    response.data ==
+                    `lot ${lot.lot_code} updated to ${updatedLot.lot_code}: ${updatedLot.seed_type} - ${updatedLot.seed_variety}`
+                ) {
                     dispatch({
-                        type: "updateLot",
+                        type: 'updateLot',
                         original_lot_code: lot.lot_code,
                         new_lot_code: updatedLot.lot_code,
                         new_seed_type: updatedLot.seed_type,
@@ -67,26 +81,26 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
                     setEditMode(false)
                 }
             } catch (err) {
-                window.alert("Lot could not be updated. Please close and try again later")
+                window.alert(
+                    'Lot could not be updated. Please close and try again later'
+                )
                 console.log(err)
             }
         }
     }
 
-
     /////////////////////// DELETE REQUEST TO API => DATABASE  ////////////////////
 
     function checkDeleteLot(e) {
         e.preventDefault()
-        if (lot_stocks[lot.lot_code] > -1 ) {
-            setConfirmation("check") 
+        if (lot_stocks[lot.lot_code] > -1) {
+            setConfirmation('check')
         } else {
             deleteLot()
         }
     }
 
     async function deleteLot() {
-  
         try {
             const response = await api.delete(
                 `warehouse/${warehouse.id}/lot/${lot.lot_code}`
@@ -94,82 +108,116 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
             // only want the reducer to delete from state if we have a success
             if (response.data == `lot ${lot.lot_code} deleted`) {
                 dispatch({
-                    type: "deleteLot",
+                    type: 'deleteLot',
                     data: lot.lot_code
                 })
                 window.alert(`Success ! Lot ${lot.lot_code} deleted`)
                 setEditMode(false)
             }
         } catch (err) {
-            window.alert("Lot could not be deleted. Please close and try again later")
+            window.alert(
+                'Lot could not be deleted. Please close and try again later'
+            )
             console.log(err)
         }
     }
 
-
-    return (          
+    return (
         <div className='editLotCard'>
-            <div id="editLotHeader">
-                <h3 id="editLot-Heading">Edit Lot</h3>
-                <h3 id="editLot-LotCode">{lot.lot_code}</h3>
+            <div id='editLotHeader'>
+                <h3 id='editLot-Heading'>Edit Lot</h3>
+                <h3 id='editLot-LotCode'>{lot.lot_code}</h3>
             </div>
-            
 
-            <form className="lotForm">
-
-                <label htmlFor="lotCode">Please enter new lot code :</label>
+            <form className='lotForm'>
+                <label htmlFor='lotCode'>Please enter new lot code :</label>
                 <input
-                    className="lotInputs"
-                    id="lotCode"
+                    className='lotInputs'
+                    id='lotCode'
                     value={updatedLot.lot_code}
-                    onChange={(event) => 
-                        setUpdatedLot( {...updatedLot, lot_code : event.target.value})}
-                ></input> 
+                    onChange={(event) =>
+                        setUpdatedLot({
+                            ...updatedLot,
+                            lot_code: event.target.value
+                        })
+                    }></input>
 
-                <label htmlFor="lotSeedType">Please select seed type:</label>
+                <label htmlFor='lotSeedType'>Please select seed type:</label>
                 <select
-                    className="lotInputs lotSelect"
-                    id="lotSeedType"
+                    className='lotInputs lotSelect'
+                    id='lotSeedType'
                     value={updatedLot.seed_type}
-                    onChange={(event) => setUpdatedLot( { ... updatedLot, seed_type: event.target.value, seed_variety: "variety not stated" })}
-
-                >
-                    { uniqueSeedTypes.map( (seed, index) => (
+                    onChange={(event) =>
+                        setUpdatedLot({
+                            ...updatedLot,
+                            seed_type: event.target.value,
+                            seed_variety: 'variety not stated'
+                        })
+                    }>
+                    {uniqueSeedTypes.map((seed, index) => (
                         <option value={seed.value} key={index}>
                             {seed.label}
                         </option>
                     ))}
                 </select>
 
-                <label htmlFor="lotSeedVariety">Please select seed variety :</label>
+                <label htmlFor='lotSeedVariety'>
+                    Please select seed variety :
+                </label>
 
                 <select
-                    className="lotInputs lotSelect"
-                    id="lotVarietyType"
-                    value={ updatedLot.seed_variety == lot.seed_variety ? lot.seed_variety : updatedLot.seed_variety}
-                    onChange={(event) => setUpdatedLot( { ... updatedLot, seed_variety: event.target.value })}
-                >
+                    className='lotInputs lotSelect'
+                    id='lotVarietyType'
+                    value={
+                        updatedLot.seed_variety == lot.seed_variety
+                            ? lot.seed_variety
+                            : updatedLot.seed_variety
+                    }
+                    onChange={(event) =>
+                        setUpdatedLot({
+                            ...updatedLot,
+                            seed_variety: event.target.value
+                        })
+                    }>
                     {filteredSeedVarieties}
-                </select>                        
-
+                </select>
             </form>
 
-
-            {confirmation == "check" ? 
-            <>
-            <div id='buttonContainer'>
-                <p>{`${lot_stocks[lot.lot_code]}kg in stock. If you delete the lot, products will also be removed from warehouse`}</p>
-                <button style={{width:"200px"}} onClick={ () => deleteLot()}>continue</button>
-                <button style={{width:"200px"}} onClick={ () => setConfirmation("no")}>cancel</button>
-            </div>
-            </>
-            :
-            <div id='buttonContainer'>
-                <button onClick={ (e) => updateLot(e) } id="saveLotButton">save</button>
-                <button onClick={ () => setEditMode(false)} id="exitLotButton">exit</button>
-                <button onClick={ (e) => checkDeleteLot(e)} id="deleteLotButton">delete</button>
-            </div> }
-           
+            {confirmation == 'check' ? (
+                <>
+                    <div id='buttonContainer'>
+                        <p>{`${
+                            lot_stocks[lot.lot_code]
+                        }kg in stock. If you delete the lot, products will also be removed from warehouse`}</p>
+                        <button
+                            style={{ width: '200px' }}
+                            onClick={() => deleteLot()}>
+                            continue
+                        </button>
+                        <button
+                            style={{ width: '200px' }}
+                            onClick={() => setConfirmation('no')}>
+                            cancel
+                        </button>
+                    </div>
+                </>
+            ) : (
+                <div id='buttonContainer'>
+                    <button onClick={(e) => updateLot(e)} id='saveLotButton'>
+                        save
+                    </button>
+                    <button
+                        onClick={() => setEditMode(false)}
+                        id='exitLotButton'>
+                        exit
+                    </button>
+                    <button
+                        onClick={(e) => checkDeleteLot(e)}
+                        id='deleteLotButton'>
+                        delete
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

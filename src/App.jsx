@@ -29,15 +29,12 @@ const initialState = {
         LotManager: false,
         LocationDetails: false,
         Move: false,
-        Dispatch: false, 
+        Dispatch: false,
         AddPallet: false
     },
 
     // ***NOTE*** replace this list when warehouse list endpoint ready
-    warehouseList: [
-        { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
-        { id: 2, name: 'warehouse_02', rows: 4, columns: 4 }
-    ]
+    warehouseList: null
 }
 
 export default function App() {
@@ -46,7 +43,6 @@ export default function App() {
     useEffect(async () => {
         if (state.metaMode == 'main') {
             // location information into state
-
             const res_locations = await api.get(
                 `warehouse/${state.warehouse.id}/locations`
             )
@@ -73,6 +69,11 @@ export default function App() {
                 data: res_lots.data
             })
         }
+        const wh_list = await api.get(`warehouses`)
+        dispatch({
+            type: 'setWarehouseList',
+            data: wh_list.data
+        })
 
         const res_seeds = await api.get('seeds')
         dispatch({
@@ -82,10 +83,14 @@ export default function App() {
     }, [state.metaMode])
 
     if (state.metaMode == 'landing') {
-        return (
+        return state.warehouseList ? (
             <palletpalContext.Provider value={{ state, dispatch }}>
                 <LandingPage />
             </palletpalContext.Provider>
+        ) : (
+            <h1 style={{ padding: '100px', color: 'green', fontSize: '3em' }}>
+                Loading Warehouse List....
+            </h1>
         )
     } else {
         // other two modes will only apply directly to Warehouse or Sidebar rendered components

@@ -173,16 +173,16 @@ export default function reducer(state, action) {
 
             return {
                 ...state,
-                products: filteredList,
+                products: filteredList
             }
-        
-        case 'addNewProductToProducts' :
+
+        case 'addNewProductToProducts':
             return {
-                ...state, 
+                ...state,
                 products: [...state.products, action.data]
             }
 
-        case 'addNewPalletToLocations' :
+        case 'addNewPalletToLocations':
             const updatedLocations = [...state.locations]
             // helper function
             const parseCoord = (string) => {
@@ -191,16 +191,15 @@ export default function reducer(state, action) {
                 y = Number(y)
                 return [x, y]
             }
-                
+
             const [x, y] = parseCoord(state.clickedLocation.coordinates)
-            
-            updatedLocations[x][y].pallets_on_location[0] ? 
-                updatedLocations[x][y].pallets_on_location.push(action.data)
-                : 
-                (updatedLocations[x][y].pallets_on_location = [action.data])
-            
+
+            updatedLocations[y][x].pallets_on_location[0]
+                ? updatedLocations[y][x].pallets_on_location.push(action.data)
+                : (updatedLocations[y][x].pallets_on_location = [action.data])
+
             return {
-                ...state, 
+                ...state,
                 locations: updatedLocations
             }
 
@@ -286,6 +285,12 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 warehouse: action.data
+            }
+
+        case 'setWarehouseList':
+            return {
+                ...state,
+                warehouseList: action.data
             }
         // NEW
         case 'addWarehouse':
