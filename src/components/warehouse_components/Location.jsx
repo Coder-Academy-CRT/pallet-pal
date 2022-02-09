@@ -58,7 +58,7 @@ function Location({ details }) {
         e.stopPropagation()
         dispatch({
             type: 'setClickedLocation',
-            data: e.target.parentNode.id
+            data: e.target.parentElement.id
         })
     }
 

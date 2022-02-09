@@ -9,13 +9,12 @@ function PalletCard({ palletId, locationId }) {
             foundPallets,
             clickedLocation,
             moveToLocation,
-            moveFromLocation
+            moveFromLocation, 
+            microModes
         },
         dispatch
     } = useContext(palletpalContext)
 
-    // to check if palletCard has been clicked, toggle buttons showing or not
-    const [palletCardClicked, setPalletCardClicked] = useState(false)
     // set classes to style when found/not found
     const [classes, setClasses] = useState('palletCard')
     // pallet products is an arry of product objects which are on this pallet
@@ -33,16 +32,23 @@ function PalletCard({ palletId, locationId }) {
         // re-rendering every time clicked location changes or when found pallets changes.
     }, [clickedLocation, foundPallets])
 
-    // change mode on click faciliating option button display
-    const handleClick = () => {
-        setPalletCardClicked(!palletCardClicked)
+    // handle whether to show pallet option or not
+    const handleClick = (e) => {
+        if (e.target.parentElement?.classList.contains('palletCard') || e.target.parentElement?.classList.contains('productCard')) {
+            dispatch({ type: 'setMicroMode', data: { mode: 'PalletOption', bool: !microModes.PalletOption } })
+        }
         dispatch({
             type: 'setSelectedPallet',
             data: palletId
         })
     }
 
-    // IDEA HOW TO HANDLE MOVE OPERATION
+    function setEditMode() {
+        // set edit mode to true
+        dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: true } })
+    }
+
+    // HANDLE MOVE OPERATION
     function handleMoveClick() {
         // set move mode to true
         dispatch({ type: 'setMicroMode', data: { mode: 'Move', bool: true } })
@@ -78,9 +84,9 @@ function PalletCard({ palletId, locationId }) {
                     key={index}
                 />
             ))}
-            {palletCardClicked ? (
+            {microModes.PalletOption ? (
                 <div className='buttons'>
-                    <button onClick={() => console.log('edit')}>Edit</button>
+                    <button onClick={() => setEditMode()}>Edit</button>
                     <button onClick={() => handleMoveClick()}>Move</button>
                     <button onClick={() => setDispatchMode()}>Dispatch</button>
 
