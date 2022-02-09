@@ -6,7 +6,8 @@ import { unstable_batchedUpdates } from 'react-dom';
 export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
 
     const { state: { warehouse, seeds, lots }, dispatch } = useContext(palletpalContext)
-    const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
+    // const [updatedLot, setUpdatedLot] = useState( { lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety } )
+    const [updatedLot, setUpdatedLot] = useState(lot)
     const [confirmation, setConfirmation] = useState("no")
     const [alertMessage, setAlertMessage] = useState("")
 
@@ -163,17 +164,20 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
     function handleCancelDelete(event) {
         setAlertMessage("")
         setConfirmation("no")
+        setUpdatedLot(lot)
     }
 
-    function setFormValue(input_type) {
+    // this function largely stops accidental modification of lot details when checking on a delete action
+    function formValue(input_type) {
         if (confirmation == "check") {
-            setUpdatedLot[input_type] = lot[input_type]
             return lot[input_type]
         } else {
             return updatedLot[input_type]
         }
     }
 
+    console.log(lot)
+    console.log(updatedLot)
     console.log(updatedLot.lot_code)
     console.log(lot.lot_code)
     console.log(updatedLot.seed_type, updatedLot.seed_variety)
@@ -192,7 +196,7 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
                     className="lotInputs"
                     id="lotCode"
                     // value={updatedLot.lot_code}
-                    value={ setFormValue('lot_code') }
+                    value={ formValue('lot_code') }
                     onChange={ handleChangedLot }
                 ></input> 
 
@@ -200,7 +204,8 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
                 <select
                     className="lotInputs lotSelect"
                     id="lotSeedType"
-                    value={updatedLot.seed_type}
+                    // value={updatedLot.seed_type}
+                    value={ formValue('seed_type')}
                     onChange={ handleChangedSeedType }
 
                 >
@@ -216,7 +221,8 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
                 <select
                     className="lotInputs lotSelect"
                     id="lotVarietyType"
-                    value={ updatedLot.seed_variety }
+                    // value={ updatedLot.seed_variety }
+                    value={ formValue('seed_variety')}
                     onChange={ handleChangedSeedVariety }
                 >
                     {filteredSeedVarieties}
