@@ -24,7 +24,7 @@ function Sidebar() {
                 <LocationDetails />
                 <LotManager />
                 {microModes.AddPallet ? <AddPallet /> : null}
-                {microModes.EditPallet ? <EditPallet /> : null}
+                {microModes.Edit ? <EditPallet /> : null}
                 <SidebarNav />
                 {microModes.Move ? <MoveOption /> : null}
             </div>

@@ -55,7 +55,7 @@ export default function DispatchBox() {
 		const isConfirmed = confirm("You want to dispatch this product?")
 		if (isConfirmed) {
 			const productId = e.target.parentElement.id
-			const updatedProductInfo = productList.map(product => {
+			const updatedProductInfo = productList.map((product, index) => {
 				if (product.product_id == productId) {
 					// dispatched: true use for rendering <div>Product has been dispatched</div> in dispatch box after user click the close button
 					return { ...product, number_of_bags: product.number_of_bags, dispatched: true }
@@ -186,6 +186,5 @@ export default function DispatchBox() {
 					)}
 			</div>
       </div>
-
   ) 
 }
