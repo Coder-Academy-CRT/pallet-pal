@@ -28,6 +28,8 @@ const initialState = {
         SearchWindow: false,
         LotManager: false,
         LocationDetails: false,
+        PalletOption: false,
+        Edit: false,
         Move: false,
         Dispatch: false,
         AddPallet: false
