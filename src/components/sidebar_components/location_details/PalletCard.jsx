@@ -42,6 +42,11 @@ function PalletCard({ palletId, locationId }) {
         })
     }
 
+    function setEditMode() {
+        // set edit mode to true
+        dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: true } })
+    }
+
     // IDEA HOW TO HANDLE MOVE OPERATION
     function handleMoveClick() {
         // set move mode to true
@@ -80,7 +85,7 @@ function PalletCard({ palletId, locationId }) {
             ))}
             {palletCardClicked ? (
                 <div className='buttons'>
-                    <button onClick={() => console.log('edit')}>Edit</button>
+                    <button onClick={() => setEditMode()}>Edit</button>
                     <button onClick={() => handleMoveClick()}>Move</button>
                     <button onClick={() => setDispatchMode()}>Dispatch</button>
 
