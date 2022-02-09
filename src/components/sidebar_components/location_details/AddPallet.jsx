@@ -82,7 +82,7 @@ export default function AddPallet() {
                         value={newProduct.number_of_bags}
                         size="10"
                     />
-                    <button style={{ padding: "3px", fontSize: "1em"}} onClick={createProduct}>+</button>
+                    <button type="button" style={{ padding: "3px", fontSize: "1em"}} onClick={createProduct}>+</button>
             </>
         )
     }
@@ -130,6 +130,7 @@ export default function AddPallet() {
     // confirm button
     async function handleSubmit(e) {
         const message = []
+        let newPalletId = ''
         e.preventDefault()
         // Create pallet with the first product 
         try {
@@ -137,23 +138,17 @@ export default function AddPallet() {
                 `warehouse/${warehouse.id}/location/${clickedLocation.coordinates}/products`, newProductList[0]
             )
             if (response.data.hasOwnProperty('product_id')){
-                const newPalletId = response.data.pallet_id
-                // use response object to update Products as it should be a whole object
-                // dispatch({
-                //     type: "addNewProductToProducts",
-                //     data: response.data
-                // })
-                // dispatch({
-                //     type: "addNewPalletToLocations",
-                //     data: newPalletId
-                // })
+                newPalletId = response.data.pallet_id
+                // use response object to update Products as it returns the whole object
+                dispatch({
+                    type: "addNewProductToProducts",
+                    data: response.data
+                })
                 message.push('success')
-                console.log("Success")
             }
         } catch (err) {
             setAlertMessage("Product could not be created. Please close and try again later")
             message.push('error')
-            console.log(err)
         }
         // Add the rest of the products to the just created pallet
         // Remove the first product as it has been created in db
@@ -166,35 +161,39 @@ export default function AddPallet() {
                     )
                     if (response2.data.hasOwnProperty('product_id')){
                         // use response object to update Products as it should be a whole object
-                        // dispatch({
-                        //     type: "addNewProductToProducts",
-                        //     data: response.data
-                        // })
-                        // dispatch({
-                        //     type: "addNewPalletToLocations",
-                        //     data: newPalletId
-                        // })
-                        const newPalletId = response.data.pallet_id
+                        dispatch({
+                            type: "addNewProductToProducts",
+                            data: response2.data
+                        })
+
                         message.push('success')
-                        console.log("Success")
                     }
                 } catch (err) {
+                    setAlertMessage("Product could not be created. Please close and try again later")
                     message.push('error')
-                    console.log(err)
                 }
             })
             if (!message[0].includes('error')) {
                 alert("All done!")
             }
+            // Add new pallet id to Locations
+            dispatch({
+                type: "addNewPalletToLocations",
+                data: newPalletId
+            })
+            // Close the addPallet option
+            dispatch({ 
+                type: 'setMicroMode', 
+                data: { mode: 'AddPallet', bool: false } 
+            })
         }
     }
 
-    
 
 
     return (
         <div>
-            <form onClick={handleSubmit}>
+            <form>
                 {newProductList.length != 0 ? (
                         <div>
                             {newProductList.map((product, index) => (
@@ -202,7 +201,7 @@ export default function AddPallet() {
                                     <div style={styleBox} key={index}>{product.lot_code}</div>
                                     <div style={styleBox} key={index}>{product.number_of_bags} bags</div>
                                     <div style={styleBox} key={index}>{product.bag_size} kg each</div>
-                                    <button onClick={handleRemove}>x</button>
+                                    <button type="button" onClick={handleRemove}>x</button>
                                 </div>
                             ))}
                             {createField()}
@@ -210,12 +209,12 @@ export default function AddPallet() {
                 ) : createField()}
                 {newProductList.length != 0 ? (
                     <div>
-                        <button onClick={handleClose}>Cancel</button>
-                        <button>Confirm</button>
+                        <button type="button" onClick={handleClose}>Cancel</button>
+                        <button onClick={handleSubmit}>Confirm</button>
                     </div>
                 ) : (
                     <div>
-                        <button onClick={handleClose}>Cancel</button>
+                        <button type="button" onClick={handleClose}>Cancel</button>
                     </div>
                 )}
             </form>

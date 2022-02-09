@@ -120,6 +120,7 @@ export default function reducer(state, action) {
                 })
             })
             return { ...state }
+
         case 'initiateMove':
             return {
                 ...state
@@ -173,16 +174,34 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 products: filteredList,
-                // this trigger re-rendering of that pallet card so it will show the updated details on the sidebar
-                clickedLocation: {
-                    ...state.clickedLocation,
-                    coordinates: state.clickedLocation.coordinates
-                }
             }
         
         case 'addNewProductToProducts' :
             return {
+                ...state, 
+                products: [...state.products, action.data]
+            }
 
+        case 'addNewPalletToLocations' :
+            const updatedLocations = [...state.locations]
+            // helper function
+            const parseCoord = (string) => {
+                let [x, y] = string.split('_')
+                x = Number(x)
+                y = Number(y)
+                return [x, y]
+            }
+                
+            const [x, y] = parseCoord(state.clickedLocation.coordinates)
+            
+            updatedLocations[x][y].pallets_on_location[0] ? 
+                updatedLocations[x][y].pallets_on_location.push(action.data)
+                : 
+                (updatedLocations[x][y].pallets_on_location = [action.data])
+            
+            return {
+                ...state, 
+                locations: updatedLocations
             }
 
         case 'movePallet':
