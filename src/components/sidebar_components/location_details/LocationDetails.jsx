@@ -47,7 +47,7 @@ function LocationDetails() {
     }
 
     if (microModes.LocationDetails) {
-        if (clickedLocation.category != "inaccessible" ) {
+        if (clickedLocation?.category != "inaccessible" ) {
             // if there are pallet cards then render pallet cards
             return palletCards.length > 0 ? (
                 <div>
