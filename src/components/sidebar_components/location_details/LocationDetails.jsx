@@ -41,7 +41,7 @@ function LocationDetails() {
             )
         }
     }
-
+    // Open add pallet option
     const handleClick = () => {
         dispatch({ type: 'setMicroMode', data: { mode: 'AddPallet', bool: true } })
     }

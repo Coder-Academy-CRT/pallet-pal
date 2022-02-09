@@ -87,53 +87,36 @@ export default function DispatchBox() {
 				}
 			  }
 			}
+			const message = []
+			productList.forEach(async (product) => {
+				try {
+					const response = await api.put(
+						`product/${product.product_id}`,
+						{
+							lot_code: product.lot_code,
+							bag_size: product.bag_size,
+							number_of_bags: product.number_of_bags
+						}
+					)
+					if (response.data == `product ${product.product_id} updated`) {
+						message.push('success')
+						// Update selectedPallet data
+						dispatch({
+							type: "updatePalletDataAfterDispatch",
+							data: productList
+						}),
+						// Update products data with the updated selectedPallet data
+						dispatch({
+							type: 'updateProducts', 
+							data: productList
+						})
+					} 
+				} catch (err) {
+					setAlertMessage("Sorry, something goes wrong. Please close and try again later")
+					message.push('fail')
 
-			// --------------------------------------------------------------------- //
-			// ---- SEND REQUEST TO DATABASE --------------------------------------- //
-			// ---- Haven't test it yet -------------------------------------------- //
-
-
-			// // use below to keep track all response from database as we want all products has been updated successfully before we update state
-			// // But!!!!!!!!! What if the first product gone through but the second one doesn't, state will not be updated but first product has been updated in DB?
-			// const feedback = []
-			// for (const product of productList) {
-			// 	const response = await api.post(
-			// 		`product/${product.product_id}`,
-			// 		{
-			// 			lot_code: product.lot_code,
-			// 			bag_size: product.bag_size,
-			// 			number_of_bags: product.number_of_bags
-			// 		}
-			// 	)
-			// 	if (response.data == `product ${product.product_id} updated`) {
-			// 		feedback.push("success")
-			// 	} else {
-			// 		feedback.push("fail")
-			// 	}
-			// }
-			// if (!feedback.includes("fail")) {
-			// 	// update state with below codes //
-			// } else {
-			// 	setAlertMessage("Sorry, something goes wrong. Please close and try again later")
-			// }
-
-			// --------------------------------------------------------------------- //
-			// --------------------------------------------------------------------- //
-
-
-
-			// Update selectedPallet data
-			dispatch({
-				type: "updatePalletDataAfterDispatch",
-				data: productList
-			}),
-			// Update products data with the updated selectedPallet data
-			dispatch({
-				type: 'updateProducts', 
-				data: productList
-			}),
-			// To close the dispatch box
-			alert("Products have been dispatched")
+				}
+			})
 		}
 		// If no product left on the pallet, remove the pallet
 		const filteredList = productList.filter(
@@ -177,10 +160,10 @@ export default function DispatchBox() {
 								<input 
 									type="number"
 									min="0"
-									max={parseInt(product.number_of_bags)}
+									max={product.number_of_bags}
 									size="5"
 									name={product.id}
-									placeholder={parseInt(product.number_of_bags)}
+									placeholder={product.number_of_bags}
 									onChange={handleChange}
 									onInput={handleChange}
 								/>
