@@ -72,12 +72,13 @@ function BuildSidebar() {
 
             if (!whResponse.data.hasOwnProperty('id')) {
                 // warehouse not created
+                console.log(whResponse)
                 console.log('WAREHOUSE DB CREATE FAILURE')
                 alert('Warehouse failed to save to database.')
             } else {
                 // if warehouse successfully created
                 // update locations
-                const locResponse = await api.post(
+                const locResponse = await api.put(
                     `warehouse/${whResponse.data.id}/locations`,
                     locationRequest()
                 )
@@ -103,12 +104,17 @@ function BuildSidebar() {
                         type: 'setWarehouse',
                         data: { newWarehouse }
                     })
+                    // set temp warehouse to null to force warehouse build instead of temp warehouse in Warehouse.jsx
+                    dispatch({
+                        type: 'setTempWarehouse',
+                        data: null
+                    })
                     // set to main mode which will load this new wh
                     dispatch({
                         type: 'setMetaMode',
                         data: 'main'
                     })
-                    message.push('success')
+                    console.log('LOCATIONS SAVED')
                 }
             }
         }

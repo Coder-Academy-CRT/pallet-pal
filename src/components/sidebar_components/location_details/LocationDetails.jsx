@@ -4,20 +4,9 @@ import palletpalContext from '../../../palletpalContext'
 
 function LocationDetails() {
     const {
-        state: { locations, clickedLocation, microModes },
+        state: { clickedLocation, microModes },
         dispatch
     } = useContext(palletpalContext)
-
-    // this function retrieves the location object directly from the array of arrays of location objects
-    function getLocation(coordString) {
-        // split coordinate into x and y coords, example ["01","02"]
-        const coords = coordString.split('_')
-        // convert to numbers
-        let x = Number(coords[0])
-        let y = Number(coords[1])
-        // index and return location object
-        return locations[y][x]
-    }
 
     // prepare pallet cards
     const palletCards = []

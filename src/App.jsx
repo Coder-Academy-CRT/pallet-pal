@@ -9,7 +9,7 @@ import api from './api'
 
 const initialState = {
     // warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
-    warehouse: {},
+    warehouse: null,
     tempWarehouse: null,
     products: [],
     locations: [],
@@ -25,7 +25,7 @@ const initialState = {
     // availableLocations: [], // for move
     metaMode: 'landing', // options include "landing" "build" "main" to cater for various levels
     microModes: {
-        SearchWindow: true,
+        SearchWindow: false,
         LotManager: false,
         LocationDetails: false,
         Move: false,
@@ -48,7 +48,11 @@ export default function App() {
             )
             dispatch({
                 type: 'setLocationData',
-                data: res_locations.data
+                data: {
+                    allLocations: res_locations.data,
+                    rows: state.warehouse.rows,
+                    columns: state.warehouse.columns
+                }
             })
             //  product information into state
             const res_products = await api.get(
