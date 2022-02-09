@@ -45,12 +45,6 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
     async function updateLot(e) {
         e.preventDefault()
         setAlertMessage("")
-        console.log(updatedLot.lot_code)
-        console.log(updatedLot.seed_type)
-        console.log(updatedLot.seed_variety)
-        console.log(lot.lot_code)
-        console.log(lot.seed_type)
-        console.log(lot.seed_variety)
 
         if (existing_lots.includes(updatedLot.lot_code) && updatedLot.lot_code != lot.lot_code) {
             
@@ -169,11 +163,6 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
         }
     }
 
-    console.log(lot)
-    console.log(updatedLot)
-    console.log(updatedLot.lot_code)
-    console.log(lot.lot_code)
-    console.log(updatedLot.seed_type, updatedLot.seed_variety)
     return (          
         <div className='editLotCard'>
             <div id="editLotHeader">
