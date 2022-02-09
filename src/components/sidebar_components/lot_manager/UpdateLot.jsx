@@ -54,8 +54,6 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
 
         if (existing_lots.includes(updatedLot.lot_code) && updatedLot.lot_code != lot.lot_code) {
             
-            // window.alert("Another lot with the same code already exists")
-
             setAlertMessage(`${updatedLot.lot_code} already exists ! Please select a new lot code`)
 
         } else if (
@@ -63,11 +61,6 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
             && updatedLot.seed_type == lot.seed_type 
             && updatedLot.seed_variety == lot.seed_variety ) {
                 setAlertMessage(`details are the same as existing lot - no changes made`)
-
-                // setTimeout(() => {
-                //     setAlertMessage("")
-                //     clearTimeout(self)
-                // }, 2000);
 
         } else {
             setAlertMessage("... connecting to database ...")
@@ -120,7 +113,7 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
     }
 
     async function deleteLot() {
-  
+        setAlertMessage("... deleting ...")
         try {
             const response = await api.delete(
                 `warehouse/${warehouse.id}/lot/${lot.lot_code}`
@@ -132,8 +125,8 @@ export default function UpdateLot( {lot, lot_stocks, setEditMode } ) {
                     data: lot.lot_code
                 })
 
-                // if deleted, card closed, so will need some window to open
-                window.alert(`Success ! Lot ${lot.lot_code} deleted`)
+                // on success, close EditMode, which prevents another lot card from automatically opening
+                setEditMode(false)
 
             }
         } catch (err) {
