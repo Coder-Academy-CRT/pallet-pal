@@ -9,26 +9,27 @@ function LotList() {
     const { state: { lots, products } } = useContext(palletpalContext)
     const [createLotForm, setCreateLotForm] = useState(false)
     
-
     let all_lots = []
     
     {lots.forEach( (lot, index) => {
         // for every lot, go through the products and find matches in the products
+        // need to reset the lot otherwise every render performs this again
+        lot = {lot_code : lot.lot_code, seed_type: lot.seed_type, seed_variety: lot.seed_variety}
         products.forEach( (product) => {
             if (product.lot_code == lot.lot_code) {
                 
                 let product_amount = Number(product.bag_size) * Number(product.number_of_bags)
                 // for any matches, take the total volume of the product, and add it to a new property in the lot
-                
-                switch (lot[product.bag_size]) {
-                    case undefined:
+  
+                switch (!!lot[product.bag_size]) {
+                    case false: // covers "undefined"
                         lot[product.bag_size] = 0
                         lot[product.bag_size] += product_amount
                         break
                     case true:
                         lot[product.bag_size] += product_amount
                         break
-                }        
+                }  
             }
         }) 
         // once each lot matches with every product, push the Lotcard, sending the updated lot details as a prop
