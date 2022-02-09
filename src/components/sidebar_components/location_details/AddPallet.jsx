@@ -7,8 +7,8 @@ export default function AddPallet() {
     const [lots, setLots] = useState([])
     const [newProduct, setNewProduct] = useState({
         lot_code: '',
-        bag_size: '',
-        number_of_bags: ''
+        bag_size: 0,
+        number_of_bags: 0
     })
     const [newProductList, setNewProductList] = useState([])
 
@@ -70,7 +70,6 @@ export default function AddPallet() {
                         placeholder="bag size"
                         onChange={handleChange}
                         name="bag_size"
-                        value={newProduct.bag_size}
                         size="10"
                     />
                     <input 
@@ -79,7 +78,6 @@ export default function AddPallet() {
                         placeholder="num of bags"
                         onChange={handleChange}
                         name="number_of_bags"
-                        value={newProduct.number_of_bags}
                         size="10"
                     />
                     <button type="button" style={{ padding: "3px", fontSize: "1em"}} onClick={createProduct}>+</button>
@@ -94,8 +92,8 @@ export default function AddPallet() {
         // reset input field placeholder value
         setNewProduct({
             lot_code: '',
-            bag_size: '',
-            number_of_bags: ''
+            bag_size: 0,
+            number_of_bags: 0
         })
     }
 
@@ -108,12 +106,12 @@ export default function AddPallet() {
             }
         })
     }
-    // ------------------ NEED TEST OUT ------------------ //
+    // handle when user delete individual product before they click confirm
     const handleRemove = (e) => {
         e.preventDefault()
-        newProductList.filter(product => product.id == e.target.ParentElement.id)
+        const filteredList = newProductList.filter((product, index) => index != e.target.parentElement.id)
+        setNewProductList(filteredList)
     }
-    // ------------------ NEED TEST OUT ------------------ //
 
     // close button
     const handleClose = () => {
@@ -127,69 +125,101 @@ export default function AddPallet() {
         }
     }
 
+    async function handleDatabaseRequest () {
+        
+    }
+
     // confirm button
     async function handleSubmit(e) {
-        const message = []
-        let newPalletId = ''
         e.preventDefault()
-        // Create pallet with the first product 
-        try {
-            const response = await api.post(
-                `warehouse/${warehouse.id}/location/${clickedLocation.coordinates}/products`, newProductList[0]
-            )
-            if (response.data.hasOwnProperty('product_id')){
-                newPalletId = response.data.pallet_id
-                // use response object to update Products as it returns the whole object
-                dispatch({
-                    type: "addNewProductToProducts",
-                    data: response.data
-                })
-                message.push('success')
-            }
-        } catch (err) {
-            setAlertMessage("Product could not be created. Please close and try again later")
-            message.push('error')
-        }
-        // Add the rest of the products to the just created pallet
-        // Remove the first product as it has been created in db
-        if (message[0] == 'success') {
-            newProductList.splice(0, 1)
-            newProductList.forEach(async (product) => {
+        // Find products that have the same lot code and bag size
+        var duplicateProducts = Object.values(newProductList.reduce((c, v) => {
+            let k = v.lot_code + '-' + v.bag_size;
+            c[k] = c[k] || [];
+            c[k].push(v);
+            return c;
+          }, {})).reduce((c, v) => v.length > 1 ? c.concat(v) : c, []);
+        
+        if (duplicateProducts.length != 0) {
+            confirm("Some products are having same lot code and bag size, do you want to merge them together? Alternatively you can go back to edit your products.")
+            if (confirm) {
+                // Merge objects with same lot code and sum the number of bags
+                const merged =  await newProductList.reduce((a,c)=>{
+                    let x = a.find(e => e.lot_code===c.lot_code && e.bag_size===c.bag_size)
+                    if(!x) {
+                        a.push(Object.assign({},c))
+                    } else {
+                        Number(x.number_of_bags = Number(x.number_of_bags) + + c.number_of_bags)
+                    }
+                    return a
+                },[])
+                console.log(merged)
+
+                setNewProductList(merged)
+
+                // for pop up window when all products have been added into db successfully
+                const message = []
+                let newPalletId = ''
+                // Create pallet with the first product 
                 try {
-                    const response2 = await api.post(
-                        `pallet/${newPalletId}/products`, product
+                    const response = await api.post(
+                        `warehouse/${warehouse.id}/location/${clickedLocation.coordinates}/products`, newProductList[0]
                     )
-                    if (response2.data.hasOwnProperty('product_id')){
-                        // use response object to update Products as it should be a whole object
+                    if (response.data.hasOwnProperty('product_id')){
+                        newPalletId = response.data.pallet_id
+                        // use response object to update Products as it returns the whole object
                         dispatch({
                             type: "addNewProductToProducts",
-                            data: response2.data
+                            data: response.data
                         })
-
                         message.push('success')
                     }
                 } catch (err) {
                     setAlertMessage("Product could not be created. Please close and try again later")
                     message.push('error')
                 }
-            })
-            if (!message[0].includes('error')) {
-                alert("All done!")
+                // Add the rest of the products to the just created pallet
+                // Remove the first product as it has been created in db
+                if (message[0] == 'success') {
+                    newProductList.splice(0, 1)
+                    newProductList.forEach(async (product) => {
+                        try {
+                            const response2 = await api.post(
+                                `pallet/${newPalletId}/products`, product
+                            )
+                            if (response2.data.hasOwnProperty('product_id')){
+                                // use response object to update Products as it should be a whole object
+                                dispatch({
+                                    type: "addNewProductToProducts",
+                                    data: response2.data
+                                })
+
+                                message.push('success')
+                            }
+                        } catch (err) {
+                            setAlertMessage("Product could not be created. Please close and try again later")
+                            message.push('error')
+                        }
+                    })
+                    if (!message[0].includes('error')) {
+                        alert("All done!")
+                    }
+                    // Add new pallet id to Locations
+                    dispatch({
+                        type: "addNewPalletToLocations",
+                        data: newPalletId
+                    })
+                    // Close the addPallet option
+                    dispatch({ 
+                        type: 'setMicroMode', 
+                        data: { mode: 'AddPallet', bool: false } 
+                    })
+                }
+            } else {
+                alert("Please edit your products.")
             }
-            // Add new pallet id to Locations
-            dispatch({
-                type: "addNewPalletToLocations",
-                data: newPalletId
-            })
-            // Close the addPallet option
-            dispatch({ 
-                type: 'setMicroMode', 
-                data: { mode: 'AddPallet', bool: false } 
-            })
         }
     }
-
-
 
     return (
         <div>
