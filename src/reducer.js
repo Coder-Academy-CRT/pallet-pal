@@ -149,13 +149,20 @@ export default function reducer(state, action) {
                     copyOfProducts[index].seed_type = action.payload.seed_type
                     copyOfProducts[index].seed_variety = action.payload.seed_variety
                 }
-                return {
-                    ...state, 
-                    products: copyOfProducts
-                }
             })
-    
-
+            // filtered out products that has no bags left
+            // only product that still has bag of product will be updated to state.products
+            console.log(copyOfProducts)
+            const filteredProducts = copyOfProducts.filter(
+                (product) => product.number_of_bags != 0
+            )
+            console.log(filteredProducts)
+            return {
+                ...state, 
+                products: filteredProducts
+            }
+            
+            
         case 'updatePalletDataAfterDispatch':
             return {
                 ...state,

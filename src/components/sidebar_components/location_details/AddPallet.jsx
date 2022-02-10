@@ -46,7 +46,7 @@ export default function AddPallet() {
     }, [products])
 
     // Create dropdown list for lot code, 2x input for bag size and number of bags
-    function createField() {
+    const createField = () => {
         return (
             <>
                     <select
