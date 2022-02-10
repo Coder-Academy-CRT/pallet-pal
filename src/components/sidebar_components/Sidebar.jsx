@@ -25,8 +25,8 @@ function Sidebar() {
                 <LotManager />
                 {microModes.AddPallet ? <AddPallet /> : null}
                 {microModes.Edit ? <EditPallet /> : null}
-                <SidebarNav />
                 {microModes.Move ? <MoveOption /> : null}
+                <SidebarNav />
             </div>
         )
     } else if (metaMode == 'build') {

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import PalletCard from './PalletCard'
 import palletpalContext from '../../../palletpalContext'
+import { useState } from 'react'
 
 function LocationDetails() {
     const {

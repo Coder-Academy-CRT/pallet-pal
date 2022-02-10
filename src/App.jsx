@@ -56,14 +56,18 @@ export default function App() {
                     columns: state.warehouse.columns
                 }
             })
+
             //  product information into state
             const res_products = await api.get(
                 `warehouse/${state.warehouse.id}/products`
             )
-            dispatch({
-                type: 'setProductData',
-                data: res_products.data
-            })
+            console.log(res_products)
+            if (res_products.status == '200') {
+                dispatch({
+                    type: 'setProductData',
+                    data: res_products.data
+                })
+            }
 
             //  lot information into state
 

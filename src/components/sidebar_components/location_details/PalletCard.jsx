@@ -5,11 +5,12 @@ import palletpalContext from '../../../palletpalContext'
 function PalletCard({ palletId, locationId }) {
     const {
         state: {
+            locations,
             products,
             foundPallets,
             clickedLocation,
             moveToLocation,
-            moveFromLocation, 
+            moveFromLocation,
             microModes
         },
         dispatch
@@ -17,12 +18,14 @@ function PalletCard({ palletId, locationId }) {
 
     // set classes to style when found/not found
     const [classes, setClasses] = useState('palletCard')
+    const [optionsActive, setOptionsActive] = useState(false)
     // pallet products is an arry of product objects which are on this pallet
     const palletProducts = products.filter(
         (product) => product.pallet_id == palletId
     )
 
     useEffect(() => {
+        setOptionsActive(false)
         // set class to normal value
         setClasses('palletCard')
         if (foundPallets.includes(palletId)) {
@@ -30,12 +33,20 @@ function PalletCard({ palletId, locationId }) {
             setClasses('palletCard found')
         }
         // re-rendering every time clicked location changes or when found pallets changes.
-    }, [clickedLocation, foundPallets])
+    }, [clickedLocation, foundPallets, locations])
 
     // handle whether to show pallet option or not
     const handleClick = (e) => {
-        if (e.target.parentElement?.classList.contains('palletCard') || e.target.parentElement?.classList.contains('productCard')) {
-            dispatch({ type: 'setMicroMode', data: { mode: 'PalletOption', bool: !microModes.PalletOption } })
+        if (
+            e.target.parentElement?.classList.contains('palletCard') ||
+            e.target.parentElement?.classList.contains('productCard')
+        ) {
+            // manage pallet active state locally
+            setOptionsActive(!optionsActive)
+            dispatch({
+                type: 'setMicroMode',
+                data: { mode: 'PalletOption', bool: !microModes.PalletOption }
+            })
         }
         dispatch({
             type: 'setSelectedPallet',
@@ -50,6 +61,7 @@ function PalletCard({ palletId, locationId }) {
 
     // HANDLE MOVE OPERATION
     function handleMoveClick() {
+        // INITIATING MOVE SEQUENCE (completed by the Location component's onClick)
         // set move mode to true
         dispatch({ type: 'setMicroMode', data: { mode: 'Move', bool: true } })
         // set pallet moving
@@ -59,13 +71,17 @@ function PalletCard({ palletId, locationId }) {
         })
         // set the location coordinates of moveFromLocation
         dispatch({ type: 'setMoveFromLocation', data: locationId })
+        console.log(locationId)
         console.log('clicked')
         console.log(moveFromLocation)
     }
 
     function setDispatchMode() {
         // set dispatch mode to true
-        dispatch({ type: 'setMicroMode', data: { mode: 'Dispatch', bool: true } })
+        dispatch({
+            type: 'setMicroMode',
+            data: { mode: 'Dispatch', bool: true }
+        })
     }
 
     // no conditional required, simply render all product cards with a map().
@@ -84,12 +100,11 @@ function PalletCard({ palletId, locationId }) {
                     key={index}
                 />
             ))}
-            {microModes.PalletOption ? (
+            {optionsActive ? (
                 <div className='buttons'>
                     <button onClick={() => setEditMode()}>Edit</button>
                     <button onClick={() => handleMoveClick()}>Move</button>
                     <button onClick={() => setDispatchMode()}>Dispatch</button>
-
                 </div>
             ) : null}
         </div>

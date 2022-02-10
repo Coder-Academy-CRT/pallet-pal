@@ -1,7 +1,8 @@
 export default function reducer(state, action) {
     switch (action.type) {
-        // edited this for dynamic rows and columns
+        // edited this for dynamic rows and columns note it requires MORE than just locations
         case 'setLocationData':
+            console.log(action.data)
             let final_list = []
 
             // push a list for every row where the y coord matches the loop counter
@@ -220,19 +221,19 @@ export default function reducer(state, action) {
             const fromLocation = newLocations[Number(fy)][Number(fx)]
             const toLocation = newLocations[Number(ty)][Number(tx)]
             console.log(toLocation.pallets_on_location)
-            // remove pallet from fromLocation
+            // remove pallet from fromLocation - get index - splice out
             const palletIdIndex = fromLocation.pallets_on_location.indexOf(
                 action.data.palletId
             )
             fromLocation.pallets_on_location.splice(palletIdIndex, 1)
-            // push palletId to toLocation
+            // push palletId to new location - the toLocation
             toLocation.pallets_on_location[0]
                 ? toLocation.pallets_on_location.push(action.data.palletId)
                 : (toLocation.pallets_on_location = [action.data.palletId])
 
             const newProducts = [...state.products]
             //UPDATE PRODUCTS LOCATIONS
-            // for every product if pallet id matches moved pallet update coordinates
+            // for every product if pallet id matches moved pallet - update coordinates
             newProducts.forEach((product) =>
                 product.pallet_id == action.data.palletId
                     ? (product.coordinates = action.data.moveToLocation)
