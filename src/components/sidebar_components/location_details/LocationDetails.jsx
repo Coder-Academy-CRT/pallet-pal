@@ -1,14 +1,23 @@
 import React, { useContext } from 'react'
 import PalletCard from './PalletCard'
 import palletpalContext from '../../../palletpalContext'
-import { useState } from 'react'
+import AddPallet from './AddPallet'
+import { useEffect } from 'react'
 
 function LocationDetails() {
     const {
         state: { clickedLocation, microModes },
         dispatch
     } = useContext(palletpalContext)
-
+    // if location changes, reset add pallet mode
+    useEffect(() => {
+        if (microModes.AddPallet) {
+            dispatch({
+                type: 'setMicroMode',
+                data: { mode: 'AddPallet', bool: false }
+            })
+        }
+    }, [clickedLocation])
     // prepare pallet cards
     const palletCards = []
     // get location object
@@ -42,21 +51,18 @@ function LocationDetails() {
     if (microModes.LocationDetails) {
         if (clickedLocation?.category != 'inaccessible') {
             // if there are pallet cards then render pallet cards
-            return palletCards.length > 0 ? (
-                <div>
-                    <button
-                        style={{ padding: '5px', margin: '5px' }}
-                        onClick={handleClick}>
-                        +
-                    </button>
-                    <div id='locationDetails'>{palletCards}</div>
-                </div>
-            ) : (
-                <div>
-                    <button onClick={handleClick}>+</button>
-                    <div id='locationDetails'>
-                        No pallets in this locations.
-                    </div>
+            return (
+                <div id='locationDetails'>
+                    <header>
+                        <h2>Location Details</h2>
+                        <p>Add Pallet</p>
+                        <button onClick={handleClick}>+</button>
+                    </header>
+
+                    {microModes.AddPallet ? <AddPallet /> : null}
+                    {palletCards.length > 0 ? (
+                        <div id='palletList'>{palletCards}</div>
+                    ) : null}
                 </div>
             )
         } else {

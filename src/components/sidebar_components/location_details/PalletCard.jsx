@@ -88,9 +88,7 @@ function PalletCard({ palletId, locationId }) {
     // ****NOTE**** removed the outer fragment and now conditionally rendering options WITHIN pallet card
     return (
         <div className={classes} palletid={palletId} onClick={handleClick}>
-            <span style={{ color: 'white', fontWeight: 'bold' }}>
-                Pallet #{palletId}
-            </span>
+            <span>Pallet #{palletId}</span>
             {palletProducts.map((product, index) => (
                 <ProductCard
                     seedType={product.seed_type}

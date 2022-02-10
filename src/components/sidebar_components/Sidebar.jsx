@@ -8,22 +8,21 @@ import palletpalContext from '../../palletpalContext'
 import BuildSidebar from './BuildSidebar'
 import SidebarNav from './SidebarNav'
 import MoveOption from './location_details/MoveOption'
-import AddPallet from './location_details/AddPallet'
 import EditPallet from './location_details/EditPallet'
 
 function Sidebar() {
     const {
-        state: { metaMode, locations, microModes }
+        state: { metaMode, locations, microModes, warehouse }
     } = useContext(palletpalContext)
 
     // ****NOTE**** the condition for locations length is to prevent location details trying to set up before locations are ready.
     if (metaMode == 'main' && locations.length > 1) {
         return (
             <div id='sidebar'>
+                <h1 id='warehouseName'>{warehouse.name}</h1>
                 <SearchWindow />
                 <LocationDetails />
                 <LotManager />
-                {microModes.AddPallet ? <AddPallet /> : null}
                 {microModes.Edit ? <EditPallet /> : null}
                 {microModes.Move ? <MoveOption /> : null}
                 <SidebarNav />

@@ -1,139 +1,167 @@
-
-
+/* blue-grey mandarin*/
+$wormhole: rgb(21, 23, 31);
+$space-cadet: #2d3142ff;
+$independence: #4f5d75ff;
+$silver: #bfc0c0ff;
+$white: #ffffffff;
+$mandarin: #ef8354ff;
 
 > #lotManager {
+    border-radius: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    min-height: fit-content;
     display: flex;
+    flex: 5;
+    overflow-y: hidden;
     flex-direction: column;
-    overflow: scroll;
-    background-color: $mostdarkest;
+
+    background-color: $white;
 
     > #lotManagerHeader {
+        flex-direction: row;
+        width: 100%;
         z-index: 2;
-        margin: 10px;
-        padding: 5px 25px 10px 5px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: solid 1px $darkest;
+        // border-bottom: solid 1px $darkest;
 
         // Lot Manager Heading
         > h2 {
-            font-size: 1.4em;
-            color: white;
-            margin-bottom: 5px;
+            padding: 0.5rem;
+            color: $space-cadet;
         }
 
         // div holding the button and "Add Lot" paragraph in Lot Manager Header
-        > #lotManagerHeaderRhs {                          
+        > #lotManagerHeaderRhs {
             display: flex;
             align-items: center;
             color: white;
 
-            > p { // "Add Lot"
-                font-size: 0.9em;
-                margin: 0px 5px;
-                color: white;
+            > p {
+                // "Add Lot"
+                padding-right: 0.25rem;
+                font-size: 1em;
+                color: $space-cadet;
             }
 
             > button {
-                @include round-button-1; // 5px margins
-                position: relative;
-                height: 30px;
-                width: 30px;  
-                margin-right: 0px;
-            }   
-        }  
+                border: none;
+                display: flex;
+                border-radius: 100%;
+                width: 2rem;
+                height: 2rem;
+                background-color: $mandarin;
+                align-items: center;
+                margin-right: 0.5rem;
+
+                > h1 {
+                    width: 100%;
+                    font-size: 2rem;
+                    font-style: normal;
+                    font-weight: 600;
+                }
+            }
+        }
     }
 
     > #createNewLotCard {
-        
         // Create Lot heading
-        > h3 { 
+        background-color: $independence;
+        > h3 {
             color: $lot-card-edit-buttons;
-            padding: 10px 5px 15px 10px;
+            padding-left: 0.5rem;
+            padding-top: 0.5rem;
+            color: white;
         }
 
         > .lotForm {
             @include lotForm;
-        
+
             > .lotInputs {
-                @include lotInputs
+                @include lotInputs;
             }
-            
+
             .lotSelect {
-                height: 33px;
+                display: flex;
             }
         }
-        
-        > #footerNewLot {   // New Lot, container holding the buttons
+
+        > #footerNewLot {
+            // New Lot, container holding the buttons
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 0px;
-            border-bottom: solid 2px $darkest;
-           
-            > button {   // New Lot (add button)
+            justify-content: space-evenly;
+
+            > button {
+                // New Lot (add button)
                 @include round-button-1(); // 5px margins
-                height: 60px;
-                width: 65px;
-                margin-left: 30px;   
+                flex: 1;
+                margin: 0.5rem;
             }
-            
-            > p {   // New Lot, save / exit buttons
+
+            > p {
+                // New Lot, save / exit buttons
                 color: $lot-alert-color;
-                position: relative;
-                width: 80%;
-                left: 5%;
+                flex: 1;
+                min-width: 0px;
+                text-align: center;
+                color: white;
+                font-weight: 600;
+                font-style: italic;
             }
         }
-
     }
-
 
     > #lotList {
         background-color: $mostdarkest;
         display: flex;
+        gap: 1px;
         flex-direction: column;
+        overflow-y: scroll;
 
-        
         > .editLotCard {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            z-index: 1;
+            width: fit-content;
             justify-self: center;
             align-self: center;
-            width: 95%;
-            box-sizing: border-box;
-            box-shadow: $darkest 0px 20px 75px -5px, white 0px 20px 0px -5px;
+            box-shadow: $mandarin 0px 5px 75px -5px, $wormhole 0px -5px 0px -5px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            background-color: $mostdarkest;
-            height: $edit-lot-card-height;
+            background-color: $space-cadet;
+            border: 1px solid $mandarin;
+            // height: $edit-lot-card-height;
 
             > #editLotHeader {
                 display: flex;
                 justify-content: flex-start;
                 align-items: flex-end;
-                
-                // x2 H3 
+
+                // x2 H3
                 > #editLot-Heading {
-                    color: $lot-card-edit-buttons;
-                    margin: 15px 0px 10px 10px;  
+                    color: $mandarin;
+                    margin: 15px 0px 10px 10px;
                 }
 
                 > #editLot-LotCode {
-                    color: $lot-card-edit-buttons;
-                    margin: 15px 15px 10px 10px;  
+                    color: $white;
+                    margin: 15px 15px 10px 10px;
                 }
             }
 
             > .lotForm {
                 @include lotForm;
-            
+
                 > .lotInputs {
-                    @include lotInputs
+                    @include lotInputs;
+                    height: 2rem;
                 }
-                
+
                 .lotSelect {
-                    height: 33px;
+                    height: 2rem;
                 }
             }
 
@@ -143,53 +171,52 @@
                 padding: 5px;
                 margin-top: 5px;
 
-                > button { // x3 buttons in edit lot form => id's = exitLotButton, saveLotButton, deleteLotButton
+                > button {
+                    // x3 buttons in edit lot form => id's = exitLotButton, saveLotButton, deleteLotButton
                     @include round-button-1;
                     height: 60px;
                     width: 60px;
                     max-width: 60px;
-                } 
-                
+                }
+
                 // alert in cases where confirmation of delete is required
                 > p {
                     color: $lot-alert-color;
-                    max-width: 50%;            
+                    max-width: 50%;
                 }
             }
         }
-        
 
         > .lotCard {
             display: flex;
             justify-content: space-between;
-            padding: 1px;
-            margin-top: 1px;
-            background-color: $mostdarkest;
-            border-bottom: solid 1px $darkest;
+            background-color: $wormhole;
+            border-bottom: solid 1px $space-cadet;
 
-            > div { // x3 main divs in lot card ( LHS / MID / RHS)
+            > div {
+                // x3 main divs in lot card ( LHS / MID / RHS)
                 color: white;
                 display: flex;
-                padding: 1px;
             }
 
             > #lotCardLhs {
                 width: 20%;
-                flex-direction: row;
-                justify-content: space-evenly;
-                align-items: center;
-            
-
-                > button {
-                    box-sizing: border-box;
-                    border: solid $mostdarkest 5px;
-                    color: darkslateblue;
-                    background-color: $lot-card-edit-buttons;
-                    margin: 5%;
-                    border-radius: 50%;
-                    height: 60px;
-                    width: 60px;
-
+                height: 100%;
+                border: none;
+                cursor: pointer;
+                background-color: $mandarin;
+                transition-duration: 1s;
+                // border-radius: 0px 0.5rem 0.5rem 0px;
+                text-align: center;
+                padding: 15px 0;
+                color: white;
+                font-style: normal;
+                font-weight: 900;
+                transform: translateX(1px);
+                &:hover {
+                    width: 25%;
+                    filter: drop-shadow(0 0 0.75rem $mandarin);
+                    filter: brightness(1.1);
                 }
             }
 
@@ -199,12 +226,12 @@
                 right: 20%;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: left;
                 white-space: nowrap;
                 padding: 3%;
-            
+
                 // lot code headings
-                > h2 { 
+                > h2 {
                     font-size: 1em;
                 }
 
@@ -216,21 +243,20 @@
             }
 
             > #lotCardRhs {
-                width: 30%; 
+                width: 30%;
                 display: flex;
-                flex-direction: column; 
+                flex-direction: column;
                 justify-content: center;
                 align-items: flex-start;
-                color: lightgrey; 
-            
-                // list of bags and amounts in each lot card
-                > ul { 
+                color: lightgrey;
 
+                // list of bags and amounts in each lot card
+                > ul {
                     > li {
                         font-size: 0.8em;
                         margin: 0.8em;
                         list-style: none;
-                    
+
                         > hr {
                             width: 50px;
                         }
