@@ -23,8 +23,6 @@ function Sidebar() {
                 <LocationDetails />
                 <LotManager />
                 <SidebarNav />
-                {microModes.Move ? <MoveOption /> : null}
-                <SidebarNav />
             </div>
         )
     } else if (metaMode == 'build') {
