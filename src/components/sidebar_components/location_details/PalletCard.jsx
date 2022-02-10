@@ -16,6 +16,8 @@ function PalletCard({ palletId, locationId }) {
         dispatch
     } = useContext(palletpalContext)
 
+    // to show/ hide the option buttons
+    const [clicked, setClicked] = useState(false)
     // set classes to style when found/not found
     const [classes, setClasses] = useState('palletCard')
     const [optionsActive, setOptionsActive] = useState(false)
@@ -71,8 +73,6 @@ function PalletCard({ palletId, locationId }) {
         })
         // set the location coordinates of moveFromLocation
         dispatch({ type: 'setMoveFromLocation', data: locationId })
-        console.log(locationId)
-        console.log('clicked')
         console.log(moveFromLocation)
     }
 
@@ -99,6 +99,7 @@ function PalletCard({ palletId, locationId }) {
                 />
             ))}
             {optionsActive ? (
+
                 <div className='buttons'>
                     <button onClick={() => setEditMode()}>Edit</button>
                     <button onClick={() => handleMoveClick()}>Move</button>

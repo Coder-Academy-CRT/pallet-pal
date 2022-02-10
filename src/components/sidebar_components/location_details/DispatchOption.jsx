@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import api from '../../../api'
 import palletpalContext from '../../../palletpalContext'
 
-export default function DispatchBox() {
+export default function DispatchOption() {
 	const { state: { selectedPallet }, dispatch } = useContext(palletpalContext)
 
 	// This state is for the delete button next to each product (when user want to dispatch the whole product)
@@ -10,30 +10,77 @@ export default function DispatchBox() {
 	// Use to store form data and update it to productList once user hit dispatch
 	const [copyProductList, setCopyProductList] = useState(productList)
 
-	const style = {
-			position: "absolute",
-			top: "calc(100vh/2 - 200px)",
-			left: "calc(100vw/2 - 500px)",
-			width: "500px",
-			height: "300px",
-			borderRadius: "10px",
-			backgroundColor: "white",
-			display: "flex",
-			flexDirection: "column",
-			justifyContent: "center",
-			alignItems: "center"
+    // --------------------------------------------------- //
+    // ----------------------STYLE------------------------ //
+ 
+    const cardWrapper = {
+        position: "absolute",
+        top: "calc(100vh/2 - 300px)",
+        left: "calc(100vw/2 - 500px)",
+        width: "900px",
+        height: "500px",
+        borderRadius: "10px",
+        backgroundColor: "white",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
+    }    
+
+    const title = {
+        marginBottom: "1rem"
+    }
+
+    const instruction = {
+		background: "lightGrey",
+		width: "85%",
+		fontSize: "0.8rem",
+		marginBottom: "2rem",
+		padding: "10px 8px",
+		lineHeight: "1.5"
 	}
 
-	const styleButton = {
+	const textWrapper = {
+		marginBottom: "10px"
+	}
+
+    const inputWrapper = {
+        display: "flex",
+        alignItems: "center"
+    }
+
+    const productDiv = {
+        display: "flex",
+        justifyContent: "space-around",
+    }
+
+    const fieldDiv = {
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+		marginBottom: "10px"
+    }
+
+    const smlBtn = {
+        fontSize: "1rem",
+        padding: "0px 2px",
+        border: "none",
+        background: "none",
+        marginLeft: "10px"
+    }
+
+    const buttonWrapper = {
+        marginTop: "1rem"
+    }
+
+    const buttonStyle = {
 		padding: "5px 20px",
 		margin: "20px 50px"
 	}
 
-	const styleWrapper = {
-		display: "flex",
-		justifyContent: "space-between",
-	}
-
+    // ----------------------STYLE------------------------ //
+    // --------------------------------------------------- //
 	// Update the number of bags that user want to dispatch
 	const handleChange = (e) => {
 		// product id of that product
@@ -69,9 +116,8 @@ export default function DispatchBox() {
 	}
 
 	// Cancel button
-	const handleClose = (e) => {
+	const handleClose = () => {
         dispatch({ type: 'setMicroMode', data: { mode: 'Dispatch', bool: false } })
-		e.preventDefault()
 	}
 
 	// Dispatch button
@@ -138,53 +184,61 @@ export default function DispatchBox() {
 
 
   return (
-      <div style={style}>
-			<div className='text-wrapper'>
-				<h1 style={{ textAlign: "center"}}>Pallet #{selectedPallet.pallet_id}</h1>
+			<div style={cardWrapper}>
+				<div style={title}>
+					<h1>Dispatch - Pallet #{selectedPallet.pallet_id}</h1>
+				</div>
+				<div style={instruction}>
+					<p>* Please enter the number of bags you want to dispatch.</p>
+					<p>* If you do not want to dispatch certain product, please enter 0.</p>
+					<p>* If you wish to dispatch the whole product, please click the x button next to that product.</p>
+					<p>* Please click confirm to confirm your pallet.</p>
+					<p>* Pallet will be removed if there is no products exist.</p>
+				</div>
 				{productList.length > 0 ? 
 					<form onSubmit={handleSubmit}>
-					{productList.map(product => (
-						product.number_of_bags > 0 ? 
-							product.dispatched ? <div><p>Product has been dispatched</p></div> :
-						<div id={product.product_id} key={product.id} style={styleWrapper} >
-							<div>
-								<p>{product.seed_type.toUpperCase()}</p>
+						{productList.map(product => (
+							product.number_of_bags > 0 ? 
+								product.dispatched ? 
+									<div style={textWrapper}>
+										<p>Product has been dispatched</p>
+									</div> :
+										<div style={productDiv} id={product.product_id} key={product.id}>
+											<div style={fieldDiv}>{product.seed_type.toUpperCase()}</div>
+											<div style={fieldDiv}>{product.lot_code}</div>
+											<div style={fieldDiv}>{parseInt(product.bag_size)} kg</div>
+											<div>
+												<input
+													style={fieldDiv} 
+													type="number"
+													min="0"
+													max={product.number_of_bags}
+													size="25"
+													name={product.id}
+													placeholder={product.number_of_bags}
+													onChange={handleChange}
+													onInput={handleChange}
+												/>
+											</div>
+											<button style={smlBtn} onClick={handleDelete}>X</button>
+										</div>
+							: (
+								<div style={textWrapper}>
+									<p>Product has been dispatched</p>
+								</div>
+							)
+						))}
+							<div style={buttonWrapper}>
+								<button style={buttonStyle} onClick={handleClose}>Cancel</button>
+								<button style={buttonStyle} type="submit" onClick={(e) => handleSubmit(e)}>Confirm</button>
 							</div>
-							<div>
-								<p>{product.lot_code}</p>
-							</div>
-							<div>
-								<p>{parseInt(product.bag_size)} kg </p>
-							</div>
-							<div style={{ display: "flex"}}>
-								<input 
-									type="number"
-									min="0"
-									max={product.number_of_bags}
-									size="5"
-									name={product.id}
-									placeholder={product.number_of_bags}
-									onChange={handleChange}
-									onInput={handleChange}
-								/>
-								<p style={{marginLeft: "5px"}}>BAG</p>
-							</div>
-							<button style={{ padding: "0 3px"}} onClick={handleDelete}>X</button>
-						</div>
-						: <p>Product has been dispatched</p>
-					))}
-						<div className='button-wrapper'>
-							<button style={styleButton} onClick={handleClose}>Cancel</button>
-							<button type="submit" style={styleButton} onClick={(e) => handleSubmit(e)}>Confirm</button>
-						</div>
 					</form>
 					: (
-						<div style={{ textAlign: "center"}}>
+						<div style={title}>
 							<h3>No product exist on this pallet, this pallet will be removed.</h3>
-							<button style={styleButton} onClick={handleClose}>Confirm</button>
+							<button style={buttonStyle} onClick={handleClose}>Confirm</button>
 						</div>
 					)}
 			</div>
-      </div>
   ) 
 }

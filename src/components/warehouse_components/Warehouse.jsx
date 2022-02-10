@@ -1,7 +1,10 @@
 import React, { useContext, useEffect } from 'react'
 import palletpalContext from '../../palletpalContext'
 import Location from './Location'
-import DispatchBox from '../sidebar_components/location_details/DispatchBox'
+import DispatchOption from '../sidebar_components/location_details/DispatchOption'
+import AddPallet from '../sidebar_components/location_details/AddPallet'
+import EditPallet from '../sidebar_components/location_details/EditPallet'
+
 
 function Warehouse() {
     const {
@@ -24,9 +27,19 @@ function Warehouse() {
             {locations.flat(1).map((location, index) => (
                 <Location details={location} key={index} />
             ))}
+            {microModes.AddPallet ? (
+                <div className='blockout-bg'>
+                    <AddPallet />
+                </div>
+            ) : null}
+            {microModes.Edit ? (
+                <div className='blockout-bg'>
+                    <EditPallet />
+                </div>
+            ) : null}
             {microModes.Dispatch ? (
                 <div className='blockout-bg'>
-                    <DispatchBox />
+                    <DispatchOption />
                 </div>
             ) : null}
         </div>
