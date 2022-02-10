@@ -9,12 +9,13 @@ function PalletCard({ palletId, locationId }) {
             foundPallets,
             clickedLocation,
             moveToLocation,
-            moveFromLocation, 
-            microModes
+            moveFromLocation
         },
         dispatch
     } = useContext(palletpalContext)
 
+    // to show/ hide the option buttons
+    const [clicked, setClicked] = useState(false)
     // set classes to style when found/not found
     const [classes, setClasses] = useState('palletCard')
     // pallet products is an arry of product objects which are on this pallet
@@ -35,7 +36,7 @@ function PalletCard({ palletId, locationId }) {
     // handle whether to show pallet option or not
     const handleClick = (e) => {
         if (e.target.parentElement?.classList.contains('palletCard') || e.target.parentElement?.classList.contains('productCard')) {
-            dispatch({ type: 'setMicroMode', data: { mode: 'PalletOption', bool: !microModes.PalletOption } })
+            setClicked(prevState => !prevState)
         }
         dispatch({
             type: 'setSelectedPallet',
@@ -59,7 +60,6 @@ function PalletCard({ palletId, locationId }) {
         })
         // set the location coordinates of moveFromLocation
         dispatch({ type: 'setMoveFromLocation', data: locationId })
-        console.log('clicked')
         console.log(moveFromLocation)
     }
 
@@ -84,12 +84,11 @@ function PalletCard({ palletId, locationId }) {
                     key={index}
                 />
             ))}
-            {microModes.PalletOption ? (
+            {clicked ? (
                 <div className='buttons'>
                     <button onClick={() => setEditMode()}>Edit</button>
                     <button onClick={() => handleMoveClick()}>Move</button>
                     <button onClick={() => setDispatchMode()}>Dispatch</button>
-
                 </div>
             ) : null}
         </div>

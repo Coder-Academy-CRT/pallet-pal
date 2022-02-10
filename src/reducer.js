@@ -141,6 +141,21 @@ export default function reducer(state, action) {
                 }
             }
 
+        case 'editProductsAfterEdit' :
+            const copyOfProducts = [...state.products]
+            copyOfProducts.forEach((product, index) => {
+                if (product.product_id == action.payload.product_id) {
+                    copyOfProducts[index] = action.payload.product
+                    copyOfProducts[index].seed_type = action.payload.seed_type
+                    copyOfProducts[index].seed_variety = action.payload.seed_variety
+                }
+                return {
+                    ...state, 
+                    products: copyOfProducts
+                }
+            })
+    
+
         case 'updatePalletDataAfterDispatch':
             return {
                 ...state,

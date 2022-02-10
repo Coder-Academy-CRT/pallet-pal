@@ -69,9 +69,8 @@ export default function DispatchBox() {
 	}
 
 	// Cancel button
-	const handleClose = (e) => {
+	const handleClose = () => {
         dispatch({ type: 'setMicroMode', data: { mode: 'Dispatch', bool: false } })
-		e.preventDefault()
 	}
 
 	// Dispatch button

@@ -3,10 +3,10 @@ import api from '../../../api';
 import palletpalContext from '../../../palletpalContext';
 
 export default function EditPallet() {
-    const { state: { products, microModes, selectedPallet, warehouse }, dispatch } = useContext(palletpalContext)
+    const { state: { products, microModes, selectedPallet, lots }, dispatch } = useContext(palletpalContext)
     // keep track local change before send to db
     const [productList, setProductList] = useState(selectedPallet.products_on_pallet)
-    const [lots, setLots] = useState([])
+    const [lotsData, setLotsData] = useState([])
 
     const style = {
         position: "absolute",
@@ -21,6 +21,11 @@ export default function EditPallet() {
         justifyContent: "center",
         alignItems: "center"
     }
+
+    const styleButton = {
+		padding: "5px 20px",
+		margin: "20px 50px"
+	}
 
     const productListStyle = {
         display: "flex",
@@ -44,7 +49,7 @@ export default function EditPallet() {
         })
 
         // set state from option lists
-        setLots(lotOptions)
+        setLotsData(lotOptions)
     }, [products])
 
     // Create dropdown list for lot code, 2x input for bag size and number of bags
@@ -53,22 +58,73 @@ export default function EditPallet() {
             <></>
         )
     }
-
-    function handleChange() {
-        console.log("hello")
+    // handle user input
+    function handleChange(e) {
+        const productId = e.target.parentElement.parentElement.id
+        const index = productList.findIndex(product => product.product_id == productId)
+        setProductList(prevState => {
+            if (e.target.name == 'lot_code') {
+                return [...prevState, prevState[index].lot_code = e.target.value ]
+            } else if (e.target.name == 'bag_size') {
+                return [...prevState, prevState[index].bag_size = e.target.value ]
+            } else if (e.target.name == 'number_of_bags') {
+                return [...prevState, prevState[index].number_of_bags = e.target.value ]
+            } else {
+                return prevState
+            }
+        })
     }
 
-    // close button
-    const handleClose = () => {
-        console.log("hello")
 
+	// Cancel button
+	const handleClose = () => {
+        dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
+	}
+
+
+    // API call
+    async function handleAPICall () {
+        const message = []
+        const filteredList = productList.filter(element => typeof element != 'string')
+
+        filteredList.forEach(async (product) => {
+            // Find the new seed type and seed variety after user change the lot code
+            const seedData = lots.filter(lot => lot.lot_code == product.lot_code)
+
+            try {
+                const response = await api.put(
+                    `product/${product.product_id}`, 
+                    {
+                        lot_code: product.lot_code,
+                        bag_size: product.bag_size,
+                        number_of_bags: product.number_of_bags
+                    })
+                    if (response.data == `product ${product.product_id} updated`) {
+                        dispatch({
+                            type: 'editProductsAfterEdit',
+                            payload: { product: product, product_id: product.product_id, seed_type: seedData[0].seed_type, seed_variety: seedData[0].seed_variety }
+                        })
+                        message.push('success')
+                        console.log("success")
+                    }
+            } catch (err) {
+                alert("Product could not be updated. Please close and try again later")
+                message.push('error')
+            }
+        })
+        if (!message.includes('error')) {
+            alert("All updated!")
+        }
     }
 
-    // submit button
+    // confirm button
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log("hello")
-
+        confirm("Confirm?")
+        if (confirm) {
+            handleAPICall()
+            dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
+        }
     }
 
     return (
@@ -77,16 +133,16 @@ export default function EditPallet() {
                   <h1>Edit Pallet #{selectedPallet.pallet_id}</h1>
                   <form>
                     {selectedPallet.products_on_pallet.map((product, index) => (
-                        <div key={product.product_id} id={product.product_id} style={productListStyle}>
+                        <div key={product.product_id} id={product.product_id} pos={index} style={productListStyle}>
                             <div>
                                 <select
                                     name="lot_code"
                                     value={productList[index].lot_code}
                                     onChange={handleChange}>
                                     <option value="" disabled>Please select lot code</option>
-                                    {lots ? (
+                                    {lotsData ? (
                                         <>
-                                            {lots.map((element, index) => (
+                                            {lotsData.map((element, index) => (
                                                 <option value={element.value} key={index}>
                                                     {element.label}
                                                 </option>
@@ -96,38 +152,34 @@ export default function EditPallet() {
                                 </select>
                             </div>
                             <div>
-                                {productList[index].seed_type}
-                            </div>
-                            <div>
                                 <input 
                                     type="number"
                                     min="0"
-                                    placeholder="bag size"
+                                    value={productList[index].bag_size}
                                     onChange={handleChange}
                                     name="bag_size"
                                     size="10"
-                                    value={productList[index].bag_size}
                                 />
                             </div>
                             <div>
                                 <input 
                                     type="number"
                                     min="0"
-                                    placeholder="num of bags"
+                                    value={productList[index].number_of_bags}
                                     onChange={handleChange}
                                     name="number_of_bags"
                                     size="10"
-                                    value={productList[index].number_of_bags}
                                 />
                             </div>
                         </div>
                     ))}
                     <div>
-                        <button type="button" onClick={handleClose}>Cancel</button>
-                        <button onClick={handleSubmit}>Confirm</button>
+                        <button style={styleButton} type="button" onClick={handleClose}>Cancel</button>
+                        <button style={styleButton} onClick={handleSubmit}>Confirm</button>
                     </div>
                   </form>
               </div>
         </div>
     ) 
 }   
+
