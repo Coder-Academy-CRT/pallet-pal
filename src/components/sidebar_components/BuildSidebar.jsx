@@ -76,6 +76,7 @@ function BuildSidebar() {
                 console.log('WAREHOUSE DB CREATE FAILURE')
                 alert('Warehouse failed to save to database.')
             } else {
+                console.log(whResponse.data.id)
                 // if warehouse successfully created
                 // update locations
                 const locResponse = await api.put(

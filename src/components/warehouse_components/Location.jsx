@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState, useReducer } from 'react'
+import api from '../../api'
 import palletpalContext from '../../palletpalContext'
 
 // passing the whole location object in rather than bits
 function Location({ details }) {
     const {
         state: {
+            warehouse,
             metaMode,
             microModes,
             locations,
@@ -21,6 +23,7 @@ function Location({ details }) {
     // set initial category
     const [category, setCategory] = useState(details.category)
     const [classes, setClasses] = useState([category, 'location'])
+    const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([
         'spare_floor',
         'allocated_storage',
@@ -88,7 +91,7 @@ function Location({ details }) {
     }
 
     // when location clicked do different things in different modes.
-    const handleClick = (e) => {
+    const handleClick = async (e) => {
         // if in build mode location click is different than in if in main mode
         switch (metaMode) {
             case 'build':
@@ -106,15 +109,41 @@ function Location({ details }) {
                         default:
                             confirm('You want to move to this location?')
                             if (confirm) {
+                                setLoading(true)
+                                const moveResponse = await api.put(
+                                    `pallet/${movingPalletId}/location/${details.coordinates}`
+                                )
+                                const locationsResponse = await api.get(
+                                    `warehouse/${warehouse.id}/locations`
+                                )
+                                if (
+                                    moveResponse.data ==
+                                        `pallet #${movingPalletId} moved to location ${details.coordinates}` &&
+                                    locationsResponse.status == 200
+                                ) {
+                                    dispatch({
+                                        type: 'setLocationData',
+                                        data: {
+                                            allLocations:
+                                                locationsResponse.data,
+                                            rows: warehouse.rows,
+                                            columns: warehouse.columns
+                                        }
+                                    })
+                                    setLoading(false)
+                                } else {
+                                    setLoading(false)
+                                }
+
+                                // dispatch({
+                                //     type: 'movePallet',
+                                //     data: {
+                                //         palletId: movingPalletId,
+                                //         moveFromLocation: moveFromLocation,
+                                //         moveToLocation: details.coordinates
+                                //     }
+                                // })
                                 alert('Pallet has been moved.')
-                                dispatch({
-                                    type: 'movePallet',
-                                    data: {
-                                        palletId: movingPalletId,
-                                        moveFromLocation: moveFromLocation,
-                                        moveToLocation: details.coordinates
-                                    }
-                                })
                                 dispatch({
                                     type: 'setMicroMode',
                                     data: { mode: 'Move', bool: false }
@@ -164,7 +193,7 @@ function Location({ details }) {
             className={classes.join(' ')}
             onClick={handleClick}
             id={details.coordinates}>
-            {boxes}
+            {!loading ? boxes : <h1>Moving..</h1>}
         </div>
     )
 }

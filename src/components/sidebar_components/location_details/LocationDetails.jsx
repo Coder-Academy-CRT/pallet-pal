@@ -1,13 +1,23 @@
 import React, { useContext } from 'react'
 import PalletCard from './PalletCard'
 import palletpalContext from '../../../palletpalContext'
+import AddPallet from './AddPallet'
+import { useEffect } from 'react'
 
 function LocationDetails() {
     const {
         state: { clickedLocation, microModes },
         dispatch
     } = useContext(palletpalContext)
-
+    // if location changes, reset add pallet mode
+    useEffect(() => {
+        if (microModes.AddPallet) {
+            dispatch({
+                type: 'setMicroMode',
+                data: { mode: 'AddPallet', bool: false }
+            })
+        }
+    }, [clickedLocation])
     // prepare pallet cards
     const palletCards = []
     // get location object
@@ -40,42 +50,21 @@ function LocationDetails() {
 
     if (microModes.LocationDetails) {
         if (clickedLocation?.category != 'inaccessible') {
-            if (palletCards.length == 0) {
-                return clickedLocation?.category == 'allocated_storage' ? (
-                    <div>
-                        <button
-                            style={{ padding: '5px', margin: '5px' }}
-                            onClick={handleClick}>
-                            +
-                        </button>
-                        <div id='locationDetails'>
-                            <p>No pallets in this locations at the moment. You can click the + button to add new pallet.</p>
-                        </div>
-                    </div>
-                ) : (
-                    <div>
-                        <button
-                            style={{ padding: '5px', margin: '5px' }}
-                            onClick={handleClick}>
-                            +
-                        </button>
-                        <div id='locationDetails'>
-                            <p>BEWARE - This location is a spare floor. Don't recommend to put pallet here, but you can still add new pallet by clicking the + button.</p> 
-                        </div>
-                    </div>
-                )
-            } else {
-                return (
-                <div>
-                    <button
-                        style={{ padding: '5px', margin: '5px' }}
-                        onClick={handleClick}>
-                        +
-                    </button>
-                    <div id='locationDetails'>{palletCards}</div>
+            // if there are pallet cards then render pallet cards
+            return (
+                <div id='locationDetails'>
+                    <header>
+                        <h2>Location Details</h2>
+                        <p>Add Pallet</p>
+                        <button onClick={handleClick}>+</button>
+                    </header>
+
+                    {microModes.AddPallet ? <AddPallet /> : null}
+                    {palletCards.length > 0 ? (
+                        <div id='palletList'>{palletCards}</div>
+                    ) : null}
                 </div>
-                )
-            }
+            )
         } else {
             dispatch({
                 type: 'setMicroMode',
