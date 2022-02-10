@@ -10,7 +10,6 @@ function Location({ details }) {
             locations,
             foundPallets,
             availableLocations,
-            selectedMoveLocation,
             moveFromLocation,
             moveToLocation,
             movingPalletId,
@@ -22,9 +21,11 @@ function Location({ details }) {
     // set initial category
     const [category, setCategory] = useState(details.category)
     const [classes, setClasses] = useState([category, 'location'])
-
-    // store all available categories
-    const categories = ['spare_floor', 'allocated_storage', 'inaccessible']
+    const [categories, setCategories] = useState([
+        'spare_floor',
+        'allocated_storage',
+        'inaccessible'
+    ])
 
     useEffect(() => {
         setClasses([category, 'location'])
@@ -47,8 +48,8 @@ function Location({ details }) {
             ? setClasses([...classes, 'selected'])
             : null
     }, [
-        foundPallets,
         category,
+        foundPallets,
         availableLocations,
         clickedLocation,
         microModes
@@ -62,28 +63,28 @@ function Location({ details }) {
         })
     }
 
-    // manage cleanup when category changes
-    function incrementCategory() {
-        // set new category
-        setCategory(
-            categories[(categories.indexOf(category) + 1) % categories.length]
-        )
-        // cleanup classes
-        setClasses([category, 'location'])
-    }
-
     function updateLocation(coordString) {
         // increment category and class cleanup
-        incrementCategory()
+        const nextCat =
+            categories[(categories.indexOf(category) + 1) % categories.length]
+        // set new category
+        setCategory(nextCat)
+        // cleanup classes
+        setClasses([category, 'location'])
         // split coordinate into x and y coords, example ["01","02"]
         const coords = coordString.split('_')
         // convert to numbers
         let x = Number(coords[0])
         let y = Number(coords[1])
         // prepare new locations object
-        const newLocations = locations
-        //update global locations object
-        newLocations[x][y].category = category
+        const newLocations = [...locations]
+        // update global locations object
+        newLocations[y][x].category = nextCat
+
+        dispatch({
+            type: 'setLocations',
+            data: newLocations
+        })
     }
 
     // when location clicked do different things in different modes.

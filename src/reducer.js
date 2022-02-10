@@ -1,18 +1,16 @@
 export default function reducer(state, action) {
     switch (action.type) {
+        // edited this for dynamic rows and columns
         case 'setLocationData':
             let final_list = []
-            let index = 0
 
-            for (let y = 0; y < 4; y++) {
-                let current_list = []
-
-                for (let x = 0; x < 4; x++) {
-                    current_list.push(action.data[index])
-                    index++
-                }
-
-                final_list.push(current_list)
+            // push a list for every row where the y coord matches the loop counter
+            for (let y = 0; y < action.data.rows; y++) {
+                final_list.push(
+                    action.data.allLocations.filter(
+                        (loc) => Number(loc.coordinates.split('_')[1]) == y
+                    )
+                )
             }
 
             return {
@@ -173,16 +171,16 @@ export default function reducer(state, action) {
 
             return {
                 ...state,
-                products: filteredList,
+                products: filteredList
             }
-        
-        case 'addNewProductToProducts' :
+
+        case 'addNewProductToProducts':
             return {
-                ...state, 
+                ...state,
                 products: [...state.products, action.data]
             }
 
-        case 'addNewPalletToLocations' :
+        case 'addNewPalletToLocations':
             const updatedLocations = [...state.locations]
             // helper function
             const parseCoord = (string) => {
@@ -191,16 +189,15 @@ export default function reducer(state, action) {
                 y = Number(y)
                 return [x, y]
             }
-                
+
             const [x, y] = parseCoord(state.clickedLocation.coordinates)
-            
-            updatedLocations[x][y].pallets_on_location[0] ? 
-                updatedLocations[x][y].pallets_on_location.push(action.data)
-                : 
-                (updatedLocations[x][y].pallets_on_location = [action.data])
-            
+
+            updatedLocations[y][x].pallets_on_location[0]
+                ? updatedLocations[y][x].pallets_on_location.push(action.data)
+                : (updatedLocations[y][x].pallets_on_location = [action.data])
+
             return {
-                ...state, 
+                ...state,
                 locations: updatedLocations
             }
 
@@ -220,8 +217,8 @@ export default function reducer(state, action) {
             const [fx, fy] = parseCoords(action.data.moveFromLocation)
             const [tx, ty] = parseCoords(action.data.moveToLocation)
             // get location object from coords
-            const fromLocation = newLocations[Number(fx)][Number(fy)]
-            const toLocation = newLocations[Number(tx)][Number(ty)]
+            const fromLocation = newLocations[Number(fy)][Number(fx)]
+            const toLocation = newLocations[Number(ty)][Number(tx)]
             console.log(toLocation.pallets_on_location)
             // remove pallet from fromLocation
             const palletIdIndex = fromLocation.pallets_on_location.indexOf(
@@ -287,6 +284,12 @@ export default function reducer(state, action) {
                 ...state,
                 warehouse: action.data
             }
+
+        case 'setWarehouseList':
+            return {
+                ...state,
+                warehouseList: action.data
+            }
         // NEW
         case 'addWarehouse':
             return {
@@ -340,6 +343,30 @@ export default function reducer(state, action) {
             return {
                 ...state,
                 microModes: newObject
+            }
+
+        case 'resetStates':
+            return {
+                ...state,
+                warehouse: null,
+                tempWarehouse: null,
+                products: [],
+                locations: [],
+                lots: [],
+                clickedLocation: null,
+                moveFromLocation: null,
+                moveToLocation: null,
+                movingPalletId: null,
+                selectedPallet: {},
+                foundPallets: [],
+                microModes: {
+                    SearchWindow: false,
+                    LotManager: false,
+                    LocationDetails: false,
+                    Move: false,
+                    Dispatch: false,
+                    AddPallet: false
+                }
             }
 
         default:

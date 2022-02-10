@@ -4,20 +4,9 @@ import palletpalContext from '../../../palletpalContext'
 
 function LocationDetails() {
     const {
-        state: { locations, clickedLocation, microModes },
+        state: { clickedLocation, microModes },
         dispatch
     } = useContext(palletpalContext)
-
-    // this function retrieves the location object directly from the array of arrays of location objects
-    function getLocation(coordString) {
-        // split coordinate into x and y coords, example ["01","02"]
-        const coords = coordString.split('_')
-        // convert to numbers
-        let x = Number(coords[0])
-        let y = Number(coords[1])
-        // index and return location object
-        return locations[x][y]
-    }
 
     // prepare pallet cards
     const palletCards = []
@@ -43,21 +32,30 @@ function LocationDetails() {
     }
     // Open add pallet option
     const handleClick = () => {
-        dispatch({ type: 'setMicroMode', data: { mode: 'AddPallet', bool: true } })
+        dispatch({
+            type: 'setMicroMode',
+            data: { mode: 'AddPallet', bool: true }
+        })
     }
 
     if (microModes.LocationDetails) {
-        if (clickedLocation?.category != "inaccessible" ) {
+        if (clickedLocation?.category != 'inaccessible') {
             // if there are pallet cards then render pallet cards
             return palletCards.length > 0 ? (
                 <div>
-                    <button style={{ padding: "5px", margin: "5px"}} onClick={handleClick}>+</button>
+                    <button
+                        style={{ padding: '5px', margin: '5px' }}
+                        onClick={handleClick}>
+                        +
+                    </button>
                     <div id='locationDetails'>{palletCards}</div>
                 </div>
             ) : (
                 <div>
                     <button onClick={handleClick}>+</button>
-                    <div id='locationDetails'>No pallets in this locations.</div>
+                    <div id='locationDetails'>
+                        No pallets in this locations.
+                    </div>
                 </div>
             )
         } else {

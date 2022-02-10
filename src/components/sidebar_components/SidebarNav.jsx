@@ -11,6 +11,10 @@ function SidebarNav() {
 
     function logout() {
         dispatch({
+            type: 'resetStates',
+            data: null
+        })
+        dispatch({
             type: 'setMetaMode',
             data: 'landing'
         })

@@ -9,7 +9,7 @@ import api from './api'
 
 const initialState = {
     // warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
-    warehouse: {},
+    warehouse: null,
     tempWarehouse: null,
     products: [],
     locations: [],
@@ -25,21 +25,18 @@ const initialState = {
     // availableLocations: [], // for move
     metaMode: 'landing', // options include "landing" "build" "main" to cater for various levels
     microModes: {
-        SearchWindow: true,
+        SearchWindow: false,
         LotManager: false,
         LocationDetails: false,
         PalletOption: false,
         Edit: false,
         Move: false,
-        Dispatch: false, 
+        Dispatch: false,
         AddPallet: false
     },
 
     // ***NOTE*** replace this list when warehouse list endpoint ready
-    warehouseList: [
-        { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
-        { id: 2, name: 'warehouse_02', rows: 4, columns: 4 }
-    ]
+    warehouseList: null
 }
 
 export default function App() {
@@ -48,13 +45,16 @@ export default function App() {
     useEffect(async () => {
         if (state.metaMode == 'main') {
             // location information into state
-
             const res_locations = await api.get(
                 `warehouse/${state.warehouse.id}/locations`
             )
             dispatch({
                 type: 'setLocationData',
-                data: res_locations.data
+                data: {
+                    allLocations: res_locations.data,
+                    rows: state.warehouse.rows,
+                    columns: state.warehouse.columns
+                }
             })
             //  product information into state
             const res_products = await api.get(
@@ -75,6 +75,11 @@ export default function App() {
                 data: res_lots.data
             })
         }
+        const wh_list = await api.get(`warehouses`)
+        dispatch({
+            type: 'setWarehouseList',
+            data: wh_list.data
+        })
 
         const res_seeds = await api.get('seeds')
         dispatch({
@@ -84,10 +89,14 @@ export default function App() {
     }, [state.metaMode])
 
     if (state.metaMode == 'landing') {
-        return (
+        return state.warehouseList ? (
             <palletpalContext.Provider value={{ state, dispatch }}>
                 <LandingPage />
             </palletpalContext.Provider>
+        ) : (
+            <h1 style={{ padding: '100px', color: 'green', fontSize: '3em' }}>
+                Loading Warehouse List....
+            </h1>
         )
     } else {
         // other two modes will only apply directly to Warehouse or Sidebar rendered components

@@ -94,6 +94,7 @@ $lot-alert-color: rgb(255, 150, 150);
     }
 
     > #landingPage {
+        height: 100vh;
         align-items: center;
         justify-content: space-evenly;
         grid-column-start: 1;
@@ -145,7 +146,7 @@ $lot-alert-color: rgb(255, 150, 150);
             border-radius: 0.5rem;
             padding: 0.5rem;
             min-height: 30%;
-            max-height: 50%;
+            max-height: 30%;
             min-width: 200px;
             max-width: 300px;
             overflow-y: auto;
