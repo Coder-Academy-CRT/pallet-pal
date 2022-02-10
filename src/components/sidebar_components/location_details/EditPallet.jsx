@@ -15,29 +15,80 @@ export default function EditPallet() {
 
     const [lotsData, setLotsData] = useState([])
 
-    const style = {
+    // --------------------------------------------------- //
+    // ----------------------STYLE------------------------ //
+ 
+    const cardWrapper = {
         position: "absolute",
-        top: "calc(100vh/2 - 200px)",
+        top: "calc(100vh/2 - 300px)",
         left: "calc(100vw/2 - 500px)",
-        width: "500px",
-        height: "300px",
+        width: "900px",
+        height: "500px",
         borderRadius: "10px",
         backgroundColor: "white",
+        textAlign: "center",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center"
+    }   
+
+    const title = {
+        marginBottom: "1rem"
     }
 
-    const styleButton = {
+    const instruction = {
+		background: "lightGrey",
+		width: "85%",
+		fontSize: "0.8rem",
+		marginBottom: "2rem",
+		padding: "10px 8px",
+		lineHeight: "1.5"
+	}
+
+    const inputWrapper = {
+        display: "flex",
+        alignItems: "center",
+    }
+
+    const newInputWrapper = {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: "10px"
+    }
+
+    const productDiv = {
+        display: "flex",
+        justifyContent: "space-around",
+        marginTop: "10px"
+    }
+
+    const fieldDiv = {
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+    }
+
+    const smlBtn = {
+        fontSize: "1.2rem",
+        padding: "0px 2px",
+        border: "none",
+        background: "none",
+        marginLeft: "10px"
+    }
+
+    const buttonWrapper = {
+        marginTop: "1rem"
+    }
+
+    const buttonStyle = {
 		padding: "5px 20px",
 		margin: "20px 50px"
 	}
 
-    const productListStyle = {
-        display: "flex",
-        justifyContent: "center",
-    }
+    // ----------------------STYLE------------------------ //
+    // --------------------------------------------------- //
 
     // Use to create drop down list for lot_code
     useEffect(() => {
@@ -62,42 +113,47 @@ export default function EditPallet() {
     // Add new product - dropdown list for lot code, 2x input for bag size and number of bags
     const createField = () => {
         return (
-            <>
-                    <select
-                        name="lot_code"
-                        value={newProduct.lot_code}
-                        onChange={handleChange}>
-                        <option value="" disabled>Please select lot code</option>
-                        {lotsData ? (
-                            <>
-                                {lotsData.map((element, index) => (
-                                    <option value={element.value} key={index}>
-                                        {element.label}
-                                    </option>
-                                ))}
-                            </>
-                        ) : null}
-                    </select>
-                    <input 
-                        type="number"
-                        min="0"
-                        placeholder="bag size"
-                        onChange={handleChange}
-                        name="bag_size"
-                        size="10"
-                        value={newProduct.bag_size}
-                    />
-                    <input 
-                        type="number"
-                        min="0"
-                        placeholder="num of bags"
-                        onChange={handleChange}
-                        name="number_of_bags"
-                        size="10"
-                        value={newProduct.number_of_bags}
-                    />
-                    <button type="button" style={{ padding: "3px", fontSize: "1em"}} onClick={createProduct}>+</button>
-            </>
+            <div style={newInputWrapper}>
+                    <div>
+                        <p>- Add New Product -</p>
+                    </div>
+                    <div>
+                        <select
+                            name="lot_code"
+                            value={newProduct.lot_code}
+                            onChange={handleChange}>
+                            <option value="" disabled>Please select lot code</option>
+                            {lotsData ? (
+                                <>
+                                    {lotsData.map((element, index) => (
+                                        <option value={element.value} key={index}>
+                                            {element.label}
+                                        </option>
+                                    ))}
+                                </>
+                            ) : null}
+                        </select>
+                        <input 
+                            type="number"
+                            min="0"
+                            placeholder="bag size"
+                            onChange={handleChange}
+                            name="bag_size"
+                            size="10"
+                            value={newProduct.bag_size}
+                        />
+                        <input 
+                            type="number"
+                            min="0"
+                            placeholder="num of bags"
+                            onChange={handleChange}
+                            name="number_of_bags"
+                            size="10"
+                            value={newProduct.number_of_bags}
+                        />
+                        <button style={smlBtn} type="button" onClick={createProduct}>+</button>
+                    </div>
+            </div>
         )
     }
 
@@ -206,6 +262,7 @@ export default function EditPallet() {
                 handleAddProductAPICall()
             }
             handleEditAPICall()
+            // Close edit box
             dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
         }
     }
@@ -216,12 +273,20 @@ export default function EditPallet() {
 	}
 
     return (
-        <div style={style}>
-              <div className='text-wrapper'>
-                  <h1>Edit Pallet #{selectedPallet.pallet_id}</h1>
+              <div style={cardWrapper}>
+                <div style={title}>
+                    <h1>Edit - Pallet #{selectedPallet.pallet_id}</h1>
+				</div>
+                <div style={instruction}>
+					<p>* Each product you can edit their lot code, bag size and number of bags.</p>
+					<p>* You can edit the lot code by selecting the new code from a dropdown list.</p>
+					<p>* You can edit the bag size and number of bags by simply enter the new amount.</p>
+                    <p>* You can add a new product by select the lot code and enter the value, follow by clicking the + button.</p>
+                    <p>* Please click confirm to confirm the changes.</p>
+				</div>
                   <form>
                     {selectedPallet.products_on_pallet.map((product, index) => (
-                        <div key={product.product_id} id={product.product_id} pos={index} style={productListStyle}>
+                        <div style={inputWrapper} key={product.product_id} id={product.product_id} pos={index}>
                             <div>
                                 <select
                                     name="lot_code"
@@ -265,24 +330,23 @@ export default function EditPallet() {
                         {newProductList.length != 0 ? (
                             <div>
                                 {newProductList.map((product, index) => (
-                                    <div id={index} key={index}>
-                                        <div>{product.lot_code}</div>
-                                        <div>{product.number_of_bags} bags</div>
-                                        <div>{product.bag_size} kg each</div>
-                                        <button type="button" onClick={handleRemove}>x</button>
+                                    <div style={productDiv} id={index} key={index}>
+                                        <div style={fieldDiv}>{product.lot_code}</div>
+                                        <div style={fieldDiv}>{product.number_of_bags} bags</div>
+                                        <div style={fieldDiv}>{product.bag_size} kg each</div>
+                                        <button style={smlBtn} type="button" onClick={handleRemove}>x</button>
                                     </div>
                                 ))}
                                 {createField()}
                             </div>
                     ) : createField()}
                     </div>
-                    <div>
-                        <button style={styleButton} type="button" onClick={handleClose}>Cancel</button>
-                        <button style={styleButton} onClick={handleSubmit}>Confirm</button>
+                    <div style={buttonWrapper}>
+                        <button style={buttonStyle} type="button" onClick={handleClose}>Cancel</button>
+                        <button style={buttonStyle} onClick={handleSubmit}>Confirm</button>
                     </div>
                   </form>
               </div>
-        </div>
     ) 
 }   
 

@@ -197,6 +197,7 @@ $lot-alert-color: rgb(255, 150, 150);
         display: grid;
         grid-row: 1 / 1;
         background-color: $space-cadet;
+        position: relative;
 
         > .location {
             display: flex;

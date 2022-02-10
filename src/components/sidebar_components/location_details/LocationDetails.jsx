@@ -40,8 +40,32 @@ function LocationDetails() {
 
     if (microModes.LocationDetails) {
         if (clickedLocation?.category != 'inaccessible') {
-            // if there are pallet cards then render pallet cards
-            return palletCards.length > 0 ? (
+            if (palletCards.length == 0) {
+                return clickedLocation?.category == 'allocated_storage' ? (
+                    <div>
+                        <button
+                            style={{ padding: '5px', margin: '5px' }}
+                            onClick={handleClick}>
+                            +
+                        </button>
+                        <div id='locationDetails'>
+                            <p>No pallets in this locations at the moment. You can click the + button to add new pallet.</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        <button
+                            style={{ padding: '5px', margin: '5px' }}
+                            onClick={handleClick}>
+                            +
+                        </button>
+                        <div id='locationDetails'>
+                            <p>BEWARE - This location is a spare floor. Don't recommend to put pallet here, but you can still add new pallet by clicking the + button.</p> 
+                        </div>
+                    </div>
+                )
+            } else {
+                return (
                 <div>
                     <button
                         style={{ padding: '5px', margin: '5px' }}
@@ -50,14 +74,8 @@ function LocationDetails() {
                     </button>
                     <div id='locationDetails'>{palletCards}</div>
                 </div>
-            ) : (
-                <div>
-                    <button onClick={handleClick}>+</button>
-                    <div id='locationDetails'>
-                        No pallets in this locations.
-                    </div>
-                </div>
-            )
+                )
+            }
         } else {
             dispatch({
                 type: 'setMicroMode',
