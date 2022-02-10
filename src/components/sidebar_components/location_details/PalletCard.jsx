@@ -15,9 +15,7 @@ function PalletCard({ palletId, locationId }) {
         },
         dispatch
     } = useContext(palletpalContext)
-
-    // to show/ hide the option buttons
-    const [clicked, setClicked] = useState(false)
+    
     // set classes to style when found/not found
     const [classes, setClasses] = useState('palletCard')
     const [optionsActive, setOptionsActive] = useState(false)
