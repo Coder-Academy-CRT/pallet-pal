@@ -3,9 +3,9 @@ import api from '../../../api';
 import palletpalContext from '../../../palletpalContext';
 
 export default function EditPallet() {
-    const { state: { products, microModes, selectedPallet }, dispatch } = useContext(palletpalContext)
+    const { state: { products, microModes, selectedPallet, lots }, dispatch } = useContext(palletpalContext)
     // keep track local change before send to db
-    const [productList, setProductList] = useState(selectedPallet.products_on_pallet)
+    const [productList, setProductList] = useState(selectedPallet.products_on_pallet.slice())
     const [newProduct, setNewProduct] = useState({
         lot_code: '',
         bag_size: '',
@@ -162,22 +162,21 @@ export default function EditPallet() {
     function handleEditChange(e) {
         const productId = e.target.parentElement.parentElement.id
         const index = productList.findIndex(product => product.product_id == productId)
-        let copyOfProductList = [...productList]
+        let copyOfProduct = Object.assign({}, productList[index])
 
-        setProductList(prevState => {
-            if (e.target.name == 'lot_code') {
-                copyOfProductList[index].lot_code = e.target.value
-                return copyOfProductList
-            } else if (e.target.name == 'bag_size') {
-                copyOfProductList[index].bag_size = e.target.value
-                return copyOfProductList
-            } else if (e.target.name == 'number_of_bags') {
-                copyOfProductList[index].number_of_bags = e.target.value
-                return copyOfProductList
-            } else {
-                return prevState
-            }
-        })
+        if (e.target.name == 'lot_code') {
+            copyOfProduct.lot_code = e.target.value
+        } else if (e.target.name == 'bag_size') {
+            copyOfProduct.bag_size = e.target.value
+
+        } else if (e.target.name == 'number_of_bags') {
+            copyOfProduct.number_of_bags = e.target.value
+        } 
+
+        let copyOfProduct2 = [...productList]
+        copyOfProduct2[index] = copyOfProduct
+        setProductList(JSON.parse(JSON.stringify(copyOfProduct2)))
+
     }
 
     // handle user input when create new product
@@ -227,7 +226,7 @@ export default function EditPallet() {
             // Add new products to the pallet first
             productList.forEach(async (product) => {
                 // Find the new seed type and seed variety after user change the lot code
-                const seedData = lotsData.filter(lot => lot.lot_code == product.lot_code)
+                const seedData = lots.filter(lot => lot.lot_code == product.lot_code)
     
                 try {
                     const response = await api.put(
@@ -259,12 +258,12 @@ export default function EditPallet() {
     // confirm button
     const handleSubmit = (e) => {
         e.preventDefault()
-        confirm("Confirm?")
-        if (confirm) {
+        const resolved = confirm("Confirm?")
+        if (resolved) {
             if (newProductList.length != 0) {
-                handleAddProductAPICall
+                handleAddProductAPICall()
             }
-            handleEditAPICall
+            handleEditAPICall()
             // Close edit box
             dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
         } else {
