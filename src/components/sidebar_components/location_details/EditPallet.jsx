@@ -5,7 +5,7 @@ import palletpalContext from '../../../palletpalContext';
 export default function EditPallet() {
     const { state: { products, microModes, selectedPallet, lots }, dispatch } = useContext(palletpalContext)
     // keep track local change before send to db
-    const [productList, setProductList] = useState(selectedPallet.products_on_pallet)
+    const [productList, setProductList] = useState(selectedPallet.products_on_pallet.slice())
     const [newProduct, setNewProduct] = useState({
         lot_code: '',
         bag_size: '',
@@ -162,17 +162,21 @@ export default function EditPallet() {
     function handleEditChange(e) {
         const productId = e.target.parentElement.parentElement.id
         const index = productList.findIndex(product => product.product_id == productId)
-        setProductList(prevState => {
-            if (e.target.name == 'lot_code') {
-                return [...prevState, prevState[index].lot_code = e.target.value ]
-            } else if (e.target.name == 'bag_size') {
-                return [...prevState, prevState[index].bag_size = e.target.value ]
-            } else if (e.target.name == 'number_of_bags') {
-                return [...prevState, prevState[index].number_of_bags = e.target.value ]
-            } else {
-                return prevState
-            }
-        })
+        let copyOfProduct = Object.assign({}, productList[index])
+
+        if (e.target.name == 'lot_code') {
+            copyOfProduct.lot_code = e.target.value
+        } else if (e.target.name == 'bag_size') {
+            copyOfProduct.bag_size = e.target.value
+
+        } else if (e.target.name == 'number_of_bags') {
+            copyOfProduct.number_of_bags = e.target.value
+        } 
+
+        let copyOfProduct2 = [...productList]
+        copyOfProduct2[index] = copyOfProduct
+        setProductList(JSON.parse(JSON.stringify(copyOfProduct2)))
+
     }
 
     // handle user input when create new product
@@ -198,7 +202,7 @@ export default function EditPallet() {
         })
     }
 
-    async function handleAddProductAPICall() {
+    function handleAddProductAPICall() {
         newProductList.forEach(async (product) => {
             try {
                 const response2 = await api.post(
@@ -218,13 +222,11 @@ export default function EditPallet() {
     }
 
     // API call
-    async function handleEditAPICall () {
-        // Add new products to the pallet first
-            const filteredList = productList.filter(element => typeof element != 'string')
-    
-            filteredList.forEach(async (product, message) => {
+    function handleEditAPICall () {
+            // Add new products to the pallet first
+            productList.forEach(async (product) => {
                 // Find the new seed type and seed variety after user change the lot code
-                const seedData = lotsData.filter(lot => lot.lot_code == product.lot_code)
+                const seedData = lots.filter(lot => lot.lot_code == product.lot_code)
     
                 try {
                     const response = await api.put(
@@ -244,7 +246,6 @@ export default function EditPallet() {
                     alert("Product could not be updated. Please close and try again later")
                 }
             })
-
     }
 
     // handle when user delete individual product before they click confirm
@@ -257,19 +258,22 @@ export default function EditPallet() {
     // confirm button
     const handleSubmit = (e) => {
         e.preventDefault()
-        confirm("Confirm?")
-        if (confirm) {
+        const resolved = confirm("Confirm?")
+        if (resolved) {
             if (newProductList.length != 0) {
                 handleAddProductAPICall()
             }
             handleEditAPICall()
             // Close edit box
             dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
+        } else {
+            dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
         }
     }
 
 	// Cancel button
-	const handleClose = () => {
+	const handleClose = (e) => {
+        e.preventDefault()
         dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
 	}
 

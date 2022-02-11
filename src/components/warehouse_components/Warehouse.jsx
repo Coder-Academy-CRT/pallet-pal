@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import palletpalContext from '../../palletpalContext'
 import Location from './Location'
-import DispatchOption from '../sidebar_components/location_details/DispatchOption'
+import DispatchPallet from '../sidebar_components/location_details/DispatchPallet'
 import AddPallet from '../sidebar_components/location_details/AddPallet'
 import EditPallet from '../sidebar_components/location_details/EditPallet'
 
@@ -39,7 +39,7 @@ function Warehouse() {
             ) : null}
             {microModes.Dispatch ? (
                 <div className='blockout-bg'>
-                    <DispatchOption />
+                    <DispatchPallet />
                 </div>
             ) : null}
         </div>

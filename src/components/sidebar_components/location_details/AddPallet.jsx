@@ -186,8 +186,8 @@ export default function AddPallet() {
     // close button
     const handleClose = () => {
         if (newProductList.length != 0) {
-            confirm('You sure? Product has not been created yet.')
-            if (confirm) {
+            const resolved = confirm('You sure? Product has not been created yet.')
+            if (resolved) {
                 dispatch({
                     type: 'setMicroMode',
                     data: { mode: 'AddPallet', bool: false }
@@ -282,10 +282,10 @@ export default function AddPallet() {
         ).reduce((c, v) => (v.length > 1 ? c.concat(v) : c), [])
 
         if (duplicateProducts.length != 0) {
-            confirm(
+            const resolved = confirm(
                 'Some products are having same lot code and bag size, do you want to merge them together? Alternatively you can go back to edit your products.'
             )
-            if (confirm) {
+            if (resolved) {
                 // Merge objects with same lot code and sum the number of bags
                 const merged = newProductList.reduce((a, c) => {
                     let x = a.find(
