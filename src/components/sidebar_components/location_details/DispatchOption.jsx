@@ -25,7 +25,9 @@ export default function DispatchOption() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+		zIndex: "5"
+
     }    
 
     const title = {
@@ -44,11 +46,6 @@ export default function DispatchOption() {
 	const textWrapper = {
 		marginBottom: "10px"
 	}
-
-    const inputWrapper = {
-        display: "flex",
-        alignItems: "center"
-    }
 
     const productDiv = {
         display: "flex",

@@ -30,7 +30,8 @@ export default function EditPallet() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center", 
+        zIndex: "5"
     }   
 
     const title = {
