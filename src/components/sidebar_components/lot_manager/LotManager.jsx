@@ -1,18 +1,20 @@
-import { useState } from "react"
-import LotList from "./LotList"
+import { useState } from 'react'
+import LotList from './LotList'
+import palletpalContext from '../../../palletpalContext'
+import { useContext } from 'react'
 
 export default function LotManager() {
-    const [active, setActive] = useState(false)
+    const {
+        state: { microModes }
+    } = useContext(palletpalContext)
 
-    return (
-        <div id='lotManager'>
-            { active ? 
-            <>
-                <button onClick={ () => setActive(false) }>close Lot Manager</button>
+    if (microModes.LotManager) {
+        return (
+            <div id='lotManager'>
                 <LotList />
-            </>
-            :
-            <button onClick={ () => setActive(true)}>open Lot Manager</button> }
-        </div>
-    )
+            </div>
+        )
+    } else {
+        return <></>
+    }
 }

@@ -7,17 +7,8 @@ $text: 'Roboto', sans-serif;
 
 $text: 'Work Sans', sans-serif;
 
-// Colour Variables
-// No other colours should exist on the page (except white and black).
-// $dark-accent: chocolate;
-// $bright-accent: orange;
-// $light: lightgray;
-// $mid: gray;
-// $dark: lightslategray;
-// $darkest: darkslategray;
-// $highlight: turquoise;
-
 /* blue-grey mandarin*/
+$wormhole: rgb(21, 23, 31);
 $space-cadet: #2d3142ff;
 $independence: #4f5d75ff;
 $silver: #bfc0c0ff;
@@ -34,40 +25,52 @@ $mostdarkest: rgb(12, 11, 15);
 $highlight: turquoise;
 $button-pale: rgb(255, 233, 215);
 $lot-card-edit-buttons: rgb(255, 184, 125);
-$edit-lot-card-height: 375px;
+// $edit-lot-card-height: 375px;
 $lot-alert-color: rgb(255, 150, 150);
 
 @mixin round-button-1 {
+    flex: 1;
+    background-color: $mandarin;
     border: none;
-    border-radius: 50%;
-    color: darkslateblue;
-    margin: 5px;
-    background-color: $button-pale;
-    
+    color: white;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 200;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    border: 1px solid rgb(255, 160, 120);
+    transition-duration: 0.5s;
+
     &:hover {
         transform: scale(1.05);
-        filter: brightness(1.1)
+        filter: brightness(1.1);
     }
 
     &:active {
         transform: scale(1.075);
-        filter: brightness(1.15)
+        filter: brightness(1.15);
     }
 }
 
 @mixin lotForm {
+    font-size: 1rem;
+    font-weight: 300;
+    padding: 0.5rem;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     color: white;
-    padding: 5px 15px 0px;
 }
 
 @mixin lotInputs {
-    font-weight: 900;
-    height: 20px;
-    font-size: 1.2em;
-    padding: 5px;
-    margin: 10px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 1rem;
+    height: 2rem;
+    background-color: $silver;
     border: none;
 }
 
@@ -98,10 +101,13 @@ $lot-alert-color: rgb(255, 150, 150);
     height: 100vh;
 
     > * .found {
-        background-color: $highlight;
+        background-color: $white;
+        z-index: 2;
+        border: 2px solid $mandarin;
     }
 
     > #landingPage {
+        height: 100vh;
         align-items: center;
         justify-content: space-evenly;
         grid-column-start: 1;
@@ -153,7 +159,7 @@ $lot-alert-color: rgb(255, 150, 150);
             border-radius: 0.5rem;
             padding: 0.5rem;
             min-height: 30%;
-            max-height: 50%;
+            max-height: 30%;
             min-width: 200px;
             max-width: 300px;
             overflow-y: auto;
@@ -179,7 +185,6 @@ $lot-alert-color: rgb(255, 150, 150);
                 }
 
                 > .loadButton {
-                    flex: 1;
                     width: 50px;
                     border: none;
                     cursor: pointer;
@@ -205,6 +210,7 @@ $lot-alert-color: rgb(255, 150, 150);
         display: grid;
         grid-row: 1 / 1;
         background-color: $space-cadet;
+        position: relative;
 
         > .location {
             display: flex;
@@ -213,8 +219,19 @@ $lot-alert-color: rgb(255, 150, 150);
             border-top: 1px dotted $white;
             border-right: 1px dotted $white;
 
+            &.moveActive {
+                border: 3px solid $white;
+            }
+
+            &.selected {
+                border: 2px solid $mandarin;
+                // filter: drop-shadow(0 0 0.75rem $mandarin);
+            }
+
             &:hover {
-                border: 5px solid rgba($color: $mandarin, $alpha: 0.4);
+                filter: drop-shadow(0 0 0.25rem $mandarin);
+
+                // border: 5px solid rgba($color: $mandarin, $alpha: 0.4);
             }
 
             > .palletBox {
@@ -229,10 +246,58 @@ $lot-alert-color: rgb(255, 150, 150);
     }
 
     #sidebar {
+        max-height: 100vh;
+        gap: 0.5rem;
         display: flex;
-        overflow-y: auto;
         flex-direction: column;
         background-color: $space-cadet;
+
+        #warehouseName {
+            margin-right: 1rem;
+            font-size: 1rem;
+            font-weight: 200;
+            color: $mandarin;
+            text-align: right;
+            font-style: italic;
+        }
+
+        #sidebarNav {
+            max-height: 10%;
+            padding: 0.2rem 0.2rem 0 0.2rem;
+            gap: 0.3rem;
+            font-size: 90%;
+            display: flex;
+            flex: 1;
+            margin-top: auto;
+            background-color: $independence;
+            justify-content: space-evenly;
+
+            .navButton {
+                background-color: $white;
+                flex: 1;
+                border: none;
+                color: $space-cadet;
+                padding: 1rem;
+                text-align: center;
+                font-weight: 200;
+                cursor: pointer;
+                border-radius: 0.5rem 0.5rem 0rem 0rem;
+                border: 1px solid $silver;
+                font-weight: 400;
+                transition-duration: 0.2s;
+
+                &.active {
+                    filter: drop-shadow(0 0 0.1rem $white);
+                    border-radius: 0;
+                    border: 1px solid rgb(255, 160, 120);
+                    background-color: $mandarin;
+                }
+
+                &:hover {
+                    filter: drop-shadow(0 0 0.75rem $mandarin);
+                }
+            }
+        }
 
         #buildSidebar {
             padding: 1rem;
@@ -240,7 +305,8 @@ $lot-alert-color: rgb(255, 150, 150);
             display: flex;
             flex-direction: column;
             background-color: $white;
-            justify-content: space-evenly;
+            align-items: center;
+            // justify-content: space-evenly;
 
             #instructions {
                 background-color: $mandarin;
@@ -317,291 +383,92 @@ $lot-alert-color: rgb(255, 150, 150);
         }
 
         #locationDetails {
-            background-color: $independence;
+            border-radius: 0.5rem;
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+            min-height: fit-content;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
-            padding: 5px;
+            background-color: $mandarin;
+            overflow: hidden;
 
-            > .palletCard {
-                padding: 5px;
-                margin-top: 5px;
+            header {
+                border-top-right-radius: 0.5rem;
+                border-top-left-radius: 0.5rem;
+                background-color: $white;
                 display: flex;
-                flex-direction: column;
-                background-color: $mandarin;
+                align-items: center;
+                flex-direction: row;
+                justify-content: space-between;
 
-                > .productCard {
-                    flex: 1;
-                    margin-top: 1px;
-                    background-color: white;
+                h2 {
+                    color: $independence;
+                    padding: 0.5rem;
+                }
+                p {
+                    padding-right: 0.25rem;
+                    font-size: 1em;
+                    color: $space-cadet;
+                }
+                button {
+                    border: none;
+                    display: flex;
+                    border-radius: 100%;
+                    width: 2rem;
+                    height: 2rem;
+                    background-color: $mandarin;
+                    align-items: center;
+                    margin-right: 0.5rem;
+                    font-size: 2rem;
+                    font-style: normal;
+                    font-weight: 600;
+                    color: white;
+                    align-content: center;
                 }
             }
-            > .found {
-                background-color: $highlight;
+
+            #palletList {
+                display: flex;
+                flex-direction: column;
+                flex: 5;
+                gap: 1px;
+                overflow-y: auto;
+                background-color: $independence;
+
+                > .palletCard {
+                    padding: 5px;
+                    gap: 1px;
+                    flex-direction: column;
+                    background-color: $mandarin;
+
+                    span {
+                        color: $white;
+                        font-weight: 400;
+                        font-size: 1rem;
+                    }
+
+                    > .productCard {
+                        flex: 1;
+                        // margin-top: 1px;
+                    }
+                }
+                > .found {
+                    background-color: $white;
+                    border: none;
+                    color: $space-cadet;
+                }
             }
         }
 
         > #searchWindow {
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
             display: flex;
             flex-direction: column;
             background-color: $highlight;
         }
 
         @import './lotManagement';
-        // > #lotManager {
-        //     display: flex;
-        //     flex-direction: column;
-        //     overflow: scroll;
-        //     background-color: $mostdarkest;
-
-        //     > #lotManagerHeader {
-        //         z-index: 2;
-        //         margin: 10px;
-        //         padding: 5px 25px 10px 5px;
-        //         display: flex;
-        //         justify-content: space-between;
-        //         align-items: center;
-        //         border-bottom: solid 1px $darkest;
-
-        //         // Lot Manager Heading
-        //         > h2 {
-        //             font-size: 1.4em;
-        //             color: white;
-        //             margin-bottom: 5px;
-        //         }
-
-        //         // div holding the button and "Add Lot" paragraph in Lot Manager Header
-        //         > #lotManagerHeaderRhs {                          
-        //             display: flex;
-        //             align-items: center;
-        //             color: white;
-
-        //             > p { // "Add Lot"
-        //                 font-size: 0.9em;
-        //                 margin: 0px 5px;
-        //                 color: white;
-        //             }
-
-        //             > button {
-        //                 @include round-button-1; // 5px margins
-        //                 position: relative;
-        //                 height: 30px;
-        //                 width: 30px;  
-        //                 margin-right: 0px;
-        //             }   
-        //         }  
-        //     }
-
-        //     > #createNewLotCard {
-                
-        //         // Create Lot heading
-        //         > h3 { 
-        //             color: $lot-card-edit-buttons;
-        //             padding: 10px 5px 15px 10px;
-        //         }
-
-
-        //         > .lotForm {
-        //             @include lotForm;        
-                
-        //             > .lotInputs {
-        //                 @include lotInputs
-        //             }
-                    
-        //             .lotSelect {
-        //                 height: 33px;
-        //             }
-        //          }
-                
-        //         > #footerNewLot {   // New Lot, container holding the buttons
-        //             display: flex;
-        //             align-items: center;
-        //             justify-content: center;
-        //             padding: 10px 0px;
-        //             border-bottom: solid 2px $darkest;
-                   
-        //             > button {   // New Lot (add button)
-        //                 @include round-button-1(); // 5px margins
-        //                 height: 60px;
-        //                 width: 65px;
-        //                 margin-left: 30px;   
-        //             }
-                    
-        //             > p {   // New Lot, save / exit buttons
-        //                 color: $lot-alert-color;
-        //                 position: relative;
-        //                 width: 80%;
-        //                 left: 5%;
-        //             }
-        //         }
-
-        //     }
-
-
-        //     > #lotList {
-        //         background-color: $mostdarkest;
-        //         display: flex;
-        //         flex-direction: column;
-
-                
-        //         > .editLotCard {
-        //             justify-self: center;
-        //             align-self: center;
-        //             width: 95%;
-        //             box-sizing: border-box;
-        //             box-shadow: $darkest 0px 20px 75px -5px, white 0px 20px 0px -5px;
-        //             display: flex;
-        //             flex-direction: column;
-        //             justify-content: flex-start;
-        //             background-color: $mostdarkest;
-        //             height: $edit-lot-card-height;
-
-        //             > #editLotHeader {
-        //                 display: flex;
-        //                 justify-content: flex-start;
-        //                 align-items: flex-end;
-                        
-        //                 // x2 H3 
-        //                 > #editLot-Heading {
-        //                     color: $lot-card-edit-buttons;
-        //                     margin: 15px 0px 10px 10px;  
-        //                 }
-
-        //                 > #editLot-LotCode {
-        //                     color: $lot-card-edit-buttons;
-        //                     margin: 15px 15px 10px 10px;  
-        //                 }
-        //             }
-
-        //             > .lotForm {
-        //                 @include lotForm;
-        //             
-                    
-        //                 > .lotInputs {
-        //                     @include lotInputs
-        //                 }
-                        
-        //                 .lotSelect {
-        //                     height: 33px;
-        //                 }
-        //              }
-
-        //             > #buttonContainer {
-        //                 display: flex;
-        //                 justify-content: space-evenly;
-        //                 padding: 5px;
-        //                 margin-top: 5px;
-
-        //                 > button { // x3 buttons in edit lot form => id's = exitLotButton, saveLotButton, deleteLotButton
-        //                     @include round-button-1;
-        //                     height: 60px;
-        //                     width: 60px;
-        //                 }      
-        //             }
-        //         }
-                
-
-        //         > .lotCard {
-        //             display: flex;
-        //             justify-content: space-between;
-        //             padding: 1px;
-        //             margin-top: 1px;
-        //             background-color: $mostdarkest;
-        //             border-bottom: solid 1px $darkest;
-
-        //             > div { // x3 main divs in lot card ( LHS / MID / RHS)
-        //                 color: white;
-        //                 display: flex;
-        //                 padding: 1px;
-        //             }
-
-        //             > #lotCardLhs {
-        //                 width: 20%;
-        //                 flex-direction: row;
-        //                 justify-content: space-evenly;
-        //                 align-items: center;
-                    
-
-        //                 > button {
-        //                     box-sizing: border-box;
-        //                     border: solid $mostdarkest 5px;
-        //                     color: darkslateblue;
-        //                     background-color: $lot-card-edit-buttons;
-        //                     margin: 5%;
-        //                     border-radius: 50%;
-        //                     height: 60px;
-        //                     width: 60px;
-
-        //                 }
-        //             }
-
-        //             > #lotCardMid {
-        //                 max-width: 0%;
-        //                 position: relative;
-        //                 right: 20%;
-        //                 display: flex;
-        //                 flex-direction: column;
-        //                 justify-content: center;
-        //                 white-space: nowrap;
-        //                 padding: 3%;
-                    
-        //                 // lot code headings
-        //                 > h2 { 
-        //                     font-size: 1em;
-        //                 }
-
-        //                 // lot seed type - variety
-        //                 > p {
-        //                     color: lightgrey;
-        //                     font-size: 0.8em;
-        //                 }
-        //             }
-
-        //             > #lotCardRhs {
-        //                 width: 30%; 
-        //                 display: flex;
-        //                 flex-direction: column; 
-        //                 justify-content: center;
-        //                 align-items: flex-start;
-        //                 color: lightgrey; 
-                    
-        //                 // list of bags and amounts in each lot card
-        //                 > ul { 
-
-        //                     > li {
-        //                         font-size: 0.8em;
-        //                         margin: 0.8em;
-        //                         list-style: none;
-                            
-        //                         > hr {
-        //                             width: 50px;
-        //                         }
-
-        //                         // total amount
-        //                         > h3 {
-        //                             color: white;
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        #sidebarNav {
-            position: sticky;
-            top: 0;
-            width: 100%;
-            display: flex;
-            flex-direction: row;
-            background-color: $mid;
-            > a {
-                flex: 1;
-                border: 1px solid $bright-accent;
-                text-align: center;
-                align-items: center;
-            }
-        }
     }
 }
 

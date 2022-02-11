@@ -1,15 +1,21 @@
 import React, { useContext, useEffect, useState, useReducer } from 'react'
+import api from '../../api'
 import palletpalContext from '../../palletpalContext'
 
 // passing the whole location object in rather than bits
 function Location({ details }) {
     const {
         state: {
-            foundPallets,
+            warehouse,
             metaMode,
+            microModes,
             locations,
-            palletOption,
-            availableLocations
+            foundPallets,
+            availableLocations,
+            moveFromLocation,
+            moveToLocation,
+            movingPalletId,
+            clickedLocation
         },
         dispatch
     } = useContext(palletpalContext)
@@ -17,9 +23,12 @@ function Location({ details }) {
     // set initial category
     const [category, setCategory] = useState(details.category)
     const [classes, setClasses] = useState([category, 'location'])
-
-    // store all available categories
-    const categories = ['spare_floor', 'allocated_storage', 'inaccessible']
+    const [loading, setLoading] = useState(false)
+    const [categories, setCategories] = useState([
+        'spare_floor',
+        'allocated_storage',
+        'inaccessible'
+    ])
 
     useEffect(() => {
         setClasses([category, 'location'])
@@ -28,77 +37,139 @@ function Location({ details }) {
                 setClasses([...classes, 'found'])
             }
         })
-        // Light up available location during 'move'
-        availableLocations.forEach((location) => {
-            setClasses([...classes, 'found'])
-        })
-    }, [foundPallets, category, availableLocations])
+
+        // Light up available locations during 'Move' mode
+        if (
+            microModes.Move &&
+            ['spare_floor', 'allocated_storage'].includes(category)
+        ) {
+            setClasses([...classes, 'moveActive'])
+        }
+        // Set selected class when location selected
+        clickedLocation?.coordinates == details.coordinates &&
+        metaMode == 'main'
+            ? setClasses([...classes, 'selected'])
+            : null
+    }, [
+        category,
+        foundPallets,
+        availableLocations,
+        clickedLocation,
+        microModes
+    ])
 
     const handleClickOnBox = (e) => {
         e.stopPropagation()
         dispatch({
             type: 'setClickedLocation',
-            data: e.target.parentNode.id
+            data: e.target.parentElement.id
         })
-    }
-
-    // manage cleanup when category changes
-    function incrementCategory() {
-        // set new category
-        setCategory(
-            categories[(categories.indexOf(category) + 1) % categories.length]
-        )
-        // cleanup classes
-        setClasses([category, 'location'])
     }
 
     function updateLocation(coordString) {
         // increment category and class cleanup
-        incrementCategory()
+        const nextCat =
+            categories[(categories.indexOf(category) + 1) % categories.length]
+        // set new category
+        setCategory(nextCat)
+        // cleanup classes
+        setClasses([category, 'location'])
         // split coordinate into x and y coords, example ["01","02"]
         const coords = coordString.split('_')
         // convert to numbers
         let x = Number(coords[0])
         let y = Number(coords[1])
         // prepare new locations object
-        const newLocations = locations
-        //update global locations object
-        newLocations[x][y].category = category
+        const newLocations = [...locations]
+        // update global locations object
+        newLocations[y][x].category = nextCat
+
         dispatch({
             type: 'setLocations',
             data: newLocations
         })
-        if (palletOption == 'move') {
-            dispatch({
-                type: 'setSelectedMoveLocation',
-                data: e.target.id
-            })
-            confirm('You want to move to this location?')
-            if (true) {
-                dispatch({
-                    type: 'updateLocationAfterMove',
-                    data: e.target.id
-                })
-            }
-            console.log(e.target.id)
-            dispatch({
-                type: 'setAvailableLocations',
-                data: []
-            })
-        }
     }
 
-    const handleClick = (e) => {
+    // when location clicked do different things in different modes.
+    const handleClick = async (e) => {
         // if in build mode location click is different than in if in main mode
         switch (metaMode) {
             case 'build':
                 // get location object and set its new category
-                updateLocation(details.coordinate, category)
+                updateLocation(details.coordinates, category)
             case 'main':
-                dispatch({
-                    type: 'setClickedLocation',
-                    data: e.target.id
-                })
+                // if in move mode
+                if (microModes.Move) {
+                    switch (details.category) {
+                        case 'inaccessible':
+                            alert(
+                                'You may not move pallets here, try allocated storage or spare floor.'
+                            )
+                            break
+                        default:
+                            confirm('You want to move to this location?')
+                            if (confirm) {
+                                setLoading(true)
+                                const moveResponse = await api.put(
+                                    `pallet/${movingPalletId}/location/${details.coordinates}`
+                                )
+                                const locationsResponse = await api.get(
+                                    `warehouse/${warehouse.id}/locations`
+                                )
+                                if (
+                                    moveResponse.data ==
+                                        `pallet #${movingPalletId} moved to location ${details.coordinates}` &&
+                                    locationsResponse.status == 200
+                                ) {
+                                    dispatch({
+                                        type: 'setLocationData',
+                                        data: {
+                                            allLocations:
+                                                locationsResponse.data,
+                                            rows: warehouse.rows,
+                                            columns: warehouse.columns
+                                        }
+                                    })
+                                    setLoading(false)
+                                } else {
+                                    setLoading(false)
+                                }
+
+                                // dispatch({
+                                //     type: 'movePallet',
+                                //     data: {
+                                //         palletId: movingPalletId,
+                                //         moveFromLocation: moveFromLocation,
+                                //         moveToLocation: details.coordinates
+                                //     }
+                                // })
+                                alert('Pallet has been moved.')
+                                dispatch({
+                                    type: 'setMicroMode',
+                                    data: { mode: 'Move', bool: false }
+                                })
+                            } else {
+                                alert('move cancelled')
+                                break
+                            }
+                    }
+                } else {
+                    dispatch({
+                        type: 'setClickedLocation',
+                        data: e.target.id
+                    })
+                    if (!microModes.LocationDetails) {
+                        dispatch({
+                            type: 'toggleMicroMode',
+                            data: 'LocationDetails'
+                        })
+                    } else {
+                        dispatch({
+                            type: 'setClickedLocation',
+                            data: e.target.id
+                        })
+                    }
+                }
         }
     }
 
@@ -122,7 +193,7 @@ function Location({ details }) {
             className={classes.join(' ')}
             onClick={handleClick}
             id={details.coordinates}>
-            {boxes}
+            {!loading ? boxes : <h1>Moving..</h1>}
         </div>
     )
 }

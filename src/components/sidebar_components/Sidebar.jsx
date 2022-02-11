@@ -1,27 +1,28 @@
 import { useContext, useState } from 'react'
-import SidebarNav from './SidebarNav'
+import React from 'react'
+
 import LocationDetails from './location_details/LocationDetails'
 import SearchWindow from './search_window/SearchWindow'
 import LotManager from './lot_manager/LotManager'
 import palletpalContext from '../../palletpalContext'
-import DispatchBox from './location_details/DispatchBox'
 import BuildSidebar from './BuildSidebar'
+import SidebarNav from './SidebarNav'
 import MoveOption from './location_details/MoveOption'
 
 function Sidebar() {
     const {
-        state: { palletOption, metaMode, locations }
+        state: { metaMode, locations, microModes, warehouse }
     } = useContext(palletpalContext)
 
     // ****NOTE**** the condition for locations length is to prevent location details trying to set up before locations are ready.
     if (metaMode == 'main' && locations.length > 1) {
         return (
             <div id='sidebar'>
-                {/* <SidebarNav /> */}
-                <LotManager />
+                <h1 id='warehouseName'>{warehouse.name}</h1>
                 <SearchWindow />
                 <LocationDetails />
-                {palletOption == 'move' ? <MoveOption /> : null}
+                <LotManager />
+                <SidebarNav />
             </div>
         )
     } else if (metaMode == 'build') {
