@@ -276,6 +276,14 @@ export default function reducer(state, action) {
             })
             return { ...state }
 
+        case 'updateClickedLocation' :
+            state.clickedLocation.pallets_on_location.forEach((pallet, index) => {
+                if(pallet == action.data) {
+                    state.clickedLocation.pallets_on_location.splice(index, 1)
+                }
+            })
+            return { ...state }
+
         case 'setFoundPallets':
             return {
                 ...state,
