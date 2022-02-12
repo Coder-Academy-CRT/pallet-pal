@@ -7,16 +7,40 @@ function BuildSidebar() {
         state: { warehouseList, tempWarehouse, locations },
         dispatch
     } = useContext(palletpalContext)
+
     const [warehouseName, setWarehouseName] = useState('')
+    const [regexAlert, setRegexAlert] = useState("")
+
+    function checkWarehouseName(warehouseName) {
+
+        const regex1 = /^[a-z]+.*$/i
+        const regex2 = /^.{3,30}$/
+        const regex3 = /^[\w#@&\.\- ]*$/
+        
+        const startTest = regex1.test(warehouseName)
+        const lengthTest = regex2.test(warehouseName)
+        const characterTest = regex3.test(warehouseName)
+        
+        if (startTest && lengthTest && characterTest) {
+          return "Pass"
+        }
+        else if (!startTest) {
+          return "Warehouse name must begin with a letter"
+        }
+        else if (!lengthTest) {
+          return "Please ensure length of warehouse name is between 3 - 30 characters"
+        }
+        else {
+          return "Please use only letters, numbers, and symbols @, &, #. Full stops and hyphens are acceptable, as are spaces."
+        }
+    }
+
 
     function validateWarehouseName(string) {
         if (Object.keys(warehouseList).includes(string)) {
             alert('name already taken')
             return false
         } else {
-            // do more validation with regex
-            // /^[a-z ,.'-{1-30}]+$/i
-
             // then set new temp warehouse
             dispatch({
                 type: 'setTempWarehouse',
@@ -59,70 +83,81 @@ function BuildSidebar() {
     }
 
     async function saveWarehouse(whName) {
-        // check if warehouse name is already taken
-        if (!validateWarehouseName(whName)) {
-            alert('Warehouse name already exists choose another')
-        } else {
-            // ADD NEW WAREHOUSE TO DB AND ON STATUS OK
-            const whResponse = await api.post(`warehouse`, {
-                warehouse_name: whName,
-                rows: tempWarehouse.rows,
-                columns: tempWarehouse.columns
-            })
+        // regex validation 
+        let regexTest = checkWarehouseName(whName)
+        if (regexTest == "Pass") {
 
-            if (!whResponse.data.hasOwnProperty('id')) {
-                // warehouse not created
-                console.log(whResponse)
-                console.log('WAREHOUSE DB CREATE FAILURE')
-                alert('Warehouse failed to save to database.')
+            // check if warehouse name is already taken
+            if (!validateWarehouseName(whName)) {
+                alert('Warehouse name already exists choose another')
             } else {
-                console.log(whResponse.data.id)
-                // if warehouse successfully created
-                // update locations
-                const locResponse = await api.put(
-                    `warehouse/${whResponse.data.id}/locations`,
-                    locationRequest()
-                )
+                // ADD NEW WAREHOUSE TO DB AND ON STATUS OK
+                const whResponse = await api.post(`warehouse`, {
+                    warehouse_name: whName,
+                    rows: tempWarehouse.rows,
+                    columns: tempWarehouse.columns
+                })
 
-                if (
-                    locResponse.data !=
-                    `Warehouse ${whResponse.data.id} locations updated`
-                ) {
-                    // fail message
-                    console.log('LOCATIONS DB UPDATE FAILURE')
-                    alert('warehouse locations failed to update')
+                if (!whResponse.data.hasOwnProperty('id')) {
+                    // warehouse not created
+                    console.log(whResponse)
+                    console.log('WAREHOUSE DB CREATE FAILURE')
+                    alert('Warehouse failed to save to database.')
                 } else {
-                    // locations saved to database update state
-                    const newWarehouse = { ...tempWarehouse }
-                    newWarehouse.id = whResponse.data.id
-                    // add warehouse to global list of warehouses
-                    dispatch({
-                        type: 'addWarehouse',
-                        data: { newWarehouse }
-                    })
-                    // set global warehouse to new warehouse
-                    dispatch({
-                        type: 'setWarehouse',
-                        data: { newWarehouse }
-                    })
-                    // set temp warehouse to null to force warehouse build instead of temp warehouse in Warehouse.jsx
-                    dispatch({
-                        type: 'setTempWarehouse',
-                        data: null
-                    })
-                    // set to main mode which will load this new wh
-                    dispatch({
-                        type: 'setMetaMode',
-                        data: 'main'
-                    })
-                    console.log('LOCATIONS SAVED')
+                    console.log(whResponse.data.id)
+                    // if warehouse successfully created
+                    // update locations
+                    const locResponse = await api.put(
+                        `warehouse/${whResponse.data.id}/locations`,
+                        locationRequest()
+                    )
+
+                    if (
+                        locResponse.data !=
+                        `Warehouse ${whResponse.data.id} locations updated`
+                    ) {
+                        // fail message
+                        console.log('LOCATIONS DB UPDATE FAILURE')
+                        alert('warehouse locations failed to update')
+                    } else {
+                        // locations saved to database update state
+                        const newWarehouse = { ...tempWarehouse }
+                        newWarehouse.id = whResponse.data.id
+                        // add warehouse to global list of warehouses
+                        dispatch({
+                            type: 'addWarehouse',
+                            data: { newWarehouse }
+                        })
+                        // set global warehouse to new warehouse
+                        dispatch({
+                            type: 'setWarehouse',
+                            data: { newWarehouse }
+                        })
+                        // set temp warehouse to null to force warehouse build instead of temp warehouse in Warehouse.jsx
+                        dispatch({
+                            type: 'setTempWarehouse',
+                            data: null
+                        })
+                        // set to main mode which will load this new wh
+                        dispatch({
+                            type: 'setMetaMode',
+                            data: 'main'
+                        })
+                        console.log('LOCATIONS SAVED')
+                    }
                 }
             }
+        
+        } else {
+            setRegexAlert(regexTest)
         }
     }
 
     function handleChange(event) {
         setWarehouseName(event.target.value)
+        if (checkWarehouseName(event.target.value) != regexAlert) { // state warehouse has delay, so use target
+            setRegexAlert('') // when warehouse name input value changes away from that regex block, resets and removes the alert
+        }  
     }
 
     function handleSubmit(e) {
@@ -136,22 +171,42 @@ function BuildSidebar() {
             <section id='instructions'>
                 <h1>Instructions</h1>
                 <p>
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Eligendi officia aspernatur excepturi iusto voluptatem
-                    dolore fugit natus maxime inventore sapiente mollitia ex
-                    debitis voluptas ipsa modi at, illum expedita? Sequi minus
-                    illo aliquid maxime accusamus quos explicabo voluptatem
-                    atque soluta tempore, possimus expedita excepturi ipsa ex
-                    accusantium deleniti, iusto natus.
+                    <br></br>
+                    This grid represents your floor space, each being slightly larger than a pallet. 
+                    x1 click changes to allocated storage, x2 clicks to inaccessible spaces, 
+                    & the third click starts over with spare floor.
+                    <br></br>
+                    <br></br>
+                    When choosing a name:
                 </p>
+                <br></br>
+                <ul>
+                    <li>
+                        it must begin with a letter & be between 3-30 characters
+                    </li>
+                    <li>
+                        it can include numbers, spaces, underscores or the following symbols "@, &, #"
+                    </li>
+                    <li>
+                        full stops and hyphens are acceptable, as are spaces
+                    </li>
+                </ul>        
             </section>
-            <section id='legend'>
-                <div className='spare_floor legendBox'>spare floor</div>
-                <div className='allocated_storage legendBox'>
-                    allocated storage
-                </div>
-                <div className='inaccessible legendBox'>inaccessible</div>
-            </section>
+
+            { regexAlert ?
+                <section>
+                    <p id='regexAlertPara'>{ regexAlert }</p>
+                </section>
+            : 
+                <section id='legend'>
+                    <div className='spare_floor legendBox'>spare floor</div>
+                    <div className='allocated_storage legendBox'>
+                        allocated storage
+                    </div>
+                    <div className='inaccessible legendBox'>inaccessible</div>
+                </section>
+            }
+
             <section id='buildActions'>
                 <h1>Warehouse Name:</h1>
                 <form action='saveWarehouse' onSubmit={(e) => handleSubmit(e)}>
@@ -167,6 +222,7 @@ function BuildSidebar() {
                 </form>
                 <button onClick={testLocationRequest}>test location req</button>
             </section>
+            
         </div>
     )
 }

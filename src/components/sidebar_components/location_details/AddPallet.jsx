@@ -190,6 +190,7 @@ export default function AddPallet() {
         // for pop up window when all products have been added into db successfully
         const message = []
         let newPalletId = ''
+
         // Create pallet with the first product
         try {
             const response = await api.post(
@@ -198,6 +199,7 @@ export default function AddPallet() {
             )
             if (response.data.hasOwnProperty('product_id')) {
                 newPalletId = response.data.pallet_id
+
                 // use response object to update Products as it returns the whole object
                 dispatch({
                     type: 'addNewProductToProducts',
