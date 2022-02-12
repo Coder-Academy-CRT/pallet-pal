@@ -1,11 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react'
 import api from '../../../api'
 import palletpalContext from '../../../palletpalContext'
-import { prepLotCodes, handleAddProductAPICall } from '../../../helpers/helpers'
 
 export default function AddPallet() {
-    const { state: { products, microModes, clickedLocation, warehouse }, dispatch } = useContext(palletpalContext)
-    const [lots, setLots] = useState([])
+    const { state: { products, microModes, clickedLocation, warehouse, lots }, dispatch } = useContext(palletpalContext)
+    const [currentLots, setCurrentLots] = useState([])
     const [newProduct, setNewProduct] = useState({
         lot_code: '',
         bag_size: '',
@@ -85,12 +84,10 @@ export default function AddPallet() {
 
     // Create drop down list for lot_code
     useEffect(() => {
-        // declare temp lists for working
-        let lotList = new Set([])
-        let lotOptions = []
-        prepLotCodes(products, lotList, lotOptions)
+        const newList = []
+        lots.forEach(lot => newList.push({value: lot.lot_code, label: lot.lot_code}))
         // set state from option lists
-        setLots(lotOptions)
+        setCurrentLots(newList)
     }, [products])
 
     // Create dropdown list for lot code, 2x input for bag size and number of bags
@@ -103,9 +100,9 @@ export default function AddPallet() {
                         value={newProduct.lot_code}
                         onChange={handleChange}>
                         <option value="" disabled>Please select lot code</option>
-                        {lots ? (
+                        {currentLots ? (
                             <>
-                                {lots.map((element, index) => (
+                                {currentLots.map((element, index) => (
                                     <option value={element.value} key={index}>
                                         {element.label}
                                     </option>
@@ -192,7 +189,7 @@ export default function AddPallet() {
     async function handleAPICall(dataArray) {
         // for pop up window when all products have been added into db successfully
         const message = []
-        let newPallet = {}
+        let newPalletId = ''
         // Create pallet with the first product
         try {
             const response = await api.post(
@@ -200,7 +197,7 @@ export default function AddPallet() {
                 dataArray[0]
             )
             if (response.data.hasOwnProperty('product_id')) {
-                newPallet = response.data
+                newPalletId = response.data.pallet_id
                 // use response object to update Products as it returns the whole object
                 dispatch({
                     type: 'addNewProductToProducts',
@@ -218,7 +215,24 @@ export default function AddPallet() {
         // Remove the first product as it has been created in db
         if (message[0] == 'success') {
             dataArray.splice(0, 1)
-            handleAddProductAPICall(dataArray, newPallet, dispatch, api, message)
+            dataArray.forEach(async (product) => {
+                try {
+                    const response2 = await api.post(
+                        `pallet/${newPalletId}/products`, product
+                    )
+                    if (response2.data.hasOwnProperty('product_id')){
+                        // use response object to update Products as it should be a whole object
+                        dispatch({
+                            type: "addNewProductToProducts",
+                            data: response2.data
+                        })
+                        message.push('success')
+                    }
+                } catch (err) {
+                    alert("Product could not be created. Please close and try again later")
+                    message.push('error')
+                }
+            })
 
             if (!message[0].includes('error')) {
                 alert('All done!')
@@ -226,7 +240,7 @@ export default function AddPallet() {
             // Add new pallet id to Locations
             dispatch({
                 type: 'addNewPalletToLocations',
-                data: newPallet.pallet_id
+                data: newPalletId
             })
             // Close the addPallet option
             dispatch({
