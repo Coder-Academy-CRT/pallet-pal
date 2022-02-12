@@ -43,7 +43,15 @@ PalletPAL utilises a PostgreSQL database where data can be created, read, update
 
 This may sound familiar to the MERN stack, which utilises similar technologies. However, while MERN utilises the MongoDB NoSQL database, the PalletPAL application preferences a relational SQL database using Postgres. This can be recognised as the PERN stack.
 
+## **API that we are using**
+
+Github Link: https://github.com/Coder-Academy-CRT/palletPAL-API 
+
 ## **Usage**
+
+You can visit our live site https://palletpal.netlify.app/, create a new warehouse to test out our application.
+
+#### **For running on local**
 
 1. Download the file `palletPAL'and unzip.
 
