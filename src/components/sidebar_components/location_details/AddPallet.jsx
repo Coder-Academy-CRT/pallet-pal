@@ -1,12 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react'
 import api from '../../../api'
 import palletpalContext from '../../../palletpalContext'
+import { prepLotCodes, handleAddProductAPICall } from '../../../helpers/helpers'
 
 export default function AddPallet() {
-    const {
-        state: { products, microModes, clickedLocation, warehouse },
-        dispatch
-    } = useContext(palletpalContext)
+    const { state: { products, microModes, clickedLocation, warehouse }, dispatch } = useContext(palletpalContext)
     const [lots, setLots] = useState([])
     const [newProduct, setNewProduct] = useState({
         lot_code: '',
@@ -90,17 +88,7 @@ export default function AddPallet() {
         // declare temp lists for working
         let lotList = new Set([])
         let lotOptions = []
-
-        // get every current lot and seed and push to temp lists
-        products.forEach((element) => {
-            lotList.add(`${element.lot_code}`)
-        })
-
-        // build options lists
-        lotList.forEach((lot) => {
-            lotOptions.push({ value: lot, label: lot })
-        })
-
+        prepLotCodes(products, lotList, lotOptions)
         // set state from option lists
         setLots(lotOptions)
     }, [products])
@@ -204,7 +192,7 @@ export default function AddPallet() {
     async function handleAPICall(dataArray) {
         // for pop up window when all products have been added into db successfully
         const message = []
-        let newPalletId = ''
+        let newPallet = {}
         // Create pallet with the first product
         try {
             const response = await api.post(
@@ -212,7 +200,7 @@ export default function AddPallet() {
                 dataArray[0]
             )
             if (response.data.hasOwnProperty('product_id')) {
-                newPalletId = response.data.pallet_id
+                newPallet = response.data
                 // use response object to update Products as it returns the whole object
                 dispatch({
                     type: 'addNewProductToProducts',
@@ -230,35 +218,15 @@ export default function AddPallet() {
         // Remove the first product as it has been created in db
         if (message[0] == 'success') {
             dataArray.splice(0, 1)
-            dataArray.forEach(async (product) => {
-                try {
-                    const response2 = await api.post(
-                        `pallet/${newPalletId}/products`,
-                        product
-                    )
-                    if (response2.data.hasOwnProperty('product_id')) {
-                        // use response object to update Products as it should be a whole object
-                        dispatch({
-                            type: 'addNewProductToProducts',
-                            data: response2.data
-                        })
+            handleAddProductAPICall(dataArray, newPallet, dispatch, api, message)
 
-                        message.push('success')
-                    }
-                } catch (err) {
-                    setAlertMessage(
-                        'Product could not be created. Please close and try again later'
-                    )
-                    message.push('error')
-                }
-            })
             if (!message[0].includes('error')) {
                 alert('All done!')
             }
             // Add new pallet id to Locations
             dispatch({
                 type: 'addNewPalletToLocations',
-                data: newPalletId
+                data: newPallet.pallet_id
             })
             // Close the addPallet option
             dispatch({
