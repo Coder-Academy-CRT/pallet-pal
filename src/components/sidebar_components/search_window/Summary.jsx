@@ -1,9 +1,7 @@
 import React from 'react'
-import { useEffect } from 'react'
+import {} from 'react'
 
 function Summary({ summary }) {
-    useEffect(() => {}, [])
-
     if (summary) {
         return (
             <div id='summary'>
