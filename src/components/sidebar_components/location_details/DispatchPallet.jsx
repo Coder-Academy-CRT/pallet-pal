@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import api from '../../../api'
 import palletpalContext from '../../../palletpalContext'
 
-export default function DispatchOption() {
+export default function DispatchPallet() {
 	const { state: { selectedPallet }, dispatch } = useContext(palletpalContext)
 
 	// This state is for the delete button next to each product (when user want to dispatch the whole product)

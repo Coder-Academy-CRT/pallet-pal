@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import api from '../../../api';
 import palletpalContext from '../../../palletpalContext';
+import { prepLotCodes, handleAddProductAPICall } from '../../../helpers/helpers';
 
 export default function EditPallet() {
     const { state: { products, microModes, selectedPallet, lots }, dispatch } = useContext(palletpalContext)
     // keep track local change before send to db
-    const [productList, setProductList] = useState(selectedPallet.products_on_pallet)
+    const [productList, setProductList] = useState(selectedPallet.products_on_pallet.slice())
     const [newProduct, setNewProduct] = useState({
         lot_code: '',
         bag_size: '',
@@ -96,17 +97,7 @@ export default function EditPallet() {
         // declare temp lists for working
         let lotList = new Set([])
         let lotOptions = []
-
-        // get every current lot and seed and push to temp lists
-        products.forEach((element) => {
-            lotList.add(`${element.lot_code}`)
-        })
-
-        // build options lists
-        lotList.forEach((lot) => {
-            lotOptions.push({ value: lot, label: lot })
-        })
-
+        prepLotCodes(products, lotList, lotOptions)
         // set state from option lists
         setLotsData(lotOptions)
     }, [products])
@@ -115,9 +106,6 @@ export default function EditPallet() {
     const createField = () => {
         return (
             <div style={newInputWrapper}>
-                    <div>
-                        <p>- Add New Product -</p>
-                    </div>
                     <div>
                         <select
                             name="lot_code"
@@ -162,17 +150,21 @@ export default function EditPallet() {
     function handleEditChange(e) {
         const productId = e.target.parentElement.parentElement.id
         const index = productList.findIndex(product => product.product_id == productId)
-        setProductList(prevState => {
-            if (e.target.name == 'lot_code') {
-                return [...prevState, prevState[index].lot_code = e.target.value ]
-            } else if (e.target.name == 'bag_size') {
-                return [...prevState, prevState[index].bag_size = e.target.value ]
-            } else if (e.target.name == 'number_of_bags') {
-                return [...prevState, prevState[index].number_of_bags = e.target.value ]
-            } else {
-                return prevState
-            }
-        })
+        let copyOfProduct = Object.assign({}, productList[index])
+
+        if (e.target.name == 'lot_code') {
+            copyOfProduct.lot_code = e.target.value
+        } else if (e.target.name == 'bag_size') {
+            copyOfProduct.bag_size = e.target.value
+
+        } else if (e.target.name == 'number_of_bags') {
+            copyOfProduct.number_of_bags = e.target.value
+        } 
+
+        let copyOfProduct2 = [...productList]
+        copyOfProduct2[index] = copyOfProduct
+        setProductList(JSON.parse(JSON.stringify(copyOfProduct2)))
+
     }
 
     // handle user input when create new product
@@ -198,33 +190,12 @@ export default function EditPallet() {
         })
     }
 
-    async function handleAddProductAPICall() {
-        newProductList.forEach(async (product) => {
-            try {
-                const response2 = await api.post(
-                    `pallet/${selectedPallet.pallet_id}/products`, product
-                )
-                if (response2.data.hasOwnProperty('product_id')){
-                    // use response object to update Products as it should be a whole object
-                    dispatch({
-                        type: "addNewProductToProducts",
-                        data: response2.data
-                    })
-                }
-            } catch (err) {
-                alert("Product could not be created. Please close and try again later")
-            }
-        })
-    }
-
     // API call
-    async function handleEditAPICall () {
-        // Add new products to the pallet first
-            const filteredList = productList.filter(element => typeof element != 'string')
-    
-            filteredList.forEach(async (product, message) => {
+    function handleEditAPICall (message) {
+            // Add new products to the pallet first
+            productList.forEach(async (product) => {
                 // Find the new seed type and seed variety after user change the lot code
-                const seedData = lotsData.filter(lot => lot.lot_code == product.lot_code)
+                const seedData = lots.filter(lot => lot.lot_code == product.lot_code)
     
                 try {
                     const response = await api.put(
@@ -239,12 +210,14 @@ export default function EditPallet() {
                                 type: 'editProductsAfterEdit',
                                 payload: { product: product, product_id: product.product_id, seed_type: seedData[0].seed_type, seed_variety: seedData[0].seed_variety }
                             })
+                            message.push('success')
                         }
                 } catch (err) {
                     alert("Product could not be updated. Please close and try again later")
+                    message.push('error')
+
                 }
             })
-
     }
 
     // handle when user delete individual product before they click confirm
@@ -256,20 +229,27 @@ export default function EditPallet() {
 
     // confirm button
     const handleSubmit = (e) => {
+        const message = []
         e.preventDefault()
-        confirm("Confirm?")
-        if (confirm) {
+        const resolved = confirm("Confirm?")
+        if (resolved) {
             if (newProductList.length != 0) {
-                handleAddProductAPICall()
+                handleAddProductAPICall(newProductList, selectedPallet, dispatch, api, message)
             }
-            handleEditAPICall()
+            handleEditAPICall(message)
             // Close edit box
             dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
+        } else {
+            dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
+        }
+        if (!message.includes('error')) {
+            alert('Pallet has been updated')
         }
     }
 
 	// Cancel button
-	const handleClose = () => {
+	const handleClose = (e) => {
+        e.preventDefault()
         dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
 	}
 
@@ -338,7 +318,7 @@ export default function EditPallet() {
                                         <button style={smlBtn} type="button" onClick={handleRemove}>x</button>
                                     </div>
                                 ))}
-                                {createField()}
+                                {createField ()}
                             </div>
                     ) : createField()}
                     </div>
