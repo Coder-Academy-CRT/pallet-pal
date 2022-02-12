@@ -4,14 +4,13 @@ import CustomSelect from './CustomSelect'
 import Summary from './Summary'
 
 function SearchWindow() {
-    const [active, setActive] = useState(true)
     const [seeds, setSeeds] = useState([])
     const [lots, setLots] = useState([])
     const [options, setOptions] = useState(null)
     const [summary, setSummary] = useState(null)
     const {
         dispatch,
-        state: { products, foundPallets, microModes }
+        state: { products, microModes }
     } = useContext(palletpalContext)
 
     useEffect(() => {
@@ -42,21 +41,8 @@ function SearchWindow() {
         setLots(lotOptions)
     }, [products])
 
-    function setOff() {
-        setActive(false)
-        // clear search results
-        dispatch({
-            type: 'setFoundPallets',
-            data: []
-        })
-        // update micromode
-        dispatch({
-            type: 'toggleMicroMode',
-            data: 'SearchWindow'
-        })
-    }
-
     function search(event) {
+        setSummary(null)
         const searchValue = event.target.value
         let bags = 0
         let totalWeight = 0
@@ -84,34 +70,44 @@ function SearchWindow() {
         })
     }
 
+    function handleLotsClick() {
+        setOptions(lots)
+        setSummary(null)
+        dispatch({
+            type: 'setFoundPallets',
+            data: []
+        })
+    }
+
     // only render while active
     if (microModes.SearchWindow) {
         return (
             <div id='searchWindow'>
-                <h3>Search</h3>
-                <section id='searchModes'>
-                    <button
-                        className='searchOption'
-                        onClick={() => {
-                            setOptions(lots)
-                        }}>
-                        LOTS
-                    </button>
-                    <button
-                        className='searchOption'
-                        onClick={() => {
-                            setOptions(seeds)
-                        }}>
-                        SEEDS
-                    </button>
+                <h2>Search</h2>
+                <section id='searchContainer'>
+                    <section id='searchModes'>
+                        <button
+                            className={options == lots ? 'active' : ''}
+                            onClick={() => handleLotsClick()}>
+                            LOTS
+                        </button>
+                        <button
+                            className={options == seeds ? 'active' : ''}
+                            onClick={() => {
+                                setOptions(seeds)
+                                setSummary(null)
+                            }}>
+                            SEEDS
+                        </button>
+                    </section>
+                    <CustomSelect
+                        options={options}
+                        name='searchDropdown'
+                        watching={options}
+                        change={(e) => search(e)}
+                    />
+                    <Summary summary={summary} />
                 </section>
-                <CustomSelect
-                    options={options}
-                    name='searchDropdown'
-                    watching={options}
-                    change={(e) => search(e)}
-                />
-                <Summary summary={summary} />
             </div>
         )
     } else {

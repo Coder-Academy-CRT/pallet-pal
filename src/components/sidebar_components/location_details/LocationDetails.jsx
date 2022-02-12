@@ -6,9 +6,10 @@ import { useEffect } from 'react'
 
 function LocationDetails() {
     const {
-        state: { clickedLocation, microModes },
+        state: { clickedLocation, microModes, lots },
         dispatch
     } = useContext(palletpalContext)
+    console.log(lots)
     // if location changes, reset add pallet mode
     useEffect(() => {
         if (microModes.AddPallet) {

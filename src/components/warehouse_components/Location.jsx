@@ -13,7 +13,6 @@ function Location({ details }) {
             foundPallets,
             availableLocations,
             moveFromLocation,
-            moveToLocation,
             movingPalletId,
             clickedLocation
         },
@@ -37,7 +36,6 @@ function Location({ details }) {
                 setClasses([...classes, 'found'])
             }
         })
-
         // Light up available locations during 'Move' mode
         if (
             microModes.Move &&
@@ -121,6 +119,7 @@ function Location({ details }) {
                                         `pallet #${movingPalletId} moved to location ${details.coordinates}` &&
                                     locationsResponse.status == 200
                                 ) {
+                                    console.log(moveResponse.data)
                                     dispatch({
                                         type: 'setLocationData',
                                         data: {
@@ -133,16 +132,9 @@ function Location({ details }) {
                                     setLoading(false)
                                 } else {
                                     setLoading(false)
+                                    console.log('pallet not moved')
                                 }
 
-                                // dispatch({
-                                //     type: 'movePallet',
-                                //     data: {
-                                //         palletId: movingPalletId,
-                                //         moveFromLocation: moveFromLocation,
-                                //         moveToLocation: details.coordinates
-                                //     }
-                                // })
                                 alert('Pallet has been moved.')
                                 dispatch({
                                     type: 'setMicroMode',
