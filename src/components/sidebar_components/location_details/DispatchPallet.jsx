@@ -175,6 +175,10 @@ export default function DispatchPallet() {
 				type: 'setSelectedPallet',
 				data: ''
 			})
+			dispatch({
+				type: 'updateClickedLocation',
+				data: selectedPallet.pallet_id
+			})
 		}
 		dispatch({ type: 'setMicroMode', data: { mode: 'Dispatch', bool: false } })
 	}

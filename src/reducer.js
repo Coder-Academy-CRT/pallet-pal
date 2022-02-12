@@ -2,7 +2,6 @@ export default function reducer(state, action) {
     switch (action.type) {
         // edited this for dynamic rows and columns note it requires MORE than just locations
         case 'setLocationData':
-            console.log(action.data)
             let final_list = []
 
             // push a list for every row where the y coord matches the loop counter
@@ -94,9 +93,9 @@ export default function reducer(state, action) {
             // Remove pallet_id from corresponding location
             state.locations.forEach((row) => {
                 row.forEach((location) => {
-                    if (location.pallets_on_location.includes(action.data)) {
+                    if (location.pallets_on_location.includes(action.data.palletId)) {
                         const i = location.pallets_on_location.indexOf(
-                            action.data
+                            action.data.palletId
                         )
                         location.pallets_on_location.splice(i, 1)
                     }
@@ -104,16 +103,19 @@ export default function reducer(state, action) {
             })
             // Add pallet_id back to corresponding location
             state.locations.forEach((row) => {
+                console.log(row)
                 row.forEach((location) => {
-                    if (location.coordinates == state.selectedMoveLocation) {
+                    console.log(location)    
+                    console.log(state.selectedMoveLocation)                
+                    if (location.coordinates == action.data.coord) {
                         if (location.pallets_on_location[0] == null) {
                             location.pallets_on_location.splice(
                                 0,
                                 1,
-                                action.data
+                                action.data.palletId
                             )
                         } else {
-                            location.pallets_on_location.push(action.data)
+                            location.pallets_on_location.push(action.data.palletId)
                         }
                     }
                 })
@@ -222,43 +224,43 @@ export default function reducer(state, action) {
                 locations: updatedLocations
             }
 
-        case 'movePallet':
-            // payload = {
-            //     palletId: '1',
-            //     moveFromLocation: '00_01',
-            //     moveToLocation: '00_03'
-            // }
-            const newLocations = [...state.locations]
-            // helper function
-            const parseCoords = (string) => {
-                return string.split('_')
-            }
-            // UPDATE LOCATIONS
-            // get coords for location indexing
-            const [fx, fy] = parseCoords(action.data.moveFromLocation)
-            const [tx, ty] = parseCoords(action.data.moveToLocation)
-            // get location object from coords
-            const fromLocation = newLocations[Number(fy)][Number(fx)]
-            const toLocation = newLocations[Number(ty)][Number(tx)]
-            console.log(toLocation.pallets_on_location)
-            // remove pallet from fromLocation - get index - splice out
-            const palletIdIndex = fromLocation.pallets_on_location.indexOf(
-                action.data.palletId
-            )
-            fromLocation.pallets_on_location.splice(palletIdIndex, 1)
-            // push palletId to new location - the toLocation
-            toLocation.pallets_on_location[0]
-                ? toLocation.pallets_on_location.push(action.data.palletId)
-                : (toLocation.pallets_on_location = [action.data.palletId])
+        // case 'movePallet':
+        //     // payload = {
+        //     //     palletId: '1',
+        //     //     moveFromLocation: '00_01',
+        //     //     moveToLocation: '00_03'
+        //     // }
+        //     const newLocations = [...state.locations]
+        //     // helper function
+        //     const parseCoords = (string) => {
+        //         return string.split('_')
+        //     }
+        //     // UPDATE LOCATIONS
+        //     // get coords for location indexing
+        //     const [fx, fy] = parseCoords(action.data.moveFromLocation)
+        //     const [tx, ty] = parseCoords(action.data.moveToLocation)
+        //     // get location object from coords
+        //     const fromLocation = newLocations[Number(fy)][Number(fx)]
+        //     const toLocation = newLocations[Number(ty)][Number(tx)]
+        //     console.log(toLocation.pallets_on_location)
+        //     // remove pallet from fromLocation - get index - splice out
+        //     const palletIdIndex = fromLocation.pallets_on_location.indexOf(
+        //         action.data.palletId
+        //     )
+        //     fromLocation.pallets_on_location.splice(palletIdIndex, 1)
+        //     // push palletId to new location - the toLocation
+        //     toLocation.pallets_on_location[0]
+        //         ? toLocation.pallets_on_location.push(action.data.palletId)
+        //         : (toLocation.pallets_on_location = [action.data.palletId])
 
-            const newProducts = [...state.products]
-            //UPDATE PRODUCTS LOCATIONS
-            // for every product if pallet id matches moved pallet - update coordinates
-            newProducts.forEach((product) =>
-                product.pallet_id == action.data.palletId
-                    ? (product.coordinates = action.data.moveToLocation)
-                    : null
-            )
+        //     const newProducts = [...state.products]
+        //     //UPDATE PRODUCTS LOCATIONS
+        //     // for every product if pallet id matches moved pallet - update coordinates
+        //     newProducts.forEach((product) =>
+        //         product.pallet_id == action.data.palletId
+        //             ? (product.coordinates = action.data.moveToLocation)
+        //             : null
+        //     )
 
             return { ...state, locations: newLocations, products: newProducts }
 
@@ -273,6 +275,14 @@ export default function reducer(state, action) {
                         location.pallets_on_location.splice(i, 1)
                     }
                 })
+            })
+            return { ...state }
+
+        case 'updateClickedLocation' :
+            state.clickedLocation.pallets_on_location.forEach((pallet, index) => {
+                if(pallet == action.data) {
+                    state.clickedLocation.pallets_on_location.splice(index, 1)
+                }
             })
             return { ...state }
 

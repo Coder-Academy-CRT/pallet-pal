@@ -58,7 +58,7 @@ function LandingPage() {
             <button
                 id='newWarehouseButton'
                 // set rows cols to 4, 4 but this can be altered without breaking new warehouse
-                onClick={() => buildNewWarehouse(8, 5)}>
+                onClick={() => buildNewWarehouse(5, 5)}>
                 build new warehouse
             </button>
         </div>

@@ -310,6 +310,7 @@ $lot-alert-color: rgb(255, 150, 150);
             justify-content: space-between; // enabled again for regex alert space
 
             #instructions {
+                font-size: small;
                 background-color: $mandarin;
                 padding: 1rem;
                 border-radius: 0.5rem;
@@ -319,6 +320,7 @@ $lot-alert-color: rgb(255, 150, 150);
                     padding: 0px 0px 5px 15px;
 
                     li {
+                        list-style-type: circle;
                         padding: 0px 0px 5px 0px;
                     }
                 }
