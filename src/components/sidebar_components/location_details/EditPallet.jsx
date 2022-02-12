@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import api from '../../../api';
 import palletpalContext from '../../../palletpalContext';
+import { prepLotCodes, handleAddProductAPICall } from '../../../helpers/helpers';
 
 export default function EditPallet() {
     const { state: { products, microModes, selectedPallet, lots }, dispatch } = useContext(palletpalContext)
@@ -96,17 +97,7 @@ export default function EditPallet() {
         // declare temp lists for working
         let lotList = new Set([])
         let lotOptions = []
-
-        // get every current lot and seed and push to temp lists
-        products.forEach((element) => {
-            lotList.add(`${element.lot_code}`)
-        })
-
-        // build options lists
-        lotList.forEach((lot) => {
-            lotOptions.push({ value: lot, label: lot })
-        })
-
+        prepLotCodes(products, lotList, lotOptions)
         // set state from option lists
         setLotsData(lotOptions)
     }, [products])
@@ -115,9 +106,6 @@ export default function EditPallet() {
     const createField = () => {
         return (
             <div style={newInputWrapper}>
-                    <div>
-                        <p>- Add New Product -</p>
-                    </div>
                     <div>
                         <select
                             name="lot_code"
@@ -202,27 +190,8 @@ export default function EditPallet() {
         })
     }
 
-    function handleAddProductAPICall() {
-        newProductList.forEach(async (product) => {
-            try {
-                const response2 = await api.post(
-                    `pallet/${selectedPallet.pallet_id}/products`, product
-                )
-                if (response2.data.hasOwnProperty('product_id')){
-                    // use response object to update Products as it should be a whole object
-                    dispatch({
-                        type: "addNewProductToProducts",
-                        data: response2.data
-                    })
-                }
-            } catch (err) {
-                alert("Product could not be created. Please close and try again later")
-            }
-        })
-    }
-
     // API call
-    function handleEditAPICall () {
+    function handleEditAPICall (message) {
             // Add new products to the pallet first
             productList.forEach(async (product) => {
                 // Find the new seed type and seed variety after user change the lot code
@@ -241,9 +210,12 @@ export default function EditPallet() {
                                 type: 'editProductsAfterEdit',
                                 payload: { product: product, product_id: product.product_id, seed_type: seedData[0].seed_type, seed_variety: seedData[0].seed_variety }
                             })
+                            message.push('success')
                         }
                 } catch (err) {
                     alert("Product could not be updated. Please close and try again later")
+                    message.push('error')
+
                 }
             })
     }
@@ -257,17 +229,21 @@ export default function EditPallet() {
 
     // confirm button
     const handleSubmit = (e) => {
+        const message = []
         e.preventDefault()
         const resolved = confirm("Confirm?")
         if (resolved) {
             if (newProductList.length != 0) {
-                handleAddProductAPICall()
+                handleAddProductAPICall(newProductList, selectedPallet, dispatch, api, message)
             }
-            handleEditAPICall()
+            handleEditAPICall(message)
             // Close edit box
             dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
         } else {
             dispatch({ type: 'setMicroMode', data: { mode: 'Edit', bool: false } })
+        }
+        if (!message.includes('error')) {
+            alert('Pallet has been updated')
         }
     }
 
@@ -342,7 +318,7 @@ export default function EditPallet() {
                                         <button style={smlBtn} type="button" onClick={handleRemove}>x</button>
                                     </div>
                                 ))}
-                                {createField()}
+                                {createField ()}
                             </div>
                     ) : createField()}
                     </div>
