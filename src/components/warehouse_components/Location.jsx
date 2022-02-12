@@ -35,8 +35,7 @@ function Location({ details }) {
             if (foundPallets.includes(palletId)) {
                 setClasses([...classes, 'found'])
             }
-        }) in you
-
+        })
         // Light up available locations during 'Move' mode
         if (
             microModes.Move &&
