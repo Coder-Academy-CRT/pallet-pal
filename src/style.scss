@@ -306,7 +306,7 @@ $lot-alert-color: rgb(255, 150, 150);
             flex-direction: column;
             background-color: $white;
             align-items: center;
-            // justify-content: space-evenly;
+            justify-content: space-between; // enabled again for regex alert space
 
             #instructions {
                 background-color: $mandarin;
@@ -314,9 +314,27 @@ $lot-alert-color: rgb(255, 150, 150);
                 border-radius: 0.5rem;
                 color: $space-cadet;
 
+                // build warehouse sidebar, instructions paragraph
+                p {
+                    
+                }
+
+                ul { 
+                    padding: 0px 0px 5px 15px;
+
+                    li {
+                        padding: 0px 0px 5px 0px;
+                    }
+                }
+
                 h1 {
                     color: $white;
                 }
+            }
+
+            section > #regexAlertPara {
+                padding: 5px;
+                color: red
             }
 
             #buildActions {
