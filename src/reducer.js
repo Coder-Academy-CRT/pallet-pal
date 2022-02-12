@@ -61,9 +61,8 @@ export default function reducer(state, action) {
                 seeds: action.data
             }
 
-        // ****NOTE**** returning and empty object {} is still truthy and thus you can not do ternary on it. Must return null if no location clicked.
         case 'setClickedLocation':
-            let foundLocation = null // << changed this to null.
+            let foundLocation = null
             state.locations.flat(1).forEach((location) => {
                 if (location.coordinates == action.data) {
                     foundLocation = location
@@ -109,11 +108,7 @@ export default function reducer(state, action) {
                     console.log(state.selectedMoveLocation)                
                     if (location.coordinates == action.data.coord) {
                         if (location.pallets_on_location[0] == null) {
-                            location.pallets_on_location.splice(
-                                0,
-                                1,
-                                action.data.palletId
-                            )
+                            location.pallets_on_location.splice(0, 1, action.data.palletId)
                         } else {
                             location.pallets_on_location.push(action.data.palletId)
                         }
@@ -162,7 +157,6 @@ export default function reducer(state, action) {
                 ...state, 
                 products: filteredProducts
             }
-            
             
         case 'updatePalletDataAfterDispatch':
             return {
@@ -262,7 +256,7 @@ export default function reducer(state, action) {
         //             : null
         //     )
 
-            return { ...state, locations: newLocations, products: newProducts }
+            // return { ...state, locations: newLocations, products: newProducts }
 
         case 'removePalletFromLocation':
             // Remove pallet_id from corresponding location
