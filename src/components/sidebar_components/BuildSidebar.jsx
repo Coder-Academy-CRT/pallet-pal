@@ -9,32 +9,27 @@ function BuildSidebar() {
     } = useContext(palletpalContext)
 
     const [warehouseName, setWarehouseName] = useState('')
-    const [regexAlert, setRegexAlert] = useState("")
+    const [regexAlert, setRegexAlert] = useState('')
 
     function checkWarehouseName(warehouseName) {
-
         const regex1 = /^[a-z]+.*$/i
         const regex2 = /^.{3,30}$/
         const regex3 = /^[\w#@&\.\- ]*$/
-        
+
         const startTest = regex1.test(warehouseName)
         const lengthTest = regex2.test(warehouseName)
         const characterTest = regex3.test(warehouseName)
-        
+
         if (startTest && lengthTest && characterTest) {
-          return "Pass"
-        }
-        else if (!startTest) {
-          return "Warehouse name must begin with a letter"
-        }
-        else if (!lengthTest) {
-          return "Please ensure length of warehouse name is between 3 - 30 characters"
-        }
-        else {
-          return "Please use only letters, numbers, and symbols @, &, #. Full stops and hyphens are acceptable, as are spaces."
+            return 'Pass'
+        } else if (!startTest) {
+            return 'Warehouse name must begin with a letter'
+        } else if (!lengthTest) {
+            return 'Please ensure length of warehouse name is between 3 - 30 characters'
+        } else {
+            return 'Please use only letters, numbers, and symbols @, &, #. Full stops and hyphens are acceptable, as are spaces.'
         }
     }
-
 
     function validateWarehouseName(string) {
         if (Object.keys(warehouseList).includes(string)) {
@@ -83,10 +78,9 @@ function BuildSidebar() {
     }
 
     async function saveWarehouse(whName) {
-        // regex validation 
+        // regex validation
         let regexTest = checkWarehouseName(whName)
-        if (regexTest == "Pass") {
-
+        if (regexTest == 'Pass') {
             // check if warehouse name is already taken
             if (!validateWarehouseName(whName)) {
                 alert('Warehouse name already exists choose another')
@@ -138,6 +132,10 @@ function BuildSidebar() {
                             type: 'setTempWarehouse',
                             data: null
                         })
+                        // this bandaid to be fixed later
+                        setInterval(() => {
+                            console.log('waiting')
+                        }, 1000)
                         // set to main mode which will load this new wh
                         dispatch({
                             type: 'setMetaMode',
@@ -147,7 +145,6 @@ function BuildSidebar() {
                     }
                 }
             }
-        
         } else {
             setRegexAlert(regexTest)
         }
@@ -155,9 +152,10 @@ function BuildSidebar() {
 
     function handleChange(event) {
         setWarehouseName(event.target.value)
-        if (checkWarehouseName(event.target.value) != regexAlert) { // state warehouse has delay, so use target
+        if (checkWarehouseName(event.target.value) != regexAlert) {
+            // state warehouse has delay, so use target
             setRegexAlert('') // when warehouse name input value changes away from that regex block, resets and removes the alert
-        }  
+        }
     }
 
     function handleSubmit(e) {
@@ -172,9 +170,9 @@ function BuildSidebar() {
                 <h1>Instructions</h1>
                 <p>
                     <br></br>
-                    This grid represents your floor space, each being slightly larger than a pallet. 
-                    x1 click changes to allocated storage, x2 clicks to inaccessible spaces, 
-                    & the third click starts over with spare floor.
+                    This grid represents your floor space, each being slightly
+                    larger than a pallet. Toggle through the types shown below
+                    by clicking locations.
                     <br></br>
                     <br></br>
                     When choosing a name:
@@ -185,19 +183,20 @@ function BuildSidebar() {
                         it must begin with a letter & be between 3-30 characters
                     </li>
                     <li>
-                        it can include numbers, spaces, underscores or the following symbols "@, &, #"
+                        it can include numbers, spaces, underscores or the
+                        following symbols "@, &, #"
                     </li>
                     <li>
                         full stops and hyphens are acceptable, as are spaces
                     </li>
-                </ul>        
+                </ul>
             </section>
 
-            { regexAlert ?
+            {regexAlert ? (
                 <section>
-                    <p id='regexAlertPara'>{ regexAlert }</p>
+                    <p id='regexAlertPara'>{regexAlert}</p>
                 </section>
-            : 
+            ) : (
                 <section id='legend'>
                     <div className='spare_floor legendBox'>spare floor</div>
                     <div className='allocated_storage legendBox'>
@@ -205,7 +204,7 @@ function BuildSidebar() {
                     </div>
                     <div className='inaccessible legendBox'>inaccessible</div>
                 </section>
-            }
+            )}
 
             <section id='buildActions'>
                 <h1>Warehouse Name:</h1>
@@ -220,9 +219,8 @@ function BuildSidebar() {
                     />
                     <input type='submit' value='save warehouse' id='whSubmit' />
                 </form>
-                <button onClick={testLocationRequest}>test location req</button>
+                {/* <button onClick={testLocationRequest}>test location req</button> */}
             </section>
-            
         </div>
     )
 }

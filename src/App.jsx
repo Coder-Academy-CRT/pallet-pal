@@ -97,7 +97,8 @@ export default function App() {
             <palletpalContext.Provider value={{ state, dispatch }}>
                 <LandingPage />
             </palletpalContext.Provider>
-        ) : (
+        ) 
+        : (
             <h1 style={{ padding: '100px', color: 'green', fontSize: '3em' }}>
                 Loading Warehouse List....
             </h1>

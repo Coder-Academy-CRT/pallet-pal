@@ -14,18 +14,9 @@ $independence: #4f5d75ff;
 $silver: #bfc0c0ff;
 $white: #ffffffff;
 $mandarin: #ef8354ff;
+$mandarin-highlight: rgb(255, 160, 120);
 
-$dark-accent: chocolate;
-$bright-accent: orange;
-$light: lightgray;
-$mid: gray;
-$dark: lightslategray;
-$darkest: darkslategray;
-$mostdarkest: rgb(12, 11, 15);
-$highlight: turquoise;
-$button-pale: rgb(255, 233, 215);
 $lot-card-edit-buttons: rgb(255, 184, 125);
-// $edit-lot-card-height: 375px;
 $lot-alert-color: rgb(255, 150, 150);
 
 @mixin round-button-1 {
@@ -39,7 +30,7 @@ $lot-alert-color: rgb(255, 150, 150);
     font-weight: 200;
     cursor: pointer;
     border-radius: 0.5rem;
-    border: 1px solid rgb(255, 160, 120);
+    border: 1px solid $mandarin-highlight;
     transition-duration: 0.5s;
 
     &:hover {
@@ -101,9 +92,8 @@ $lot-alert-color: rgb(255, 150, 150);
     height: 100vh;
 
     > * .found {
-        background-color: $white;
-        z-index: 2;
-        border: 2px solid $mandarin;
+        z-index: 1;
+        background: linear-gradient(90deg, $mandarin-highlight 0%, $white 100%);
     }
 
     > #landingPage {
@@ -143,7 +133,7 @@ $lot-alert-color: rgb(255, 150, 150);
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 0.5rem;
-            border: 1px solid rgb(255, 160, 120);
+            border: 1px solid $mandarin-highlight;
             transition-duration: 0.5s;
 
             &:hover {
@@ -236,7 +226,7 @@ $lot-alert-color: rgb(255, 150, 150);
 
             > .palletBox {
                 background-color: $mandarin;
-                border: 1px solid rgb(255, 160, 120);
+                border: 1px solid $mandarin-highlight;
                 margin-top: 1px;
                 padding: 2px;
                 height: 25%;
@@ -251,6 +241,16 @@ $lot-alert-color: rgb(255, 150, 150);
         display: flex;
         flex-direction: column;
         background-color: $space-cadet;
+
+        #welcome {
+            text-align: center;
+            font-weight: 200;
+            font-size: larger;
+            color: $white;
+            margin: 1rem;
+            position: relative;
+            top: 40%;
+        }
 
         #warehouseName {
             margin-right: 1rem;
@@ -289,7 +289,7 @@ $lot-alert-color: rgb(255, 150, 150);
                 &.active {
                     filter: drop-shadow(0 0 0.1rem $white);
                     border-radius: 0;
-                    border: 1px solid rgb(255, 160, 120);
+                    border: 1px solid $mandarin-highlight;
                     background-color: $mandarin;
                 }
 
@@ -306,23 +306,21 @@ $lot-alert-color: rgb(255, 150, 150);
             flex-direction: column;
             background-color: $white;
             align-items: center;
+            overflow-y: auto;
             justify-content: space-between; // enabled again for regex alert space
 
             #instructions {
+                font-size: small;
                 background-color: $mandarin;
                 padding: 1rem;
                 border-radius: 0.5rem;
                 color: $space-cadet;
 
-                // build warehouse sidebar, instructions paragraph
-                p {
-                    
-                }
-
-                ul { 
+                ul {
                     padding: 0px 0px 5px 15px;
 
                     li {
+                        list-style-type: circle;
                         padding: 0px 0px 5px 0px;
                     }
                 }
@@ -334,7 +332,7 @@ $lot-alert-color: rgb(255, 150, 150);
 
             section > #regexAlertPara {
                 padding: 5px;
-                color: red
+                color: red;
             }
 
             #buildActions {
@@ -380,7 +378,7 @@ $lot-alert-color: rgb(255, 150, 150);
                         margin-top: 1rem;
                         cursor: pointer;
                         border-radius: 0.5rem;
-                        border: 1px solid rgb(255, 160, 120);
+                        border: 1px solid $mandarin-highlight;
                         transition-duration: 0.5s;
 
                         &:hover {
@@ -395,6 +393,7 @@ $lot-alert-color: rgb(255, 150, 150);
                 flex: 1;
                 display: flex;
                 justify-content: center;
+                font-size: vh;
                 padding: 1rem;
                 margin: 2px;
             }
@@ -420,13 +419,14 @@ $lot-alert-color: rgb(255, 150, 150);
                 justify-content: space-between;
 
                 h2 {
-                    color: $independence;
+                    color: $space-cadet;
                     padding: 0.5rem;
                 }
                 p {
                     padding-right: 0.25rem;
                     font-size: 1em;
                     color: $space-cadet;
+                    text-align: right;
                 }
                 button {
                     border: none;
@@ -441,7 +441,7 @@ $lot-alert-color: rgb(255, 150, 150);
                     font-style: normal;
                     font-weight: 600;
                     color: white;
-                    align-content: center;
+                    justify-content: center;
                 }
             }
 
@@ -449,41 +449,113 @@ $lot-alert-color: rgb(255, 150, 150);
                 display: flex;
                 flex-direction: column;
                 flex: 5;
-                gap: 1px;
                 overflow-y: auto;
                 background-color: $independence;
 
                 > .palletCard {
-                    padding: 5px;
-                    gap: 1px;
+                    display: flex;
+                    gap: 3px;
                     flex-direction: column;
                     background-color: $mandarin;
+                    border-top: 1px solid $space-cadet;
 
                     span {
+                        margin-left: 0.2rem;
                         color: $white;
                         font-weight: 400;
                         font-size: 1rem;
                     }
 
                     > .productCard {
-                        flex: 1;
-                        // margin-top: 1px;
+                        display: flex;
+                        justify-content: space-between;
+                        color: $space-cadet;
+                        font-size: smaller;
+                        border-bottom: 1px solid $mandarin-highlight;
+                        .details {
+                            p {
+                                margin-left: 10px;
+                            }
+                        }
+
+                        h3 {
+                            margin-right: 0.5rem;
+                        }
                     }
                 }
                 > .found {
-                    background-color: $white;
-                    border: none;
+                    z-index: 1;
+                    display: flex;
+                    background-color: $mandarin-highlight;
+                    border: 2px solid $mandarin;
+                    background: linear-gradient(
+                        90deg,
+                        $mandarin-highlight 0%,
+                        $white 100%
+                    );
                     color: $space-cadet;
                 }
             }
         }
 
         > #searchWindow {
+            border-radius: 0.5rem;
             margin-left: 0.5rem;
             margin-right: 0.5rem;
+            min-height: fit-content;
             display: flex;
             flex-direction: column;
-            background-color: $highlight;
+            background: linear-gradient(
+                90deg,
+                $mandarin-highlight 0%,
+                $white 100%
+            );
+            overflow: hidden;
+
+            h2 {
+                color: $white;
+                padding: 0.5rem;
+            }
+
+            #searchContainer {
+                display: flex;
+                flex-direction: column;
+                padding: 0.5rem;
+                gap: 0.5rem;
+
+                #searchModes {
+                    display: flex;
+                    justify-content: space-evenly;
+                    gap: 0.5rem;
+
+                    button {
+                        @include round-button-1;
+                        background-color: $space-cadet;
+                        border: 1px solid white;
+                        transition-duration: 1s;
+
+                        &.active {
+                            background-color: $independence;
+                            transform: translate(0px, -5px);
+                            filter: drop-shadow(
+                                0.1rem 0.1rem 0.2rem $space-cadet
+                            );
+                        }
+                    }
+                }
+
+                #searchDropdown {
+                    padding: 0.2rem;
+                    @include lotInputs();
+                    border-radius: 0.5rem;
+                    background-color: $white;
+                    font-size: smaller;
+                }
+
+                #summary {
+                    color: $space-cadet;
+                }
+            }
         }
 
         @import './lotManagement';
