@@ -39,7 +39,9 @@ function PalletCard({ palletId, locationId }) {
     const handleClick = (e) => {
         if (
             e.target.parentElement?.classList.contains('palletCard') ||
-            e.target.parentElement?.classList.contains('productCard')
+            e.target.parentElement.parentElement?.classList.contains(
+                'productCard'
+            )
         ) {
             // manage pallet active state locally
             setOptionsActive(!optionsActive)
@@ -71,7 +73,6 @@ function PalletCard({ palletId, locationId }) {
         })
         // set the location coordinates of moveFromLocation
         dispatch({ type: 'setMoveFromLocation', data: locationId })
-        console.log(moveFromLocation)
     }
 
     function setDispatchMode() {

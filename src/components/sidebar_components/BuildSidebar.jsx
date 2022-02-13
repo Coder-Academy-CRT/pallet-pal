@@ -115,17 +115,20 @@ function BuildSidebar() {
                         alert('warehouse locations failed to update')
                     } else {
                         // locations saved to database update state
-                        const newWarehouse = { ...tempWarehouse }
-                        newWarehouse.id = whResponse.data.id
+                        const newWarehouse = {
+                            ...tempWarehouse,
+                            id: whResponse.data.id,
+                            name: whName
+                        }
                         // add warehouse to global list of warehouses
                         dispatch({
                             type: 'addWarehouse',
-                            data: { newWarehouse }
+                            data: newWarehouse
                         })
                         // set global warehouse to new warehouse
                         dispatch({
                             type: 'setWarehouse',
-                            data: { newWarehouse }
+                            data: newWarehouse
                         })
                         // set temp warehouse to null to force warehouse build instead of temp warehouse in Warehouse.jsx
                         dispatch({
@@ -133,9 +136,6 @@ function BuildSidebar() {
                             data: null
                         })
                         // this bandaid to be fixed later
-                        setInterval(() => {
-                            console.log('waiting')
-                        }, 1000)
                         // set to main mode which will load this new wh
                         dispatch({
                             type: 'setMetaMode',
