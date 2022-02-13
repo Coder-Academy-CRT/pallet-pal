@@ -11,12 +11,12 @@ function LocationDetails() {
     } = useContext(palletpalContext)
     // if location changes, reset add pallet mode
     useEffect(() => {
-        if (microModes.AddPallet) {
-            dispatch({
-                type: 'setMicroMode',
-                data: { mode: 'AddPallet', bool: false }
-            })
-        }
+        // if (microModes.AddPallet) {
+        //     dispatch({
+        //         type: 'setMicroMode',
+        //         data: { mode: 'AddPallet', bool: false }
+        //     })
+        // }
     }, [clickedLocation])
     // prepare pallet cards
     const palletCards = []
