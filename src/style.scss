@@ -122,6 +122,22 @@ $lot-alert-color: rgb(255, 150, 150);
             }
         }
 
+        #developedBy {
+            position: fixed;
+            bottom: 0;
+            margin-bottom: 1rem;
+            color: $independence;
+            max-height: 4rem;
+
+            p {
+                text-align: center;
+            }
+            a {
+                padding: 0.1rem;
+                color: $independence;
+            }
+        }
+
         > #newWarehouseButton {
             background-color: $mandarin;
             border: none;
