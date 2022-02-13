@@ -64,9 +64,8 @@ export default function reducer(state, action) {
                 seeds: action.data
             }
 
-        // ****NOTE**** returning and empty object {} is still truthy and thus you can not do ternary on it. Must return null if no location clicked.
         case 'setClickedLocation':
-            let foundLocation = null // << changed this to null.
+            let foundLocation = null
             state.locations.flat(1).forEach((location) => {
                 if (location.coordinates == action.data) {
                     foundLocation = location
@@ -110,14 +109,10 @@ export default function reducer(state, action) {
             })
             // Add pallet_id back to corresponding location
             state.locations.forEach((row) => {
-                row.forEach((location) => {
+                row.forEach((location) => {               
                     if (location.coordinates == action.data.coord) {
                         if (location.pallets_on_location[0] == null) {
-                            location.pallets_on_location.splice(
-                                0,
-                                1,
-                                action.data.palletId
-                            )
+                            location.pallets_on_location.splice(0, 1, action.data.palletId)
                         } else {
                             location.pallets_on_location.push(
                                 action.data.palletId
@@ -229,46 +224,6 @@ export default function reducer(state, action) {
                 ...state,
                 locations: updatedLocations
             }
-
-            // case 'movePallet':
-            //     // payload = {
-            //     //     palletId: '1',
-            //     //     moveFromLocation: '00_01',
-            //     //     moveToLocation: '00_03'
-            //     // }
-            //     const newLocations = [...state.locations]
-            //     // helper function
-            //     const parseCoords = (string) => {
-            //         return string.split('_')
-            //     }
-            //     // UPDATE LOCATIONS
-            //     // get coords for location indexing
-            //     const [fx, fy] = parseCoords(action.data.moveFromLocation)
-            //     const [tx, ty] = parseCoords(action.data.moveToLocation)
-            //     // get location object from coords
-            //     const fromLocation = newLocations[Number(fy)][Number(fx)]
-            //     const toLocation = newLocations[Number(ty)][Number(tx)]
-            //     console.log(toLocation.pallets_on_location)
-            //     // remove pallet from fromLocation - get index - splice out
-            //     const palletIdIndex = fromLocation.pallets_on_location.indexOf(
-            //         action.data.palletId
-            //     )
-            //     fromLocation.pallets_on_location.splice(palletIdIndex, 1)
-            //     // push palletId to new location - the toLocation
-            //     toLocation.pallets_on_location[0]
-            //         ? toLocation.pallets_on_location.push(action.data.palletId)
-            //         : (toLocation.pallets_on_location = [action.data.palletId])
-
-            //     const newProducts = [...state.products]
-            //     //UPDATE PRODUCTS LOCATIONS
-            //     // for every product if pallet id matches moved pallet - update coordinates
-            //     newProducts.forEach((product) =>
-            //         product.pallet_id == action.data.palletId
-            //             ? (product.coordinates = action.data.moveToLocation)
-            //             : null
-            //     )
-
-            return { ...state, locations: newLocations, products: newProducts }
 
         case 'removePalletFromLocation':
             // Remove pallet_id from corresponding location
