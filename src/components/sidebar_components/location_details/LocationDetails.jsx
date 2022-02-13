@@ -6,17 +6,17 @@ import { useEffect } from 'react'
 
 function LocationDetails() {
     const {
-        state: { clickedLocation, microModes },
+        state: { clickedLocation, microModes, lots },
         dispatch
     } = useContext(palletpalContext)
     // if location changes, reset add pallet mode
     useEffect(() => {
-        if (microModes.AddPallet) {
-            dispatch({
-                type: 'setMicroMode',
-                data: { mode: 'AddPallet', bool: false }
-            })
-        }
+        // if (microModes.AddPallet) {
+        //     dispatch({
+        //         type: 'setMicroMode',
+        //         data: { mode: 'AddPallet', bool: false }
+        //     })
+        // }
     }, [clickedLocation])
     // prepare pallet cards
     const palletCards = []

@@ -1,11 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react'
 import api from '../../../api'
 import palletpalContext from '../../../palletpalContext'
-import { prepLotCodes, handleAddProductAPICall } from '../../../helpers/helpers'
 
 export default function AddPallet() {
-    const { state: { products, microModes, clickedLocation, warehouse }, dispatch } = useContext(palletpalContext)
-    const [lots, setLots] = useState([])
+    const {
+        state: { products, microModes, clickedLocation, warehouse, lots },
+        dispatch
+    } = useContext(palletpalContext)
+    const [currentLots, setCurrentLots] = useState([])
     const [newProduct, setNewProduct] = useState({
         lot_code: '',
         bag_size: '',
@@ -13,139 +15,78 @@ export default function AddPallet() {
     })
     const [newProductList, setNewProductList] = useState([])
 
-    // --------------------------------------------------- //
-    // ----------------------STYLE------------------------ //
- 
-    const cardWrapper = {
-        position: "absolute",
-        top: "calc(100vh/2 - 300px)",
-        left: "calc(100vw/2 - 500px)",
-        width: "900px",
-        height: "500px",
-        borderRadius: "10px",
-        backgroundColor: "white",
-        textAlign: "center",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: "5"
-
-    }   
-
-    const title = {
-        marginBottom: "1rem"
-    }
-
-    const instruction = {
-		background: "lightGrey",
-		width: "85%",
-		fontSize: "0.8rem",
-		marginBottom: "2rem",
-		padding: "10px 8px",
-		lineHeight: "1.5"
-	}
-
-    const inputWrapper = {
-        display: "flex",
-        alignItems: "center"
-    }
-
-    const productDiv = {
-        display: "flex",
-        justifyContent: "space-around",
-        marginTop: "5px"
-    }
-
-    const fieldDiv = {
-        width: "100%",
-        display: "flex",
-        justifyContent: "center"
-    }
-
-    const smlBtn = {
-        fontSize: "1.2rem",
-        padding: "0px 2px",
-        border: "none",
-        background: "none",
-        marginLeft: "10px"
-    }
-
-    const buttonWrapper = {
-        marginTop: "1rem"
-    }
-
-    const buttonStyle = {
-		padding: "5px 20px",
-		margin: "20px 50px"
-	}
-
-    // ----------------------STYLE------------------------ //
-    // --------------------------------------------------- //
-
     // Create drop down list for lot_code
     useEffect(() => {
-        // declare temp lists for working
-        let lotList = new Set([])
-        let lotOptions = []
-        prepLotCodes(products, lotList, lotOptions)
+        const newList = []
+        lots.forEach((lot) =>
+            newList.push({ value: lot.lot_code, label: lot.lot_code })
+        )
         // set state from option lists
-        setLots(lotOptions)
+        setCurrentLots(newList)
     }, [products])
 
     // Create dropdown list for lot code, 2x input for bag size and number of bags
     const createField = () => {
         return (
-            <div style={inputWrapper}>
-                <div>
-                    <select
-                        name="lot_code"
-                        value={newProduct.lot_code}
-                        onChange={handleChange}>
-                        <option value="" disabled>Please select lot code</option>
-                        {lots ? (
-                            <>
-                                {lots.map((element, index) => (
-                                    <option value={element.value} key={index}>
-                                        {element.label}
-                                    </option>
-                                ))}
-                            </>
-                        ) : null}
-                    </select>
-                </div>
-                <div>
-                    <input 
-                        type="number"
-                        min="0"
-                        placeholder="bag size"
-                        onChange={handleChange}
-                        name="bag_size"
-                        size="10"
-                        value={newProduct.bag_size}
-                    />
-                </div>
-                <div>
-                    <input 
-                        type="number"
-                        min="0"
-                        placeholder="num of bags"
-                        onChange={handleChange}
-                        name="number_of_bags"
-                        size="10"
-                        value={newProduct.number_of_bags}
-                    />
-                </div>
-                <button style={smlBtn} type="button" onClick={createProduct}>+</button>
+            <div className='inputWrapper'>
+                <select
+                    name='lot_code'
+                    value={newProduct.lot_code}
+                    onChange={handleChange}
+                    required='true'>
+                    <option value='' disabled>
+                        Please select lot code
+                    </option>
+                    {currentLots ? (
+                        <>
+                            {currentLots.map((element, index) => (
+                                <option value={element.value} key={index}>
+                                    {element.label}
+                                </option>
+                            ))}
+                        </>
+                    ) : null}
+                </select>
+                <input
+                    type='number'
+                    min='0'
+                    placeholder='size(kg)'
+                    onChange={handleChange}
+                    name='bag_size'
+                    size='10'
+                    value={newProduct.bag_size}
+                />
+                <input
+                    type='number'
+                    min='0'
+                    placeholder='# bags'
+                    onChange={handleChange}
+                    name='number_of_bags'
+                    size='10'
+                    value={newProduct.number_of_bags}
+                />
+                <button type='button' onClick={createProduct}>
+                    +
+                </button>
             </div>
         )
     }
 
     const createProduct = (e) => {
         e.preventDefault()
+
+        if (
+            newProduct.lot_code == '' ||
+            newProduct.bag_size == '' ||
+            newProduct.number_of_bags == ''
+        ) {
+            alert('fill all fields')
+            return
+        }
         // store the 'new' product in newProductList temporarily, and send request to db when user click 'confirm' button
         setNewProductList([...newProductList, newProduct])
         // reset input field placeholder value
+
         setNewProduct({
             lot_code: '',
             bag_size: '',
@@ -153,7 +94,7 @@ export default function AddPallet() {
         })
     }
 
-    // handle user input (includes lots_code, bag size and number of bags)
+    // handle user input (includes currentLots_code, bag size and number of bags)
     const handleChange = (e) => {
         setNewProduct((prevState) => {
             return {
@@ -174,7 +115,9 @@ export default function AddPallet() {
     // close button
     const handleClose = () => {
         if (newProductList.length != 0) {
-            const resolved = confirm('You sure? Product has not been created yet.')
+            const resolved = confirm(
+                'You sure? Product has not been created yet.'
+            )
             if (resolved) {
                 dispatch({
                     type: 'setMicroMode',
@@ -192,7 +135,8 @@ export default function AddPallet() {
     async function handleAPICall(dataArray) {
         // for pop up window when all products have been added into db successfully
         const message = []
-        let newProduct = {}
+        let newPalletId = ''
+
         // Create pallet with the first product
         try {
             const response = await api.post(
@@ -200,7 +144,8 @@ export default function AddPallet() {
                 dataArray[0]
             )
             if (response.data.hasOwnProperty('product_id')) {
-                newProduct = response.data
+                newPalletId = response.data.pallet_id
+
                 // use response object to update Products as it returns the whole object
                 dispatch({
                     type: 'addNewProductToProducts',
@@ -214,11 +159,32 @@ export default function AddPallet() {
             )
             message.push('error')
         }
+
         // Add the rest of the products to the just created pallet
         // Remove the first product as it has been created in db
         if (message[0] == 'success') {
             dataArray.splice(0, 1)
-            handleAddProductAPICall(dataArray, newProduct, dispatch, api, message)
+            dataArray.forEach(async (product) => {
+                try {
+                    const response2 = await api.post(
+                        `pallet/${newPalletId}/products`,
+                        product
+                    )
+                    if (response2.data.hasOwnProperty('product_id')) {
+                        // use response object to update Products as it should be a whole object
+                        dispatch({
+                            type: 'addNewProductToProducts',
+                            data: response2.data
+                        })
+                        message.push('success')
+                    }
+                } catch (err) {
+                    alert(
+                        'Product could not be created. Please close and try again later'
+                    )
+                    message.push('error')
+                }
+            })
 
             if (!message[0].includes('error')) {
                 alert('All done!')
@@ -226,7 +192,7 @@ export default function AddPallet() {
             // Add new pallet id to Locations
             dispatch({
                 type: 'addNewPalletToLocations',
-                data: newProduct.pallet_id
+                data: newPalletId
             })
             // Close the addPallet option
             dispatch({
@@ -282,42 +248,67 @@ export default function AddPallet() {
     }
 
     return (
-        <div style={cardWrapper}>
-            <div style={title}>
-                <h1>Create Pallet</h1>
-            </div>
-            <div style={instruction}>
-					<p>* You can add a product by selecting the lot code and enter bag size and the number of bags.</p>
-					<p>* Then click the + button to add a product.</p>
-					<p>* You can click the x button to remove the product.</p>
-                    <p>* Please click confirm to create your new pallet.</p>
-				</div>
-            <div>
-                <form>
-                    {newProductList.length != 0 ? (
+        <div className='lockout'>
+            <div id='addPallet'>
+                <header>
+                    <h1>Create Pallet</h1>
+                    <div>
+                        <p>
+                            Add products by selecting the lot code, bag size and
+                            number of bags.
+                        </p>
+                        <p>Remove unwanted items by clicking the X.</p>
+                        <p>Confirm to finalize pallet creation</p>
+                    </div>
+                </header>
+                <div>
+                    <form>
+                        {newProductList.length != 0 ? (
                             <div>
                                 {createField()}
-                                {newProductList.map((product, index) => (
-                                    <div style={productDiv} id={index} key={index}>
-                                        <div style={fieldDiv}>{product.lot_code}</div>
-                                        <div style={fieldDiv}>{product.bag_size} kg</div>
-                                        <div style={fieldDiv}>{product.number_of_bags} bags</div>
-                                        <button style={smlBtn} type="button" onClick={handleRemove}>x</button>
-                                    </div>
-                                ))}
+                                <div id='productContainer'>
+                                    {newProductList.map((product, index) => (
+                                        <div
+                                            id={index}
+                                            key={index}
+                                            className='productField'>
+                                            <div className='info'>
+                                                {product.lot_code}
+                                            </div>
+                                            <div className='info'>
+                                                {product.bag_size} kg
+                                            </div>
+                                            <div className='info'>
+                                                {product.number_of_bags} bags
+                                            </div>
+                                            <button
+                                                type='button'
+                                                onClick={handleRemove}>
+                                                x
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                    ) : createField()}
-                    {newProductList.length != 0 ? (
-                        <div style={buttonWrapper}>
-                            <button style={buttonStyle} type="button" onClick={handleClose}>Cancel</button>
-                            <button style={buttonStyle} onClick={handleSubmit}>Confirm</button>
-                        </div>
-                    ) : (
-                        <div style={buttonWrapper}>
-                            <button style={buttonStyle} type="button" onClick={handleClose}>Cancel</button>
-                        </div>
-                    )}
-                </form>
+                        ) : (
+                            createField()
+                        )}
+                        {newProductList.length != 0 ? (
+                            <div className='buttonWrapper'>
+                                <button type='button' onClick={handleClose}>
+                                    Cancel
+                                </button>
+                                <button onClick={handleSubmit}>Confirm</button>
+                            </div>
+                        ) : (
+                            <div className='buttonWrapper'>
+                                <button type='button' onClick={handleClose}>
+                                    Cancel
+                                </button>
+                            </div>
+                        )}
+                    </form>
+                </div>
             </div>
         </div>
     )

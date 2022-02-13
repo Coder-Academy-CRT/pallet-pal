@@ -57,7 +57,11 @@ function LotCard({ lot }) {
 
                 <div id='lotCardMid'>
                     <h2>{lot.lot_code}</h2>
-                    <p>{`${lot.seed_type} - ${lot.seed_variety}`}</p>
+                    <p>{`${lot.seed_type} - ${
+                        lot.seed_variety == 'variety not stated'
+                            ? 'v.n.s.'
+                            : lot.seed_variety
+                    }`}</p>
                 </div>
                 <div id='lotCardRhs'>
                     <ul>{bag_sizes}</ul>
