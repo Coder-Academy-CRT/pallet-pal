@@ -88,7 +88,6 @@ export default function AddLot({ setCreateLotForm }) {
                 setAlertMessage(
                     'Lot could not be added. Please close and try again later'
                 )
-                console.log(err)
             }
         }
     }

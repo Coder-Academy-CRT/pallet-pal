@@ -102,7 +102,6 @@ export default function UpdateLot({ lot, lot_stocks, setEditMode }) {
                 setAlertMessage(
                     'Lot could not be updated. Please close and try again later'
                 )
-                console.log(err)
             }
         }
     }
@@ -150,7 +149,6 @@ export default function UpdateLot({ lot, lot_stocks, setEditMode }) {
             setAlertMessage(
                 'Lot could not be updated. Please close and try again later'
             )
-            console.log(err)
         }
     }
 
