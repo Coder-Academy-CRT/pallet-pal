@@ -59,7 +59,7 @@ describe("App component tests", () => {
       // name is loading correctly
       expect(screen.getByRole('heading', {name: 'warehouse_01'})).toBeInTheDocument()
       // ensure that other sections are loading correctly
-      expect(screen.getByText(/search/)).toBeInTheDocument()
+      expect(screen.getByText('Search for products in your warehouse by clicking the "search" tab.')).toBeInTheDocument()
       expect(screen.getByText(/details/)).toBeInTheDocument()
       expect(screen.getByText(/lots/)).toBeInTheDocument()
       expect(screen.getByText(/logout/)).toBeInTheDocument()
@@ -127,7 +127,7 @@ describe("App component tests", () => {
     render(
       contextedComponent(< ProductCard seedType={'ryegrass'} bagSize={25} numOfBags={40} lotCode={'AUSN121001'} />)
     )
-    expect(screen.getByText(/AUSN121001: ryegrass 40 bags 1000kg/i)).toBeInTheDocument()
+      expect(screen.getByText(/AUSN121001: ryegrass - undefined/i)).toBeInTheDocument()
   })
 
   /// 10 ///
@@ -136,7 +136,7 @@ describe("App component tests", () => {
       contextedComponent(< PalletCard palletId={7} locationId={12}/>)
     )
     // this pallet has 9 bags @ 30kg each in lot AUSN121013
-    expect(screen.getByText(/AUSN121013: ryegrass 9.00 bags 180kg/i)).toBeInTheDocument()
+    expect(screen.getByText(/AUSN121013: ryegrass - wimmera/i)).toBeInTheDocument()
   })
 
    /// 11 ///
