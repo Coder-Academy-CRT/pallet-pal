@@ -132,6 +132,10 @@ function BuildSidebar() {
                             type: 'setTempWarehouse',
                             data: null
                         })
+                        // this bandaid to be fixed later
+                        setInterval(() => {
+                            console.log('waiting')
+                        }, 1000)
                         // set to main mode which will load this new wh
                         dispatch({
                             type: 'setMetaMode',
@@ -167,9 +171,8 @@ function BuildSidebar() {
                 <p>
                     <br></br>
                     This grid represents your floor space, each being slightly
-                    larger than a pallet. x1 click changes to allocated storage,
-                    x2 clicks to inaccessible spaces, & the third click starts
-                    over with spare floor.
+                    larger than a pallet. Toggle through the types shown below
+                    by clicking locations.
                     <br></br>
                     <br></br>
                     When choosing a name:

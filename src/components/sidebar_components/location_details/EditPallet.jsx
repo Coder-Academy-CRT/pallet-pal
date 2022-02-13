@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import api from '../../../api';
 import palletpalContext from '../../../palletpalContext';
-import { prepLotCodes, handleAddProductAPICall } from '../../../helpers/helpers';
 
 export default function EditPallet() {
     const { state: { products, microModes, selectedPallet, lots }, dispatch } = useContext(palletpalContext)
@@ -14,7 +13,7 @@ export default function EditPallet() {
     })
     const [newProductList, setNewProductList] = useState([])
 
-    const [lotsData, setLotsData] = useState([])
+    const [currentLots, setCurrentLots] = useState([])
 
     // --------------------------------------------------- //
     // ----------------------STYLE------------------------ //
@@ -94,12 +93,10 @@ export default function EditPallet() {
 
     // Use to create drop down list for lot_code
     useEffect(() => {
-        // declare temp lists for working
-        let lotList = new Set([])
-        let lotOptions = []
-        prepLotCodes(products, lotList, lotOptions)
+        const newList = []
+        lots.forEach(lot => newList.push({value: lot.lot_code, label: lot.lot_code}))
         // set state from option lists
-        setLotsData(lotOptions)
+        setCurrentLots(newList)
     }, [products])
 
     // Add new product - dropdown list for lot code, 2x input for bag size and number of bags
@@ -112,9 +109,9 @@ export default function EditPallet() {
                             value={newProduct.lot_code}
                             onChange={handleChange}>
                             <option value="" disabled>Please select lot code</option>
-                            {lotsData ? (
+                            {currentLots ? (
                                 <>
-                                    {lotsData.map((element, index) => (
+                                    {currentLots.map((element, index) => (
                                         <option value={element.value} key={index}>
                                             {element.label}
                                         </option>
@@ -189,6 +186,27 @@ export default function EditPallet() {
             number_of_bags: ''
         })
     }
+    function handleAddProductAPICall(message) {
+        newProductList.forEach(async (product) => {
+            try {
+                const response2 = await api.post(
+                    `pallet/${selectedPallet.pallet_id}/products`, product
+                )
+                if (response2.data.hasOwnProperty('product_id')){
+                    // use response object to update Products as it should be a whole object
+                    dispatch({
+                        type: "addNewProductToProducts",
+                        data: response2.data
+                    })
+                    message.push('success')
+                }
+            } catch (err) {
+                alert("Product could not be created. Please close and try again later")
+                message.push('error')
+            }
+        })
+    }
+    
 
     // API call
     function handleEditAPICall (message) {
@@ -196,7 +214,6 @@ export default function EditPallet() {
             productList.forEach(async (product) => {
                 // Find the new seed type and seed variety after user change the lot code
                 const seedData = lots.filter(lot => lot.lot_code == product.lot_code)
-    
                 try {
                     const response = await api.put(
                         `product/${product.product_id}`, 
@@ -215,7 +232,6 @@ export default function EditPallet() {
                 } catch (err) {
                     alert("Product could not be updated. Please close and try again later")
                     message.push('error')
-
                 }
             })
     }
@@ -234,7 +250,7 @@ export default function EditPallet() {
         const resolved = confirm("Confirm?")
         if (resolved) {
             if (newProductList.length != 0) {
-                handleAddProductAPICall(newProductList, selectedPallet, dispatch, api, message)
+                handleAddProductAPICall(message)
             }
             handleEditAPICall(message)
             // Close edit box
@@ -274,9 +290,9 @@ export default function EditPallet() {
                                     value={productList[index].lot_code}
                                     onChange={handleEditChange}>
                                     <option value="" disabled>Please select lot code</option>
-                                    {lotsData ? (
+                                    {currentLots ? (
                                         <>
-                                            {lotsData.map((element, index) => (
+                                            {currentLots.map((element, index) => (
                                                 <option value={element.value} key={index}>
                                                     {element.label}
                                                 </option>
