@@ -314,13 +314,13 @@ export default function reducer(state, action) {
                 ...state,
                 moveFromLocation: action.data
             }
-        // NEW
+
         case 'setMoveToLocation':
             return {
                 ...state,
                 moveToLocation: action.data
             }
-        // NEW
+
         case 'setWarehouse':
             return {
                 ...state,
@@ -332,13 +332,13 @@ export default function reducer(state, action) {
                 ...state,
                 warehouseList: action.data
             }
-        // NEW
+
         case 'addWarehouse':
             return {
                 ...state,
                 warehouseList: [...state.warehouseList, action.data]
             }
-        // NEW
+
         case 'setTempWarehouse':
             return {
                 ...state,

@@ -7,7 +7,6 @@ import LotManager from './lot_manager/LotManager'
 import palletpalContext from '../../palletpalContext'
 import BuildSidebar from './BuildSidebar'
 import SidebarNav from './SidebarNav'
-import MoveOption from './location_details/MoveOption'
 
 function Sidebar() {
     const {
