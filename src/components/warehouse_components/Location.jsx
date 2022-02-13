@@ -176,7 +176,6 @@ function Location({ details }) {
                     className='palletBox'
                     key={pallet}
                     onClick={handleClickOnBox}>
-                    # {pallet}
                 </div>
             )
         })
