@@ -122,7 +122,6 @@ function Location({ details }) {
                                             type: 'updateProductsAfterMoved',
                                             data: details.coordinates
                                         })
-                                        console.log(movingPalletId)
                                         dispatch({
                                             type: 'updateLocationsAfterMoved',
                                             data: {
@@ -142,9 +141,7 @@ function Location({ details }) {
                                     alert(
                                         'Pallet could not be moved. Please close and try again later'
                                     )
-                                    console.log(err)
                                     setLoading(false)
-                                    console.log('pallet not moved')
                                 }
                                 // const moveResponse = await api.put(
                                 //     `pallet/${movingPalletId}/location/${details.coordinates}`
