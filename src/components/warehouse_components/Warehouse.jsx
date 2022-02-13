@@ -5,7 +5,6 @@ import DispatchPallet from '../sidebar_components/location_details/DispatchPalle
 import AddPallet from '../sidebar_components/location_details/AddPallet'
 import EditPallet from '../sidebar_components/location_details/EditPallet'
 
-
 function Warehouse() {
     const {
         state: { warehouse, locations, metaMode, tempWarehouse, microModes }
@@ -27,11 +26,11 @@ function Warehouse() {
             {locations.flat(1).map((location, index) => (
                 <Location details={location} key={index} />
             ))}
-            {microModes.AddPallet ? (
+            {/* {microModes.AddPallet ? (
                 <div className='blockout-bg'>
                     <AddPallet />
                 </div>
-            ) : null}
+            ) : null} */}
             {microModes.Edit ? (
                 <div className='blockout-bg'>
                     <EditPallet />
