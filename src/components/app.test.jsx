@@ -135,7 +135,6 @@ describe("App component tests", () => {
     render(
       contextedComponent(< PalletCard palletId={7} locationId={12}/>)
     )
-    // this pallet has 9 bags @ 30kg each in lot AUSN121013
     expect(screen.getByText(/AUSN121013: ryegrass - wimmera/i)).toBeInTheDocument()
   })
 
