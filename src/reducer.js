@@ -102,10 +102,7 @@ export default function reducer(state, action) {
             })
             // Add pallet_id back to corresponding location
             state.locations.forEach((row) => {
-                console.log(row)
-                row.forEach((location) => {
-                    console.log(location)    
-                    console.log(state.selectedMoveLocation)                
+                row.forEach((location) => {               
                     if (location.coordinates == action.data.coord) {
                         if (location.pallets_on_location[0] == null) {
                             location.pallets_on_location.splice(0, 1, action.data.palletId)
