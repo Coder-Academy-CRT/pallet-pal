@@ -223,35 +223,6 @@ export default function AddPallet() {
             )
             message.push('error')
         }
-        function handleAddProductAPICall(
-            productList,
-            pallet,
-            dispatch,
-            api,
-            message
-        ) {
-            productList.forEach(async (product) => {
-                try {
-                    const response2 = await api.post(
-                        `pallet/${pallet.pallet_id}/products`,
-                        product
-                    )
-                    if (response2.data.hasOwnProperty('product_id')) {
-                        // use response object to update Products as it should be a whole object
-                        dispatch({
-                            type: 'addNewProductToProducts',
-                            data: response2.data
-                        })
-                        message.push('success')
-                    }
-                } catch (err) {
-                    alert(
-                        'Product could not be created. Please close and try again later'
-                    )
-                    message.push('error')
-                }
-            })
-        }
 
         // Add the rest of the products to the just created pallet
         // Remove the first product as it has been created in db

@@ -114,6 +114,7 @@ function BuildSidebar() {
                         console.log('LOCATIONS DB UPDATE FAILURE')
                         alert('warehouse locations failed to update')
                     } else {
+                        console.log(locResponse)
                         // locations saved to database update state
                         const newWarehouse = { ...tempWarehouse }
                         newWarehouse.id = whResponse.data.id
