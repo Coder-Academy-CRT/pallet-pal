@@ -19,66 +19,66 @@ export default function AddPallet() {
     // ----------------------STYLE------------------------ //
 
     const cardWrapper = {
-        position: 'absolute',
-        top: 'calc(100vh/2 - 300px)',
-        left: 'calc(100vw/2 - 500px)',
-        width: '900px',
-        height: '500px',
-        borderRadius: '10px',
-        backgroundColor: 'white',
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: '5'
+        // position: 'absolute',
+        // top: 'calc(100vh/2 - 300px)',
+        // left: 'calc(100vw/2 - 500px)',
+        // width: '900px',
+        // height: '500px',
+        // borderRadius: '10px',
+        // backgroundColor: 'white',
+        // textAlign: 'center',
+        // display: 'flex',
+        // flexDirection: 'column',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // zIndex: '5'
     }
 
     const title = {
-        marginBottom: '1rem'
+        // marginBottom: '1rem'
     }
 
     const instruction = {
-        background: 'lightGrey',
-        width: '85%',
-        fontSize: '0.8rem',
-        marginBottom: '2rem',
-        padding: '10px 8px',
-        lineHeight: '1.5'
+        // background: 'lightGrey',
+        // width: '85%',
+        // fontSize: '0.8rem',
+        // marginBottom: '2rem',
+        // padding: '10px 8px',
+        // lineHeight: '1.5'
     }
 
     const inputWrapper = {
-        display: 'flex',
-        alignItems: 'center'
+        // display: 'flex',
+        // alignItems: 'center'
     }
 
     const productDiv = {
-        display: 'flex',
-        justifyContent: 'space-around',
-        marginTop: '5px'
+        // display: 'flex',
+        // justifyContent: 'space-around',
+        // marginTop: '5px'
     }
 
     const fieldDiv = {
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center'
+        // width: '100%',
+        // display: 'flex',
+        // justifyContent: 'center'
     }
 
     const smlBtn = {
-        fontSize: '1.2rem',
-        padding: '0px 2px',
-        border: 'none',
-        background: 'none',
-        marginLeft: '10px'
+        // fontSize: '1.2rem',
+        // padding: '0px 2px',
+        // border: 'none',
+        // background: 'none',
+        // marginLeft: '10px'
     }
 
     const buttonWrapper = {
-        marginTop: '1rem'
+        // marginTop: '1rem'
     }
 
     const buttonStyle = {
-        padding: '5px 20px',
-        margin: '20px 50px'
+        // padding: '5px 20px',
+        // margin: '20px 50px'
     }
 
     // ----------------------STYLE------------------------ //
@@ -97,49 +97,43 @@ export default function AddPallet() {
     // Create dropdown list for lot code, 2x input for bag size and number of bags
     const createField = () => {
         return (
-            <div style={inputWrapper} className='inputWrapper'>
-                <div>
-                    <select
-                        name='lot_code'
-                        value={newProduct.lot_code}
-                        onChange={handleChange}
-                        required='true'>
-                        <option value='' disabled>
-                            Please select lot code
-                        </option>
-                        {currentLots ? (
-                            <>
-                                {currentLots.map((element, index) => (
-                                    <option value={element.value} key={index}>
-                                        {element.label}
-                                    </option>
-                                ))}
-                            </>
-                        ) : null}
-                    </select>
-                </div>
-                <div>
-                    <input
-                        type='number'
-                        min='0'
-                        placeholder='bag size'
-                        onChange={handleChange}
-                        name='bag_size'
-                        size='10'
-                        value={newProduct.bag_size}
-                    />
-                </div>
-                <div>
-                    <input
-                        type='number'
-                        min='0'
-                        placeholder='num of bags'
-                        onChange={handleChange}
-                        name='number_of_bags'
-                        size='10'
-                        value={newProduct.number_of_bags}
-                    />
-                </div>
+            <div className='inputWrapper'>
+                <select
+                    name='lot_code'
+                    value={newProduct.lot_code}
+                    onChange={handleChange}
+                    required='true'>
+                    <option value='' disabled>
+                        Please select lot code
+                    </option>
+                    {currentLots ? (
+                        <>
+                            {currentLots.map((element, index) => (
+                                <option value={element.value} key={index}>
+                                    {element.label}
+                                </option>
+                            ))}
+                        </>
+                    ) : null}
+                </select>
+                <input
+                    type='number'
+                    min='0'
+                    placeholder='size(kg)'
+                    onChange={handleChange}
+                    name='bag_size'
+                    size='10'
+                    value={newProduct.bag_size}
+                />
+                <input
+                    type='number'
+                    min='0'
+                    placeholder='# bags'
+                    onChange={handleChange}
+                    name='number_of_bags'
+                    size='10'
+                    value={newProduct.number_of_bags}
+                />
                 <button style={smlBtn} type='button' onClick={createProduct}>
                     +
                 </button>
@@ -323,70 +317,79 @@ export default function AddPallet() {
     }
 
     return (
-        <div style={cardWrapper}>
-            <div style={title}>
-                <h1>Create Pallet</h1>
-            </div>
-            <div style={instruction}>
-                <p>
-                    * You can add a product by selecting the lot code and enter
-                    bag size and the number of bags.
-                </p>
-                <p>* Then click the + button to add a product.</p>
-                <p>* You can click the x button to remove the product.</p>
-                <p>* Please click confirm to create your new pallet.</p>
-            </div>
-            <div>
-                <form>
-                    {newProductList.length != 0 ? (
-                        <div>
-                            {createField()}
-                            {newProductList.map((product, index) => (
-                                <div style={productDiv} id={index} key={index}>
-                                    <div style={fieldDiv}>
-                                        {product.lot_code}
-                                    </div>
-                                    <div style={fieldDiv}>
-                                        {product.bag_size} kg
-                                    </div>
-                                    <div style={fieldDiv}>
-                                        {product.number_of_bags} bags
-                                    </div>
-                                    <button
-                                        style={smlBtn}
-                                        type='button'
-                                        onClick={handleRemove}>
-                                        x
-                                    </button>
+        <div className='lockout'>
+            <div id='addPallet' style={cardWrapper}>
+                <header>
+                    <h1>Create Pallet</h1>
+                    <div style={instruction}>
+                        <p>
+                            Add products by selecting the lot code, bag size and
+                            number of bags.
+                        </p>
+                        <p>Remove unwanted items by clicking the X.</p>
+                        <p>Confirm to finalize pallet creation</p>
+                    </div>
+                </header>
+                {/* <div style={title}></div> */}
+                <div>
+                    <form>
+                        {newProductList.length != 0 ? (
+                            <div>
+                                {createField()}
+                                <div id='productContainer'>
+                                    {newProductList.map((product, index) => (
+                                        <div
+                                            id={index}
+                                            key={index}
+                                            className='productField'>
+                                            <div className='info'>
+                                                {product.lot_code}
+                                            </div>
+                                            <div className='info'>
+                                                {product.bag_size} kg
+                                            </div>
+                                            <div className='info'>
+                                                {product.number_of_bags} bags
+                                            </div>
+                                            <button
+                                                style={smlBtn}
+                                                type='button'
+                                                onClick={handleRemove}>
+                                                x
+                                            </button>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    ) : (
-                        createField()
-                    )}
-                    {newProductList.length != 0 ? (
-                        <div style={buttonWrapper}>
-                            <button
-                                style={buttonStyle}
-                                type='button'
-                                onClick={handleClose}>
-                                Cancel
-                            </button>
-                            <button style={buttonStyle} onClick={handleSubmit}>
-                                Confirm
-                            </button>
-                        </div>
-                    ) : (
-                        <div style={buttonWrapper}>
-                            <button
-                                style={buttonStyle}
-                                type='button'
-                                onClick={handleClose}>
-                                Cancel
-                            </button>
-                        </div>
-                    )}
-                </form>
+                            </div>
+                        ) : (
+                            createField()
+                        )}
+                        {newProductList.length != 0 ? (
+                            <div className='buttonWrapper'>
+                                <button
+                                    style={buttonStyle}
+                                    type='button'
+                                    onClick={handleClose}>
+                                    Cancel
+                                </button>
+                                <button
+                                    style={buttonStyle}
+                                    onClick={handleSubmit}>
+                                    Confirm
+                                </button>
+                            </div>
+                        ) : (
+                            <div className='buttonWrapper'>
+                                <button
+                                    style={buttonStyle}
+                                    type='button'
+                                    onClick={handleClose}>
+                                    Cancel
+                                </button>
+                            </div>
+                        )}
+                    </form>
+                </div>
             </div>
         </div>
     )

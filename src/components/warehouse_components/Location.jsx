@@ -130,10 +130,6 @@ function Location({ details }) {
                                             }
                                         })
                                         setLoading(false)
-                                        dispatch({
-                                            type: 'setMicroMode',
-                                            data: { mode: 'Move', bool: false }
-                                        })
                                     } else {
                                     }
                                 } catch (err) {
@@ -142,49 +138,11 @@ function Location({ details }) {
                                     )
                                     setLoading(false)
                                 }
-                                // const moveResponse = await api.put(
-                                //     `pallet/${movingPalletId}/location/${details.coordinates}`
-                                // )
-                                // // const locationsResponse = await api.get(
-                                // //     `warehouse/${warehouse.id}/locations`
-                                // // )
-                                // if (
-                                //     moveResponse.data ==
-                                //         `pallet #${movingPalletId} moved to location ${details.coordinates}` &&
-                                //     locationsResponse.status == 200
-                                // ) {
-                                //     dispatch({
-                                //         type: 'setLocationData',
-                                //         data: {
-                                //             allLocations:
-                                //                 locationsResponse.data,
-                                //             rows: warehouse.rows,
-                                //             columns: warehouse.columns
-                                //         }
-                                //     })
-                                //     console.log(locationsResponse.data)
-                                //     console.log(moveResponse)
-                                //     console.log(warehouse.rows)
-                                //     console.log(warehouse.columns)
-                                //     setLoading(false)
-                                // } else {
-                                //     setLoading(false)
-                                // }
-
-                                // // dispatch({
-                                // //     type: 'movePallet',
-                                // //     data: {
-                                // //         palletId: movingPalletId,
-                                // //         moveFromLocation: moveFromLocation,
-                                // //         moveToLocation: details.coordinates
-                                // //     }
-                                // // })
-                                // alert('Pallet has been moved.')
-                                // dispatch({
-                                //     type: 'setMicroMode',
-                                //     data: { mode: 'Move', bool: false }
-                                // })
                             } else {
+                                dispatch({
+                                    type: 'setMicroMode',
+                                    data: { mode: 'Move', bool: false }
+                                })
                                 alert('move cancelled')
                                 break
                             }
