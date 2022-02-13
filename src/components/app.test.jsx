@@ -2,13 +2,23 @@
 
 
 import palletpalContext from '../palletpalContext'
-import {render, screen} from '@testing-library/react'
+import {render, fireEvent, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
+import userEvent from '@testing-library/user-event'
 
 // Components
 import App from '../App'
+
 import LotList from './sidebar_components/lot_manager/LotList'
 import LotCard from './sidebar_components/lot_manager/LotCard'
+import CreateLot from './sidebar_components/lot_manager/CreateLot'
+
+import CustomSelect from './sidebar_components/search_window/CustomSelect'
+import Summary from './sidebar_components/search_window/Summary'
+
+import AddPallet from './sidebar_components/location_details/AddPallet'
+import ProductCard from './sidebar_components/location_details/ProductCard'
+import PalletCard from './sidebar_components/location_details/PalletCard'
 
 
 
@@ -58,7 +68,7 @@ describe("App component tests", () => {
 
   })
 
-   /// 2 ///
+   /// 3 ///
    it("shows the details in LotCard", () => {
 
     render(
@@ -71,7 +81,59 @@ describe("App component tests", () => {
 
   })
 
+  /// 4 ///
+  it("shows the details in CreateLot", () => {
 
+    render(
+      contextedComponent(<CreateLot/>)
+    )
+
+    expect(screen.getByRole('heading', {name: 'Create Lot'})).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: 'add lot'})).toBeInTheDocument()
+    expect(screen.getByLabelText('Please select seed type:')).toBeInTheDocument
+
+    // checks user event and text that then appears
+    userEvent.click(screen.getByRole('button'))
+    expect(screen.getByText(/Please write in a lot code/i)).toBeInTheDocument()
+
+    
+  })
+
+   // 5 ///
+   it("displays the presence of a clickable 'combobox' select", () => {
+
+    render(
+      contextedComponent(< CustomSelect />)
+    )
+
+    fireEvent.click(screen.getByRole('combobox'))
+ 
+  })
+
+   /// 6 ///
+   it("shows the Product Card summary including total amount", () => {
+
+    render(
+      contextedComponent(< ProductCard seedType={'ryegrass'} bagSize={25} numOfBags={40} lotCode={'AUSN121001'} />)
+    )
+
+    expect(screen.getByText(/AUSN121001: ryegrass 40 bags 1000kg/i)).toBeInTheDocument()
+
+  })
+
+  /// 7 ///
+  it("correctly shows the summary of pallet #7 at location #12", () => {
+
+    render(
+      contextedComponent(< PalletCard palletId={7} locationId={12}/>)
+    )
+
+    // this pallet has 9 bags @ 30kg each in lot AUSN121013
+    expect(screen.getByText(/AUSN121013: ryegrass 9.00 bags 180kg/i)).toBeInTheDocument()
+
+    screen.debug()
+
+  })
 
 
 })
