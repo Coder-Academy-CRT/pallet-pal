@@ -15,7 +15,7 @@ function PalletCard({ palletId, locationId }) {
         },
         dispatch
     } = useContext(palletpalContext)
-    
+
     // set classes to style when found/not found
     const [classes, setClasses] = useState('palletCard')
     const [optionsActive, setOptionsActive] = useState(false)
@@ -39,7 +39,9 @@ function PalletCard({ palletId, locationId }) {
     const handleClick = (e) => {
         if (
             e.target.parentElement?.classList.contains('palletCard') ||
-            e.target.parentElement?.classList.contains('productCard')
+            e.target.parentElement.parentElement?.classList.contains(
+                'productCard'
+            )
         ) {
             // manage pallet active state locally
             setOptionsActive(!optionsActive)
@@ -71,7 +73,6 @@ function PalletCard({ palletId, locationId }) {
         })
         // set the location coordinates of moveFromLocation
         dispatch({ type: 'setMoveFromLocation', data: locationId })
-        console.log(moveFromLocation)
     }
 
     function setDispatchMode() {
@@ -90,6 +91,7 @@ function PalletCard({ palletId, locationId }) {
             {palletProducts.map((product, index) => (
                 <ProductCard
                     seedType={product.seed_type}
+                    seedVariety={product.seed_variety}
                     bagSize={product.bag_size}
                     numOfBags={product.number_of_bags}
                     lotCode={product.lot_code}
@@ -97,7 +99,6 @@ function PalletCard({ palletId, locationId }) {
                 />
             ))}
             {optionsActive ? (
-
                 <div className='buttons'>
                     <button onClick={() => setEditMode()}>Edit</button>
                     <button onClick={() => handleMoveClick()}>Move</button>

@@ -1,0 +1,139 @@
+/* blue-grey mandarin*/
+$wormhole: rgb(21, 23, 31);
+$space-cadet: #2d3142ff;
+$independence: #4f5d75ff;
+$silver: #bfc0c0ff;
+$white: #ffffffff;
+$mandarin: #ef8354ff;
+$mandarin-highlight: rgb(255, 160, 120);
+
+.lockout {
+    z-index: 1;
+    background-color: rgba($color: $space-cadet, $alpha: 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    #addPallet {
+        background-color: $wormhole;
+        min-width: 300px;
+        max-width: 50%;
+        border-radius: 0.5rem;
+
+        header {
+            color: $space-cadet;
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem;
+            align-items: center;
+
+            p {
+                text-align: center;
+                font-style: italic;
+            }
+        }
+
+        .inputWrapper {
+            margin: 0.5rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 0.5rem;
+
+            input {
+                @include lotInputs;
+                min-width: 15%;
+            }
+
+            select {
+                @include lotInputs;
+
+                min-width: 45%;
+                flex: 1;
+            }
+            button {
+                border: none;
+                display: flex;
+                border-radius: 100%;
+                min-width: 2rem;
+                height: 2rem;
+                background-color: $mandarin;
+                align-items: center;
+                font-size: 2rem;
+                font-style: normal;
+                font-weight: 600;
+                color: white;
+                justify-content: center;
+
+                &:hover {
+                    filter: brightness(1.2);
+                }
+            }
+        }
+        #productContainer {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 0.5rem;
+            .productField {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+                display: grid;
+                grid-template-columns: 45% 1fr 1fr 2rem;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 0.5rem;
+                width: 100%;
+                border-radius: 0.5rem;
+                align-items: center;
+            }
+            button {
+                border: none;
+                display: flex;
+                border-radius: 100%;
+                min-width: 2rem;
+                height: 2rem;
+                background-color: $independence;
+                align-items: center;
+                margin-right: 0.5rem;
+                font-size: 1.5rem;
+                font-style: normal;
+                font-weight: 600;
+                color: $white;
+                justify-content: center;
+
+                &:hover {
+                    filter: brightness(1.2);
+                }
+            }
+
+            .info {
+                border-radius: 0.5rem;
+                @include lotInputs;
+                background-color: $space-cadet;
+                color: white;
+            }
+        }
+        .buttonWrapper {
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            gap: 1rem;
+
+            button {
+                @include round-button-1;
+                max-width: 30%;
+            }
+        }
+    }
+
+    h1 {
+    }
+}

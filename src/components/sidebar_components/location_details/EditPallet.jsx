@@ -177,7 +177,6 @@ export default function EditPallet() {
     // create new product
     const createProduct = (e) => {
         e.preventDefault()
-        console.log(newProduct)
         // store the 'new' product in newProductList temporarily, and send request to db when user click 'confirm' button 
         setNewProductList([...newProductList, newProduct])
         // reset input field placeholder value
@@ -214,10 +213,7 @@ export default function EditPallet() {
             // Add new products to the pallet first
             productList.forEach(async (product) => {
                 // Find the new seed type and seed variety after user change the lot code
-                console.log(lots)
-                console.log(product)
                 const seedData = lots.filter(lot => lot.lot_code == product.lot_code)
-                console.log(seedData)
                 try {
                     const response = await api.put(
                         `product/${product.product_id}`, 
@@ -236,7 +232,6 @@ export default function EditPallet() {
                 } catch (err) {
                     alert("Product could not be updated. Please close and try again later")
                     message.push('error')
-                    console.log(err)
                 }
             })
     }

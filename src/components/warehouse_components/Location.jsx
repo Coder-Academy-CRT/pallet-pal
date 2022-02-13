@@ -13,7 +13,6 @@ function Location({ details }) {
             foundPallets,
             availableLocations,
             moveFromLocation,
-            moveToLocation,
             movingPalletId,
             clickedLocation
         },
@@ -37,7 +36,6 @@ function Location({ details }) {
                 setClasses([...classes, 'found'])
             }
         })
-
         // Light up available locations during 'Move' mode
         if (
             microModes.Move &&
@@ -107,80 +105,44 @@ function Location({ details }) {
                             )
                             break
                         default:
-                            const resolved = confirm('You want to move to this location?')
+                            const resolved = confirm(
+                                'You want to move to this location?'
+                            )
                             if (resolved) {
                                 setLoading(true)
                                 try {
                                     const response = await api.put(
                                         `pallet/${movingPalletId}/location/${details.coordinates}`
                                     )
-                                    if (response.data == `pallet #${movingPalletId} moved to location ${details.coordinates}`) {
+                                    if (
+                                        response.data ==
+                                        `pallet #${movingPalletId} moved to location ${details.coordinates}`
+                                    ) {
                                         dispatch({
                                             type: 'updateProductsAfterMoved',
                                             data: details.coordinates
                                         })
-                                        console.log(movingPalletId)
                                         dispatch({
                                             type: 'updateLocationsAfterMoved',
-                                            data: { palletId: movingPalletId, coord: details.coordinates } 
+                                            data: {
+                                                palletId: movingPalletId,
+                                                coord: details.coordinates
+                                            }
                                         })
                                         setLoading(false)
-                                        alert('Pallet has been moved.')
-                                        dispatch({
-                                            type: 'setMicroMode',
-                                            data: { mode: 'Move', bool: false }
-                                        })
                                     } else {
-
                                     }
-                                } catch(err) {
-                                    alert('Pallet could not be moved. Please close and try again later')
-                                    console.log(err)
+                                } catch (err) {
+                                    alert(
+                                        'Pallet could not be moved. Please close and try again later'
+                                    )
                                     setLoading(false)
                                 }
-                                // const moveResponse = await api.put(
-                                //     `pallet/${movingPalletId}/location/${details.coordinates}`
-                                // )
-                                // // const locationsResponse = await api.get(
-                                // //     `warehouse/${warehouse.id}/locations`
-                                // // )
-                                // if (
-                                //     moveResponse.data ==
-                                //         `pallet #${movingPalletId} moved to location ${details.coordinates}` &&
-                                //     locationsResponse.status == 200
-                                // ) {
-                                //     dispatch({
-                                //         type: 'setLocationData',
-                                //         data: {
-                                //             allLocations:
-                                //                 locationsResponse.data,
-                                //             rows: warehouse.rows,
-                                //             columns: warehouse.columns
-                                //         }
-                                //     })
-                                //     console.log(locationsResponse.data)
-                                //     console.log(moveResponse)
-                                //     console.log(warehouse.rows)
-                                //     console.log(warehouse.columns)
-                                //     setLoading(false)
-                                // } else {
-                                //     setLoading(false)
-                                // }
-
-                                // // dispatch({
-                                // //     type: 'movePallet',
-                                // //     data: {
-                                // //         palletId: movingPalletId,
-                                // //         moveFromLocation: moveFromLocation,
-                                // //         moveToLocation: details.coordinates
-                                // //     }
-                                // // })
-                                // alert('Pallet has been moved.')
-                                // dispatch({
-                                //     type: 'setMicroMode',
-                                //     data: { mode: 'Move', bool: false }
-                                // })
                             } else {
+                                dispatch({
+                                    type: 'setMicroMode',
+                                    data: { mode: 'Move', bool: false }
+                                })
                                 alert('move cancelled')
                                 break
                             }
