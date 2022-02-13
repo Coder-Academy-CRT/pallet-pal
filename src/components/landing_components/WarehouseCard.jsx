@@ -3,7 +3,6 @@ import palletpalContext from '../../palletpalContext'
 import api from '../../api'
 
 function WarehouseCard({ info }) {
-    // console.log(info)
     const {
         state: { warehouse },
         dispatch
@@ -11,8 +10,6 @@ function WarehouseCard({ info }) {
     const [warehouseInfo, setWarehouseInfo] = useState(info)
 
     async function loadWarehouse() {
-        console.log(info)
-        console.log('loading warehouse')
         dispatch({ type: 'setWarehouse', data: info })
         dispatch({ type: 'setMetaMode', data: 'main' })
     }

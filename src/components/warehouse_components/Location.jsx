@@ -130,7 +130,6 @@ function Location({ details }) {
                                             }
                                         })
                                         setLoading(false)
-                                        alert('Pallet has been moved.')
                                         dispatch({
                                             type: 'setMicroMode',
                                             data: { mode: 'Move', bool: false }

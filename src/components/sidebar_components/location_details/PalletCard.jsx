@@ -71,7 +71,6 @@ function PalletCard({ palletId, locationId }) {
         })
         // set the location coordinates of moveFromLocation
         dispatch({ type: 'setMoveFromLocation', data: locationId })
-        console.log(moveFromLocation)
     }
 
     function setDispatchMode() {

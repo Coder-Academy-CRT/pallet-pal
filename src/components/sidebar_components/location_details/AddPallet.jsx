@@ -97,60 +97,78 @@ export default function AddPallet() {
     // Create dropdown list for lot code, 2x input for bag size and number of bags
     const createField = () => {
         return (
-            <div style={inputWrapper}>
-                <div>
-                    <select
-                        name='lot_code'
-                        value={newProduct.lot_code}
-                        onChange={handleChange}>
-                        <option value='' disabled>
-                            Please select lot code
-                        </option>
-                        {currentLots ? (
-                            <>
-                                {currentLots.map((element, index) => (
-                                    <option value={element.value} key={index}>
-                                        {element.label}
-                                    </option>
-                                ))}
-                            </>
-                        ) : null}
-                    </select>
+            <div className='blockout'>
+                <div style={inputWrapper} className='inputWrapper'>
+                    <div>
+                        <select
+                            name='lot_code'
+                            value={newProduct.lot_code}
+                            onChange={handleChange}
+                            required='true'>
+                            <option value='' disabled>
+                                Please select lot code
+                            </option>
+                            {currentLots ? (
+                                <>
+                                    {currentLots.map((element, index) => (
+                                        <option
+                                            value={element.value}
+                                            key={index}>
+                                            {element.label}
+                                        </option>
+                                    ))}
+                                </>
+                            ) : null}
+                        </select>
+                    </div>
+                    <div>
+                        <input
+                            type='number'
+                            min='0'
+                            placeholder='bag size'
+                            onChange={handleChange}
+                            name='bag_size'
+                            size='10'
+                            value={newProduct.bag_size}
+                        />
+                    </div>
+                    <div>
+                        <input
+                            type='number'
+                            min='0'
+                            placeholder='num of bags'
+                            onChange={handleChange}
+                            name='number_of_bags'
+                            size='10'
+                            value={newProduct.number_of_bags}
+                        />
+                    </div>
+                    <button
+                        style={smlBtn}
+                        type='button'
+                        onClick={createProduct}>
+                        +
+                    </button>
                 </div>
-                <div>
-                    <input
-                        type='number'
-                        min='0'
-                        placeholder='bag size'
-                        onChange={handleChange}
-                        name='bag_size'
-                        size='10'
-                        value={newProduct.bag_size}
-                    />
-                </div>
-                <div>
-                    <input
-                        type='number'
-                        min='0'
-                        placeholder='num of bags'
-                        onChange={handleChange}
-                        name='number_of_bags'
-                        size='10'
-                        value={newProduct.number_of_bags}
-                    />
-                </div>
-                <button style={smlBtn} type='button' onClick={createProduct}>
-                    +
-                </button>
             </div>
         )
     }
 
     const createProduct = (e) => {
         e.preventDefault()
+
+        if (
+            newProduct.lot_code == '' ||
+            newProduct.bag_size == '' ||
+            newProduct.number_of_bags == ''
+        ) {
+            alert('fill all fields')
+            return
+        }
         // store the 'new' product in newProductList temporarily, and send request to db when user click 'confirm' button
         setNewProductList([...newProductList, newProduct])
         // reset input field placeholder value
+
         setNewProduct({
             lot_code: '',
             bag_size: '',

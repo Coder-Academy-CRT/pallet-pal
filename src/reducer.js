@@ -7,8 +7,6 @@ export default function reducer(state, action) {
                 a.coordinates > b.coordinates ? 1 : -1
             )
 
-            console.log('sorted list')
-            console.log(sorted)
             // push a list for every row where the y coord matches the loop counter
             for (let y = 0; y < action.data.rows; y++) {
                 final_list.push(

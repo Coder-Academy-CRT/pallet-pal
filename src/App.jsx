@@ -8,7 +8,6 @@ import reducer from './reducer'
 import api from './api'
 
 const initialState = {
-    // warehouse: { id: 1, name: 'warehouse_01', rows: 4, columns: 4 },
     warehouse: null,
     tempWarehouse: null,
     products: [],
@@ -60,7 +59,6 @@ export default function App() {
             const res_products = await api.get(
                 `warehouse/${state.warehouse.id}/products`
             )
-            console.log(res_products)
             if (res_products.status == '200') {
                 dispatch({
                     type: 'setProductData',
@@ -96,8 +94,7 @@ export default function App() {
             <palletpalContext.Provider value={{ state, dispatch }}>
                 <LandingPage />
             </palletpalContext.Provider>
-        ) 
-        : (
+        ) : (
             <h1 style={{ padding: '100px', color: 'green', fontSize: '3em' }}>
                 Loading Warehouse List....
             </h1>
