@@ -91,6 +91,7 @@ export default function App() {
         })
     }, [state.metaMode])
 
+    console.log(JSON.stringify(state))
     if (state.metaMode == 'landing') {
         return state.warehouseList ? (
             <palletpalContext.Provider value={{ state, dispatch }}>
