@@ -61,6 +61,14 @@ function LandingPage() {
                 onClick={() => buildNewWarehouse(5, 5)}>
                 build new warehouse
             </button>
+            <section id='developedBy'>
+                <p>Developed by</p>
+                <a href='https://www.linkedin.com/in/rhonalam/'>Rhona Lam</a>|
+                <a href='https://www.linkedin.com/in/tfxlong/'>Timothy Long</a>|
+                <a href='https://www.linkedin.com/in/cameron-taylor-a49141220'>
+                    Cameron Taylor
+                </a>
+            </section>
         </div>
     )
 }
