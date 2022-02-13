@@ -225,46 +225,6 @@ export default function reducer(state, action) {
                 locations: updatedLocations
             }
 
-            // case 'movePallet':
-            //     // payload = {
-            //     //     palletId: '1',
-            //     //     moveFromLocation: '00_01',
-            //     //     moveToLocation: '00_03'
-            //     // }
-            //     const newLocations = [...state.locations]
-            //     // helper function
-            //     const parseCoords = (string) => {
-            //         return string.split('_')
-            //     }
-            //     // UPDATE LOCATIONS
-            //     // get coords for location indexing
-            //     const [fx, fy] = parseCoords(action.data.moveFromLocation)
-            //     const [tx, ty] = parseCoords(action.data.moveToLocation)
-            //     // get location object from coords
-            //     const fromLocation = newLocations[Number(fy)][Number(fx)]
-            //     const toLocation = newLocations[Number(ty)][Number(tx)]
-            //     console.log(toLocation.pallets_on_location)
-            //     // remove pallet from fromLocation - get index - splice out
-            //     const palletIdIndex = fromLocation.pallets_on_location.indexOf(
-            //         action.data.palletId
-            //     )
-            //     fromLocation.pallets_on_location.splice(palletIdIndex, 1)
-            //     // push palletId to new location - the toLocation
-            //     toLocation.pallets_on_location[0]
-            //         ? toLocation.pallets_on_location.push(action.data.palletId)
-            //         : (toLocation.pallets_on_location = [action.data.palletId])
-
-            //     const newProducts = [...state.products]
-            //     //UPDATE PRODUCTS LOCATIONS
-            //     // for every product if pallet id matches moved pallet - update coordinates
-            //     newProducts.forEach((product) =>
-            //         product.pallet_id == action.data.palletId
-            //             ? (product.coordinates = action.data.moveToLocation)
-            //             : null
-            //     )
-
-            // return { ...state, locations: newLocations, products: newProducts }
-
         case 'removePalletFromLocation':
             // Remove pallet_id from corresponding location
             state.locations.forEach((row) => {

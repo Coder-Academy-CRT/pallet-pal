@@ -73,10 +73,6 @@ function BuildSidebar() {
         }
     }
 
-    function testLocationRequest() {
-        console.log(locationRequest())
-    }
-
     async function saveWarehouse(whName) {
         // regex validation
         let regexTest = checkWarehouseName(whName)
@@ -94,11 +90,8 @@ function BuildSidebar() {
 
                 if (!whResponse.data.hasOwnProperty('id')) {
                     // warehouse not created
-                    console.log(whResponse)
-                    console.log('WAREHOUSE DB CREATE FAILURE')
                     alert('Warehouse failed to save to database.')
                 } else {
-                    console.log(whResponse.data.id)
                     // if warehouse successfully created
                     // update locations
                     const locResponse = await api.put(
@@ -111,7 +104,6 @@ function BuildSidebar() {
                         `Warehouse ${whResponse.data.id} locations updated`
                     ) {
                         // fail message
-                        console.log('LOCATIONS DB UPDATE FAILURE')
                         alert('warehouse locations failed to update')
                     } else {
                         // locations saved to database update state
@@ -141,7 +133,6 @@ function BuildSidebar() {
                             type: 'setMetaMode',
                             data: 'main'
                         })
-                        console.log('LOCATIONS SAVED')
                     }
                 }
             }
@@ -160,7 +151,6 @@ function BuildSidebar() {
 
     function handleSubmit(e) {
         e.preventDefault()
-        // console.log(e.target.whName.value)
         saveWarehouse(e.target.whName.value)
     }
 
@@ -219,7 +209,6 @@ function BuildSidebar() {
                     />
                     <input type='submit' value='save warehouse' id='whSubmit' />
                 </form>
-                {/* <button onClick={testLocationRequest}>test location req</button> */}
             </section>
         </div>
     )
